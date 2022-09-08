@@ -25,7 +25,9 @@
   "dependencies": {
     "asynckit": "^0.4.0",
     "bootstrap": "^5.2.0",
+    "bootstrap-icons": "^1.9.1",
     "combined-stream": "^1.0.8",
+    "css.gg": "^2.0.0",
     "delayed-stream": "^1.0.0",
     "esbuild": "^0.15.7",
     "esbuild-windows-64": "^0.15.7",

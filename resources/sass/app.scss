@@ -10,6 +10,42 @@
 @import "../../node_modules/bootstrap/scss/variables";
 
 // 4. Include any default map overrides here
+// color
+$primary: #5D9CEC;
+$secondary: #AC92EC;
+$danger: #ED5565;
+$warning: #FFCE54;
+$success: #48CFAD;
+$info: #4FC1E9;
+$light: #F5F7FA;
+$dark: #656D78;
+
+$theme-colors: (
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+);
+
+// Init
+$font-family-base: "Poppins" ,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-size-base: .9rem;
+
+// Body
+$body-bg: #f0f2f5;
+$body-color: #434A54;
+
+// Card
+$card-border-width: 0;
+
+// Form Control
+$input-bg: #e9ecef;
+$input-font-size: .9rem;
+$input-focus-bg: $input-bg;
 
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
@@ -24,8 +60,45 @@
 @import "../../node_modules/bootstrap/scss/containers";
 @import "../../node_modules/bootstrap/scss/grid";
 @import "../../node_modules/bootstrap/scss/helpers";
+@import "../../node_modules/bootstrap/scss/navbar";
+@import "../../node_modules/bootstrap/scss/nav";
+@import "../../node_modules/bootstrap/scss/transitions";
+@import "../../node_modules/bootstrap/scss/card";
+@import "../../node_modules/bootstrap/scss/forms";
+@import "../../node_modules/bootstrap/scss/buttons";
+@import "../../node_modules/bootstrap/scss/button-group";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "../../node_modules/bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+.font-logo {
+    font-family: 'Righteous';
+}
+
+.bg-login {
+    background: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 2355, 255, 1)), url('/assets/images/backgrounds/bg-login-min.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.input-group {
+    border-radius: $input-border-radius;
+    &.input-group-lg {
+        border-radius: $input-border-radius-lg;
+    }
+    &:focus-within {
+        border-color: $input-focus-border-color;
+        box-shadow: $input-focus-box-shadow;
+
+        input {
+            box-shadow: none;
+        }
+
+        .input-group-text {
+            border-color: $input-focus-border-color;
+        }
+    }
+}
