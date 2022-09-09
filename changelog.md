@@ -1,6 +1,11 @@
 **Change Log:**
 
-1.1.1 ****
+1.1.2 **Add maintenance function and optimized login page**
+- Optimized login error
+- Fix display login page for mobile devices
+- Add maintenance function
+
+1.1.1 **Add login page and optimized input group**
 - Add login page
 - Optimized input group focus
 
