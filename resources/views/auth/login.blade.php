@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"></head>
 <body class="bg-login">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg bg-transparent border-0">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><h1 class="font-logo">PANA<span class="text-primary">TECH</span><span class="text-secondary">.</span></h1></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@
                                         <div class="input-group input-group-lg @error('username') is-invalid @enderror">
                                             <input type="text" name="username" class="form-control border-end-0 @error('username') is-invalid @enderror" id="username" value="{{ old('username') }}" autofocus>
                                             <span class="input-group-text text-muted">
-                                                <i class="bi-envelope-fill"></i>
+                                                @svg('heroicon-s-identification', 'icon', ['style' => 'width:22px;height:22px'])
                                             </span>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                                         <div class="input-group input-group-lg @error('password') is-invalid @enderror">
                                             <input type="password" name="password" class="form-control border-end-0 @error('password') is-invalid @enderror" id="password" value="">
                                             <span class="input-group-text text-muted">
-                                                <i class="bi-key-fill"></i>
+                                                @svg('heroicon-s-key', 'icon')
                                             </span>
                                         </div>
                                     </div>

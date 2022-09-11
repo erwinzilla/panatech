@@ -1,5 +1,13 @@
 **Change Log:**
 
+1.1.3 
+- Add main menu navbar
+- Add template dashboard
+- Add Heroicons on blade 
+- Add sidebar menu
+- **IMPORTANT**
+  - Run NPM Install
+
 1.1.2 **Add maintenance function and optimized login page**
 - Optimized login error
 - Fix display login page for mobile devices

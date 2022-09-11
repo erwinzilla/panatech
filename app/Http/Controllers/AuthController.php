@@ -55,14 +55,22 @@ class AuthController extends Controller
             ];
 
 //            AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah login', 'user', null);
-//            return redirect()->route('home')->with($params);
-            return 'success';
+            return redirect()->route('home')->with($params);
 
-        } else { // false
+        } else {
             //Login Fail
             $params = ['Username/Password salah silahkan cek kembali'];
             return redirect()->back()->withErrors($params)->withInput($request->all());
         }
+    }
 
+    public function logout()
+    {
+        Auth::logout(); // menghapus session yang aktif
+//        $params = [
+//            'status'    => 'success',
+//            'message'   => 'Berhasil logout'
+//        ];
+        return redirect()->route('login');
     }
 }
