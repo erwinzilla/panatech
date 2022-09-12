@@ -72,14 +72,17 @@
                                         </div>
                                     </div>
                                     @if(session('errors'))
-                                        <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                                            <b>Ada masalah saat login:</b>
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            <ul class="mb-0 mt-2">
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="alert alert-danger alert-dismissible fade show mb-2 d-flex" role="alert">
+                                            @svg('heroicon-s-x-circle', 'icon opacity-75 mt-0')
+                                            <div class="ms-2">
+                                                <b>Ada masalah saat login:</b>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                <ul class="mb-0 mt-1">
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     @endif
                                     @if (Session::has('success'))

@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
 
-    {{--    Bootstrap 5.1 custom css--}}
+    {{-- Bootstrap 5.1 custom css--}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous|Poppins">
     <link href="{{ url('assets/css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 </head>
-<body class="bg">
+<body>
     <!-- Mini Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
@@ -47,36 +47,65 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbar-menu">
                 <ul class="navbar-nav nav-pills">
                     <li class="nav-item me-2">
-                        <a href="#" data-bs-toggle="dropdown" class="nav-link active" aria-expanded="false">Home</a>
+                        <a href="#" class="nav-link active" aria-expanded="false">Home</a>
                     </li>
                     <li class="nav-item me-2">
-                        <a href="#" data-bs-toggle="dropdown" class="nav-link" aria-expanded="false">Ticket</a>
+                        <a href="#" class="nav-link" aria-expanded="false">Ticket</a>
                     </li>
                     <li class="nav-item me-2">
-                        <a href="#" data-bs-toggle="dropdown" class="nav-link" aria-expanded="false">Customer</a>
+                        <a href="#" class="nav-link" aria-expanded="false">Customer</a>
                     </li>
                     <li class="nav-item me-2">
-                        <a href="#" data-bs-toggle="dropdown" class="nav-link" aria-expanded="false">Product</a>
+                        <a href="#" class="nav-link" aria-expanded="false">Product</a>
                     </li>
                     <li class="nav-item me-2">
-                        <a href="#" data-bs-toggle="dropdown" class="nav-link" aria-expanded="false">Sparepart</a>
+                        <a href="#" class="nav-link" aria-expanded="false">Sparepart</a>
+                    </li>
+                    <li class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('user') }}" class="dropdown-item">@svg('heroicon-s-users', 'icon') User</a></li>
+                            <li><a href="{{ url('user/privilege') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon') Privilege</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-{{--    Sidebar --}}
-    <section class="sidebar bg-white">
-        @yield('sidebar')
-    </section>
 
-{{--    Content--}}
-    <section class="content">
-        <div class="container-fluid">
-            @yield('content')
-        </div>
-    </section>
+    <div class="main-content">
+        {{--    Sidebar --}}
+        <section class="sidebar bg-white">
+            @yield('sidebar')
+        </section>
 
+        {{--    Content--}}
+        <section class="content">
+            <div class="container-fluid">
+                @yield('content')
+            </div>
+        </section>
+    </div>
+
+{{--    Place for script--}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
+
+    @if(session('status'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                //show alert
+                alert.fire({
+                    title: '{{ ucwords(session('status')) }}',
+                    text: '{{ session('message') }}',
+                    icon: '{{ session('status') }}',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+            })
+        </script>
+    @endif
 </body>
 </html>

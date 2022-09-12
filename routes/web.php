@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserPrivilegeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,4 +24,12 @@ Route::group(['middleware' => 'auth'], function () {
     // auth
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Trash
+    Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
+
+    // resources route
+    Route::resources([
+        'user/privilege' => UserPrivilegeController::class
+    ]);
 });

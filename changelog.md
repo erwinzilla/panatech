@@ -1,12 +1,17 @@
-**Change Log:**
+# **Change Log:**
 
-1.1.3 
+###### **IMPORTANT**
+- Run NPM Install
+- Run Migrate
+
+1.1.4 **CRUD User Privilege**
+- CRUD User Privilege
+
+1.1.3 **Optimized display template pagE**
 - Add main menu navbar
 - Add template dashboard
 - Add Heroicons on blade 
 - Add sidebar menu
-- **IMPORTANT**
-  - Run NPM Install
 
 1.1.2 **Add maintenance function and optimized login page**
 - Optimized login error

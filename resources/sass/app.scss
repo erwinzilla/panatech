@@ -32,6 +32,10 @@ $theme-colors: (
 );
 
 // Init
+$border-color: rgba($dark, 0.15);
+$radius: .5rem;
+$min-contrast-ratio: 1;
+
 // Font
 $font-family-base: "Poppins" ,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 $font-size-base: .9rem;
@@ -44,21 +48,30 @@ $body-bg: #f0f2f5;
 $body-color: #434A54;
 
 // Card
-$card-border-width: 0;
+$card-border-color: $border-color;
+$card-border-radius: $radius;
+$card-cap-padding-y: 1rem;
+$card-cap-bg: $white;
 
 // Form Control
 $form-feedback-icon-invalid: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$form-feedback-icon-invalid-color}" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>');
+$form-label-margin-bottom: .25rem;
 
 // Input
 $input-bg: #e9ecef;
-$input-font-size: .9rem;
+$input-font-size: .8rem;
 $input-focus-bg: $input-bg;
+$input-padding-x: .75rem;
+$input-padding-y: .5rem;
+
+// Button
+$btn-font-size: .8rem;
 
 // Navbar
 $navbar-padding-y: .25rem;
 
 // Nav
-$nav-pills-border-radius: .5rem;
+$nav-pills-border-radius: $radius;
 $nav-pills-link-active-bg: $primary;
 
 // Breadcrumb
@@ -66,9 +79,36 @@ $breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/
 $breadcrumb-font-size: 1rem;
 $breadcrumb-item-padding-x: 1rem;
 
+// Dropdown
+$dropdown-border-color: $border-color;
+$dropdown-font-size: .8rem;
+$dropdown-color: $body-color;
+$dropdown-link-color: $body-color;
+$dropdown-link-active-bg: $primary;
+
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
 @import "../../node_modules/bootstrap/scss/mixins";
+
+$custom-colors: (
+    'blue'      : $blue,
+    'purple'    : $purple,
+    'teal'      : $teal,
+    'orange'    : $orange,
+    'yellow'    : $yellow,
+    'green'     : $green,
+    'red'       : $red,
+    'gray'      : $gray-700,
+    'white'     : $white
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+$utilities-text-colors: map-loop($theme-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($theme-colors, rgba-css-var, "$key", "bg");
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+
 @import "../../node_modules/bootstrap/scss/root";
 
 // 6. Optionally include any other parts as needed
@@ -91,6 +131,7 @@ $breadcrumb-item-padding-x: 1rem;
 @import "../../node_modules/bootstrap/scss/dropdown";
 @import "../../node_modules/bootstrap/scss/badge";
 @import "../../node_modules/bootstrap/scss/breadcrumb";
+@import "../../node_modules/bootstrap/scss/tables";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "../../node_modules/bootstrap/scss/utilities/api";
@@ -104,6 +145,9 @@ $breadcrumb-item-padding-x: 1rem;
 }
 .border-dashed {
     border-style: dashed !important;
+}
+.border-dashed-bottom {
+    border-bottom: $border-width dashed $border-color !important;
 }
 .content {
     padding-left: 17rem;
@@ -167,16 +211,18 @@ $breadcrumb-item-padding-x: 1rem;
         }
     }
 }
+.main-content {
+    position: relative;
+}
 .navbar {
     border-bottom: $border-width $border-style rgba($dark, .1);
     color: rgba($dark, .75);
     background-color: $white;
-    .nav-link {
-        img {
-            width: 44px;
-            height: 44px;
-            object-fit: cover;
-            object-position: center;
+    .nav-item {
+        .dropdown-menu {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin-top: .3rem;
         }
     }
 }
@@ -188,7 +234,7 @@ $breadcrumb-item-padding-x: 1rem;
 .sidebar {
     position: absolute;
     width: 17rem;
-    height: 100vh;
+    height: 100%;
     padding: 1rem;
     border-right: $border-width $border-style $border-color;
     .nav {
@@ -203,4 +249,24 @@ $breadcrumb-item-padding-x: 1rem;
             }
         }
     }
+}
+.table {
+    tbody {
+        tr {
+            &:last-child {
+                td {
+                    border-bottom: 0;
+                    &:first-child {
+                        border-bottom-left-radius: $radius;
+                    }
+                    &:last-child {
+                        border-bottom-right-radius: $radius;
+                    }
+                }
+            }
+        }
+    }
+}
+.w-2-slot {
+    width: 7rem;
 }
