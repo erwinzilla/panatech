@@ -47,6 +47,6 @@ class User extends Authenticatable
 
     public function privileges()
     {
-        return $this->belongsTo('App\Models\UserPrivilege', 'privilege');
+        return $this->belongsTo('App\Models\UserPrivilege', 'privilege')->withTrashed();
     }
 }

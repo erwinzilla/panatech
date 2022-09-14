@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Trash
     Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
+    Route::get('user/privilege/restore/{id?}', [UserPrivilegeController::class, 'restore']);
+    Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
 
     // resources route
     Route::resources([

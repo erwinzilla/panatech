@@ -4,14 +4,7 @@
 
 @section('sidebar')
     <div class="bg-white">
-        <div class="d-flex fs-6 mb-3">
-            <img src="https://erwinzilla.com/v2/uploads/images/users/1642948549.jpg" class="avatar rounded-circle" alt="Avatar">
-            <div class="mx-2">
-                <b class="text-black">{{ ucwords(Auth::user()->name) }}</b><br>
-                <span class="badge bg-primary bg-opacity-25 text-primary">Technician</span>
-            </div>
-            <span class="ms-auto align-self-center">@svg('heroicon-s-adjustments-horizontal', 'icon')</span>
-        </div>
+        @include('sidebar-profile')
         <ul class="nav nav-pills flex-column" id="sidebar">
             <li class="nav-item mb-1">
                 <a href="{{ url('user/privilege') }}" class="nav-link" aria-current="page">@svg('heroicon-o-credit-card', 'icon') Privilege</a>

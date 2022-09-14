@@ -255,8 +255,8 @@ class UserPrivilegeController extends Controller
 
     public function trash()
     {
-        //tidak bisa diakses bila hak akses kurang dari 1::onlysee
-        if( Auth::user()->privileges->users  < 1 ) {
+        //tidak bisa diakses bila hak akses kurang dari 3::all access
+        if( Auth::user()->privileges->users < 3 ) {
             $params = [
                 'status'    => 'warning',
                 'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
@@ -271,5 +271,73 @@ class UserPrivilegeController extends Controller
         ];
 
         return view('user.privilege.data', $params);
+    }
+
+    public function restore($id = null)
+    {
+        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
+        if( Auth::user()->privileges->users < 3 ) {
+            $params = [
+                'status'    => 'warning',
+                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
+            ];
+            return redirect('home')->with($params);
+        }
+
+        if ($id != null){
+            $hasil = UserPrivilege::onlyTrashed()
+                ->where('id', $id)
+                ->restore();
+        } else {
+            $hasil = UserPrivilege::onlyTrashed()->restore();
+        }
+
+        if($hasil){
+            $params = [
+                'status'    => 'success',
+                'message'   => 'Sukses mengembalikan user privilege'
+            ];
+        } else {
+            $params = [
+                'status'    => 'error',
+                'message'   => 'Gagal mengembalikan user privilege'
+            ];
+        }
+//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
+        return redirect('user/privilege/trash')->with($params);
+    }
+
+    public function delete($id = null)
+    {
+        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
+        if( Auth::user()->privileges->users < 3 ) {
+            $params = [
+                'status'    => 'warning',
+                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
+            ];
+            return redirect('home')->with($params);
+        }
+
+        if ($id != null){
+            $hasil = UserPrivilege::onlyTrashed()
+                ->where('id', $id)
+                ->forceDelete();
+        } else {
+            $hasil = UserPrivilege::onlyTrashed()->forceDelete();
+        }
+
+        if($hasil){
+            $params = [
+                'status'    => 'success',
+                'message'   => 'Sukses menghapus permanen user privilege'
+            ];
+        } else {
+            $params = [
+                'status'    => 'error',
+                'message'   => 'Gagal menghapus permanen user privilege'
+            ];
+        }
+//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
+        return redirect('user/privilege/trash')->with($params);
     }
 }

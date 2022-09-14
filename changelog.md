@@ -3,6 +3,12 @@
 ###### **IMPORTANT**
 - Run NPM Install
 - Run Migrate
+- Run Composer
+
+1.1.5 **Add Completely User Privilege Function**
+- Completely user privilege function
+- Add privilege user
+- Fix border login
 
 1.1.4 **CRUD User Privilege**
 - CRUD User Privilege

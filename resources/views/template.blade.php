@@ -61,13 +61,16 @@
                     <li class="nav-item me-2">
                         <a href="#" class="nav-link" aria-expanded="false">Sparepart</a>
                     </li>
-                    <li class="nav-item dropdown me-2">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('user') }}" class="dropdown-item">@svg('heroicon-s-users', 'icon') User</a></li>
-                            <li><a href="{{ url('user/privilege') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon') Privilege</a></li>
-                        </ul>
-                    </li>
+{{--                    Jika only see maka munculkan tombol--}}
+                    @if(Auth::user()->privileges->users > 0)
+                        <li class="nav-item dropdown me-2">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">User / Employee</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('user') }}" class="dropdown-item">@svg('heroicon-s-users', 'icon') User</a></li>
+                                <li><a href="{{ url('user/privilege') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon') Privilege</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

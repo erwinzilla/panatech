@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="row mt-md-4">
             <div class="col-md-4">
-                <div class="card p-4 bg-transparent">
+                <div class="card p-4 bg-transparent border-0">
                     <div class="card-body">
                         @if(env('APP_MAINTENANCE'))
                             <h1 class="fw-bold text-black">Sorry<b class="text-secondary">.</b></h1>

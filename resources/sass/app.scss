@@ -267,6 +267,9 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
         }
     }
 }
+.w-1-slot {
+    width: 3.5rem;
+}
 .w-2-slot {
     width: 7rem;
 }
