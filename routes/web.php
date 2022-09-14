@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserPrivilegeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,13 +26,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Trash
+    // User Privilege
     Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
     Route::get('user/privilege/restore/{id?}', [UserPrivilegeController::class, 'restore']);
     Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
 
+    // User
+    Route::get('user/trash', [UserController::class, 'trash']);
+    Route::get('user/restore/{id?}', [UserController::class, 'restore']);
+    Route::get('user/delete/{id?}', [UserController::class, 'delete']);
+
     // resources route
     Route::resources([
-        'user/privilege' => UserPrivilegeController::class
+        'user/privilege' => UserPrivilegeController::class,
+        'user' => UserController::class
     ]);
 });

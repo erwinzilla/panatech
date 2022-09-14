@@ -4,7 +4,7 @@
 
 @section('sidebar')
     <div class="bg-white">
-        @include('sidebar-profile')
+        @include('sidebar.profile')
         <ul class="nav nav-pills flex-column">
             <li class="nav-item mb-1">
                 <a class="nav-link active" aria-current="page" href="#">@svg('heroicon-o-home', 'icon') Home</a>

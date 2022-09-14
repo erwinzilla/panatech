@@ -5,6 +5,10 @@
 - Run Migrate
 - Run Composer
 
+1.2.0 **On Progress User Function & Re-Structure Blade View**
+- Add user edit page & display data
+- Change structure blade for layout and component
+
 1.1.5 **Add Completely User Privilege Function**
 - Completely user privilege function
 - Add privilege user
@@ -32,7 +36,5 @@
 - Add user table on database
 - Add function Auth
 - Install Boostrap 5.2
-- **IMPORTANT**
--- Run Migrate & NPM Install
   
 1.0.0 **Install Fresh Laravel Project**

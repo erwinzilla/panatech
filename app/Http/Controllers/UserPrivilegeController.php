@@ -28,10 +28,11 @@ class UserPrivilegeController extends Controller
         // penguraian data
         $params = [
             'data'  => UserPrivilege::all(),
-            'type'  => 'data'
+            'type'  => 'data',
+            'title' => 'User Privilege'
         ];
 
-        return view('user.privilege.data', $params);
+        return view('layout.user.privilege.data', $params);
     }
 
     /**
@@ -66,10 +67,11 @@ class UserPrivilegeController extends Controller
         // penguraian data
         $params = [
             'data'  => $data,
-            'type'  => 'create'
+            'type'  => 'create',
+            'title' => 'Create User Privilege'
         ];
 
-        return view('user.privilege.input', $params);
+        return view('layout.user.privilege.input', $params);
     }
 
     /**
@@ -156,10 +158,11 @@ class UserPrivilegeController extends Controller
         // penguraian data
         $params = [
             'data'  => $userPrivilege->find($id),
-            'type'  => 'edit'
+            'type'  => 'edit',
+            'title' => 'Edit Data User Privilege'
         ];
 
-        return view('user.privilege.input', $params);
+        return view('layout.user.privilege.input', $params);
     }
 
     /**
@@ -268,9 +271,10 @@ class UserPrivilegeController extends Controller
         $params = [
             'data'  => UserPrivilege::onlyTrashed()->get(),
             'type'  => 'trash',
+            'title' => 'Trash'
         ];
 
-        return view('user.privilege.data', $params);
+        return view('layout.user.privilege.data', $params);
     }
 
     public function restore($id = null)
