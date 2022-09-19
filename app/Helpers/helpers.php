@@ -32,3 +32,21 @@ if (! function_exists('privilegeLevel')) {
         }
     }
 }
+
+/**
+ * Mari membuat helper function untuk memberikan hak ases dan langsung mendirect penggunanya
+ *
+ * @return response()
+ */
+if (! function_exists('getUserLevel')) {
+    function getUserLevel($type)
+    {
+        // Level
+        // 0:Forbidden, 1:Only See, 2:Can CRUD, 3:All Access
+        if (isset(Auth::user()->privileges->$type)) {
+            return Auth::user()->privileges->$type;
+        } else {
+            return false;
+        }
+    }
+}

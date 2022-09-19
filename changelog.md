@@ -5,10 +5,18 @@
 - Run Migrate
 - Run Composer
 
+1.2.2 **Add Completely User Function**
+- Completely User Function
+- Add Constants Privilege Level
+- Add function getUserLevel()
+- Replace all code for privilege
+- Fix file css
+
 1.2.1 **Privilege Bypass Simplify**
 - Fix sidebar function
 - Add tooltips
 - Simplify Privilege Bypass
+- Add Favicon
 
 1.2.0 **On Progress User Function & Re-Structure Blade View**
 - Add user edit page & display data

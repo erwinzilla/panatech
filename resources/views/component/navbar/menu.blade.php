@@ -9,20 +9,8 @@
                 <li class="nav-item me-2">
                     <a href="{{ url('home') }}" class="nav-link {{ Request::segment(1) == 'home' ? 'active' : '' }}" aria-expanded="false">Home</a>
                 </li>
-                <li class="nav-item me-2">
-                    <a href="#" class="nav-link" aria-expanded="false">Ticket</a>
-                </li>
-                <li class="nav-item me-2">
-                    <a href="#" class="nav-link" aria-expanded="false">Customer</a>
-                </li>
-                <li class="nav-item me-2">
-                    <a href="#" class="nav-link" aria-expanded="false">Product</a>
-                </li>
-                <li class="nav-item me-2">
-                    <a href="#" class="nav-link" aria-expanded="false">Sparepart</a>
-                </li>
                 {{--                    Jika only see maka munculkan tombol--}}
-                @if(Auth::user()->privileges->users > 0)
+                @if(getUserLevel('users') > 0)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'user' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">User / Employee</a>
                         <ul class="dropdown-menu">

@@ -26,7 +26,7 @@
                         <small class="text-muted">Daftar list pengguna atau pekerja</small>
                     </div>
                     {{--                Jika can CRUD maka munculkan tombol--}}
-                    @if(Auth::user()->privileges->users > 1)
+                    @if(getUserLevel('users') >= CAN_CRUD)
                         <div class="align-self-center ms-auto">
                             @if($type == 'data')
                                 <a href="{{ url('user/create') }}" class="btn btn-primary">
@@ -57,7 +57,7 @@
                             <th>Phone</th>
                             <th>Privilege</th>
                             {{--                                Jika can CRUD maka munculkan tombol--}}
-                            @if(Auth::user()->privileges->users > 1)
+                            @if(getUserLevel('users') >= CAN_CRUD)
                                 <th class="pe-3 text-center">Action</th>
                             @endif
                         </tr>
@@ -85,7 +85,7 @@
                                         @endif
                                     </td>
                                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                                    @if(Auth::user()->privileges->users > 1)
+                                    @if(getUserLevel('users') >= CAN_CRUD)
                                         <td class="pe-3 w-2-slot">
                                             <div class="d-flex">
                                                 @include('form.button.crud', ['url' => 'user/', 'type' => $type, 'id' => $row->id])
@@ -98,7 +98,7 @@
                             <tr>
                                 @php
                                     $colspan = 8;
-                                    if (Auth::user()->privileges->users > 1) {
+                                    if (getUserLevel('users') >= CAN_CRUD) {
                                         $colspan += 1; // ada bagian untuk action button
                                     }
                                 @endphp

@@ -32,6 +32,8 @@ $theme-colors: (
 );
 
 // Init
+$content-bg: #f0f2f5;
+
 $border-color: rgba($dark, 0.15);
 $radius: .5rem;
 $min-contrast-ratio: 1;
@@ -44,7 +46,7 @@ $font-size-base: .9rem;
 $container-padding-x: 3rem;
 
 // Body
-$body-bg: #f0f2f5;
+$body-bg: #ffffff;
 $body-color: #434A54;
 
 // Card
@@ -159,6 +161,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 .content {
     padding-left: 17rem;
     padding-top: 1rem;
+    background-color: #f0f2f5;
 }
 .bg-login {
     background: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 2355, 255, 1)), url('/assets/images/backgrounds/bg-login-min.jpg');
@@ -314,7 +317,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
                 .nav-link {
                     color: $navbar-light-color;
                     &.active {
-                        background-color: $body-bg;
+                        background-color: $content-bg;
                     }
                 }
             }

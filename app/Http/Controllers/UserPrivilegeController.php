@@ -16,14 +16,8 @@ class UserPrivilegeController extends Controller
      */
     public function index()
     {
-        //tidak bisa diakses bila hak akses kurang dari 1::onlysee
-        if( Auth::user()->privileges->users  < 1 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ONLY_SEE);
 
         // penguraian data
         $params = [
@@ -42,14 +36,8 @@ class UserPrivilegeController extends Controller
      */
     public function create()
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         $data = [
             'id'        => null,
@@ -82,14 +70,8 @@ class UserPrivilegeController extends Controller
      */
     public function store(Request $request)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // validasi
         $rules = [
@@ -146,14 +128,8 @@ class UserPrivilegeController extends Controller
      */
     public function edit(UserPrivilege $userPrivilege, $id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // penguraian data
         $params = [
@@ -174,14 +150,8 @@ class UserPrivilegeController extends Controller
      */
     public function update(Request $request, UserPrivilege $userPrivilege, $id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // validasi
         $rules = [
@@ -228,14 +198,8 @@ class UserPrivilegeController extends Controller
      */
     public function destroy(UserPrivilege $userPrivilege, $id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         $hasil = UserPrivilege::find($id);
         $hasil->delete();
@@ -258,14 +222,8 @@ class UserPrivilegeController extends Controller
 
     public function trash()
     {
-        //tidak bisa diakses bila hak akses kurang dari 3::all access
-        if( Auth::user()->privileges->users < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         // penguraian data
         $params = [
@@ -279,14 +237,8 @@ class UserPrivilegeController extends Controller
 
     public function restore($id = null)
     {
-        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
-        if( Auth::user()->privileges->users < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         if ($id != null){
             $hasil = UserPrivilege::onlyTrashed()
@@ -313,14 +265,8 @@ class UserPrivilegeController extends Controller
 
     public function delete($id = null)
     {
-        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
-        if( Auth::user()->privileges->users < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         if ($id != null){
             $hasil = UserPrivilege::onlyTrashed()

@@ -26,7 +26,7 @@
                         <small class="text-muted">Daftar list hak ases pengguna</small>
                     </div>
 {{--                Jika can CRUD maka munculkan tombol--}}
-                    @if(Auth::user()->privileges->users > 1)
+                    @if(getUserLevel('users') >= CAN_CRUD)
                         <div class="align-self-center ms-auto">
                             @if($type == 'data')
                                 <a href="{{ url('user/privilege/create') }}" class="btn btn-primary">
@@ -52,7 +52,7 @@
                                 <th>Name</th>
                                 <th>Color</th>
 {{--                                Jika can CRUD maka munculkan tombol--}}
-                                @if(Auth::user()->privileges->users > 1)
+                                @if(getUserLevel('users') >= CAN_CRUD)
                                     <th class="pe-3 text-center">Action</th>
                                 @endif
                             </tr>
@@ -71,7 +71,7 @@
                                             @endif
                                         </td>
     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                                        @if(Auth::user()->privileges->users > 1)
+                                        @if(getUserLevel('users') >= CAN_CRUD)
                                             <td class="pe-3 w-2-slot">
                                                 <div class="d-flex justify-content-center">
                                                     @include('form.button.crud', ['url' => 'user/privilege/', 'type' => $type, 'id' => $row->id])
@@ -84,7 +84,7 @@
                                 <tr>
                                     @php
                                     $colspan = 3;
-                                    if (Auth::user()->privileges->users > 1) {
+                                    if (getUserLevel('users') >= CAN_CRUD) {
                                         $colspan += 1; // ada baguian untuk action button
                                     }
                                     @endphp

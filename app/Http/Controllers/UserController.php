@@ -21,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         // cek privilege
-        privilegeLevel('users', 1);
+        privilegeLevel('users', ONLY_SEE);
 
         // penguraian data
         $params = [
@@ -40,14 +40,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         $data = [
             'name'              => null,
@@ -82,14 +76,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // validasi
         $rules = [
@@ -183,7 +171,7 @@ class UserController extends Controller
             ->get()->first();
 
         // jika profile bukan dari sendiri
-        if( $data->id != Auth::user()->id && Auth::user()->privileges->users  < 2 ) {
+        if( $data->id != Auth::user()->id && getUserLevel('users')  < CAN_CRUD ) {
             $params = [
                 'status'    => 'warning',
                 'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
@@ -209,14 +197,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // penguraian data
         $params = [
@@ -238,14 +220,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         // validasi
         $rules = [
@@ -343,14 +319,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 2 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', CAN_CRUD);
 
         $hasil = User::find($id);
         $hasil->delete();
@@ -373,14 +343,8 @@ class UserController extends Controller
 
     public function trash(Request $request)
     {
-        //tidak bisa diakses bila hak akses kurang dari 2::canedit
-        if( Auth::user()->privileges->users  < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('home')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         // penguraian data
         $params = [
@@ -394,14 +358,8 @@ class UserController extends Controller
 
     public function restore($id = null)
     {
-        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
-        if( PrivilegeHelp::getLevel(Auth::user()->privilege, 'a_users') < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('dashboard')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -422,20 +380,14 @@ class UserController extends Controller
                 'message'   => 'Gagal mengembalikan user'
             ];
         }
-        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
+//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
         return redirect('user/trash')->with($params);
     }
 
     public function delete($id = null)
     {
-        //tidak bisa diakses bila hak akses kurang dari 3::allaccess
-        if( PrivilegeHelp::getLevel(Auth::user()->privilege, 'a_users') < 3 ) {
-            $params = [
-                'status'    => 'warning',
-                'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
-            ];
-            return redirect('dashboard')->with($params);
-        }
+        // cek privilege
+        privilegeLevel('users', ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -456,7 +408,7 @@ class UserController extends Controller
                 'message'   => 'Gagal menghapus permanen user'
             ];
         }
-        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
+//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
         return redirect('user/trash')->with($params);
     }
 }

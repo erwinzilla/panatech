@@ -8,7 +8,7 @@
             <a href="{{ $type == 'create' ? '#main' : url('user/privilege/create') }}" class="nav-link">@svg('heroicon-o-plus', 'icon') Create new</a>
         </li>
         {{--            Jika all access maka munculkan element--}}
-        @if(Auth::user()->privileges->users > 2)
+        @if(getUserLevel('users') >= ALL_ACCESS)
             <li class="nav-item">
                 <a href="{{ $type == 'trash' ? '#main' : url('user/privilege/trash') }}" class="nav-link text-danger">@svg('heroicon-o-trash', 'icon') Trash</a>
             </li>
