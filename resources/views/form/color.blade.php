@@ -3,6 +3,9 @@
     <input type="radio" class="btn-check" name="color" id="option-color-primary" value="primary" autocomplete="off" {{ old('color', $data->color) == 'primary' ? 'checked' : ''}}>
     <label class="btn btn-outline-primary rounded-5" for="option-color-primary">Primary</label>
 
+    <input type="radio" class="btn-check" name="color" id="option-color-secondary" value="secondary" autocomplete="off" {{ old('color', $data->color) == 'secondary' ? 'checked' : ''}}>
+    <label class="btn btn-outline-secondary rounded-5" for="option-color-secondary">Secondary</label>
+
     <input type="radio" class="btn-check" name="color" id="option-color-purple" value="purple" autocomplete="off" {{ old('color', $data->color) == 'purple' ? 'checked' : ''}}>
     <label class="btn btn-outline-purple rounded-5" for="option-color-purple">Purple</label>
 
@@ -23,4 +26,7 @@
 
     <input type="radio" class="btn-check" name="color" id="option-color-red" value="red" autocomplete="off" {{ old('color', $data->color) == 'red' ? 'checked' : ''}}>
     <label class="btn btn-outline-red rounded-5" for="option-color-red">Red</label>
+
+    <input type="radio" class="btn-check" name="color" id="option-color-gray" value="gray" autocomplete="off" {{ old('color', $data->color) == 'gray' ? 'checked' : ''}}>
+    <label class="btn btn-outline-gray rounded-5" for="option-color-gray">Gray</label>
 </div>

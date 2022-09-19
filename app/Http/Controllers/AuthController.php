@@ -14,7 +14,11 @@ class AuthController extends Controller
             //Login Success
             return redirect()->route('home');
         }
-        return view('auth.login');
+
+        $params = [
+            'title' => 'Login'
+        ];
+        return view('auth.login', $params);
     }
 
     public function login(Request $request)

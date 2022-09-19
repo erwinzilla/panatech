@@ -1,4 +1,4 @@
-@extends('template')
+@extends('layout.template')
 
 @section('title', ucwords($title))
 
@@ -7,13 +7,13 @@
 @endsection
 
 @section('content')
-    @include('breadcrumb')
+    @include('component.breadcrumb')
     <h1 class="fw-bold">{{ ucwords($title) }}</h1>
 
 {{--    Body--}}
-    <div class="row mt-3" data-bs-spy="scroll" data-bs-target="#sidebar" data-bs-smooth-scroll="true">
+    <div class="row mt-3">
         <div class="col-md-12">
-            @include('alert')
+            @include('component.alert')
             <div id="main" class="card">
                 <div class="card-header d-flex justify-content-start w-100">
                     @if($type == 'trash')
@@ -73,23 +73,8 @@
     {{--                                    Jika can CRUD maka munculkan tombol--}}
                                         @if(Auth::user()->privileges->users > 1)
                                             <td class="pe-3 w-2-slot">
-                                                <div class="d-flex">
-                                                    @if($type == 'data')
-                                                        <a href="{{ url('user/privilege/'.$row->id.'/edit') }}" class="btn btn-warning text-white me-2">@svg('heroicon-s-pencil-square', 'icon-sm')</a>
-                                                        <form id="delete-{{ $row->id }}" method="post" action="{{ url('user/privilege/'.$row->id) }}" onsubmit="confirm_delete({{ $row->id }});return false;">
-                                                            @method('delete')
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-danger text-white">@svg('heroicon-s-trash', 'icon-sm')</button>
-                                                        </form>
-                                                    @endif
-                                                    @if($type == 'trash')
-                                                        <a href="{{ url('user/privilege/restore/'.$row->id) }}" class="btn btn-outline-info me-2 restore-action-link">
-                                                            @svg('heroicon-s-arrow-up-on-square', 'icon')
-                                                        </a>
-                                                        <a id="delete-link-{{ $row->id }}" href="{{ url('user/privilege/delete/'.$row->id) }}" class="btn btn-outline-danger delete-action-link" onclick="confirm_delete_link({{ $row->id }}); return false;">
-                                                            @svg('heroicon-s-trash', 'icon')
-                                                        </a>
-                                                    @endif
+                                                <div class="d-flex justify-content-center">
+                                                    @include('form.button.crud', ['url' => 'user/privilege/', 'type' => $type, 'id' => $row->id])
                                                 </div>
                                             </td>
                                         @endif

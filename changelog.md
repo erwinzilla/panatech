@@ -5,6 +5,11 @@
 - Run Migrate
 - Run Composer
 
+1.2.1 **Privilege Bypass Simplify**
+- Fix sidebar function
+- Add tooltips
+- Simplify Privilege Bypass
+
 1.2.0 **On Progress User Function & Re-Structure Blade View**
 - Add user edit page & display data
 - Change structure blade for layout and component

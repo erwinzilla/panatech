@@ -1,4 +1,6 @@
 // const base_url = 'https://erwinzilla.com/v2/';
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 // setting alert
 let alert = Swal.mixin({

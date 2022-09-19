@@ -8,7 +8,9 @@
             <li class="breadcrumb-item"><a href="{{ url('home') }}" class="text-decoration-none">Home</a></li>
         @endif
         @if(Request::segment(2))
-            <li class="breadcrumb-item"><a href="{{ url(Request::segment(1).'/'.Request::segment(2)) }}" class="text-decoration-none">{{ ucwords(Request::segment(2)) }}</a></li>
+            @if(!is_numeric(Request::segment(2)))
+                <li class="breadcrumb-item"><a href="{{ url(Request::segment(1).'/'.Request::segment(2)) }}" class="text-decoration-none">{{ ucwords(Request::segment(2)) }}</a></li>
+            @endif
         @endif
         @if(Request::segment(3))
 {{--            Filter ID for edit data--}}

@@ -1,4 +1,4 @@
-@extends('template')
+@extends('layout.template')
 
 @section('title', ucwords($title))
 
@@ -7,11 +7,11 @@
 @endsection
 
 @section('content')
-    @include('breadcrumb')
+    @include('component.breadcrumb')
     <h1 class="fw-bold">{{ ucwords($title) }}</h1>
 
     {{--    Body--}}
-    <div class="row mt-3" data-bs-spy="scroll" data-bs-target="#sidebar" data-bs-smooth-scroll="true">
+    <div class="row mt-3">
         <div class="col-md-3">
             <h5 class="text-black mb-0">Main Menu</h5>
             <small class="text-muted">Data ini yang nanti akan digunakan saat memberikan akses kepada pengguna</small>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
-                        @include('form.button')
+                        @include('form.button.submit')
                     </div>
                 </div>
                 </form>
