@@ -5,6 +5,11 @@
 - Run Migrate
 - Run Composer
 
+1.4.0 **Completely Branch Coordinator Function & Datatables For Privilege**
+- Add branch coordinator database
+- Add branch coordinator controller and model
+- Add datatables for privilige (experimental)
+
 1.3.0 **Add Completely Branch Function**
 - Add branches database
 - Add branch controller and model

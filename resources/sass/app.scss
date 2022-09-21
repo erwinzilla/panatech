@@ -67,6 +67,13 @@ $input-focus-bg: $input-bg;
 $input-padding-x: .75rem;
 $input-padding-y: .5rem;
 
+// select
+$form-select-bg: $input-bg;
+$form-select-font-size: $input-font-size;
+$form-select-padding-y: $input-padding-y;
+$form-select-padding-x: $input-padding-x;
+$form-select-border-color: $input-border-color;
+
 // Button
 $btn-font-size: .8rem;
 
@@ -88,6 +95,12 @@ $dropdown-font-size: .8rem;
 $dropdown-color: $navbar-light-color;
 $dropdown-link-color: $navbar-light-color;
 $dropdown-link-active-bg: $primary;
+
+// Modal
+$modal-content-border-color: $border-color;
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
+$modal-footer-bg: $content-bg;
 
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
@@ -136,6 +149,9 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 @import "../../node_modules/bootstrap/scss/breadcrumb";
 @import "../../node_modules/bootstrap/scss/tables";
 @import "../../node_modules/bootstrap/scss/tooltip";
+@import "../../node_modules/bootstrap/scss/modal";
+@import "../../node_modules/bootstrap/scss/pagination";
+@import "../../node_modules/bootstrap/scss/spinners";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "../../node_modules/bootstrap/scss/utilities/api";
@@ -325,16 +341,18 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     }
 }
 .table {
-    tbody {
-        tr {
-            &:last-child {
-                td {
-                    border-bottom: 0;
-                    &:first-child {
-                        border-bottom-left-radius: $radius;
-                    }
-                    &:last-child {
-                        border-bottom-right-radius: $radius;
+    &:not(.dt-table) {
+        tbody {
+            tr {
+                &:last-child {
+                    td {
+                        border-bottom: 0;
+                        &:first-child {
+                            border-bottom-left-radius: $radius;
+                        }
+                        &:last-child {
+                            border-bottom-right-radius: $radius;
+                        }
                     }
                 }
             }

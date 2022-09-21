@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Hash;
 use File;
-use App\Helpers;
 
 class UserController extends Controller
 {
+    const blade_view = 'layout.user';
+    const url_redirect ='user';
+    const name = 'user / employee';
+    const privilege = 'users';
     /**
      * Display a listing of the resource.
      *
@@ -21,16 +24,16 @@ class UserController extends Controller
     public function index()
     {
         // cek privilege
-        privilegeLevel('users', ONLY_SEE);
+        privilegeLevel(self::privilege, ONLY_SEE);
 
         // penguraian data
         $params = [
             'data'  => User::all(),
             'type'  => 'data',
-            'title' => 'User / Employee'
+            'title' => self::name
         ];
 
-        return view('layout.user.data', $params);
+        return view(self::blade_view.'.data', $params);
     }
 
     /**
@@ -41,7 +44,7 @@ class UserController extends Controller
     public function create()
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel(self::privilege, CAN_CRUD);
 
         $data = [
             'name'              => null,
@@ -62,10 +65,10 @@ class UserController extends Controller
             'data'  => $data,
             'data2' => UserPrivilege::all(),
             'type'  => 'create',
-            'title' => 'Create User / Employee'
+            'title' => 'Create '.self::name
         ];
 
-        return view('layout.user.input', $params);
+        return view(self::blade_view.'.input', $params);
     }
 
     /**
@@ -77,7 +80,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel(self::privilege, CAN_CRUD);
 
         // validasi
         $rules = [
@@ -141,20 +144,10 @@ class UserController extends Controller
 
         // User::create($request->all());
 
-        if($hasil){
-            $params = [
-                'status'    => 'success',
-                'message'   => 'Sukses menambahkan user / employee'
-            ];
-        } else {
-            $params = [
-                'status'    => 'error',
-                'message'   => 'Gagal menambahkan user / employee'
-            ];
-        }
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::name);
 
-//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $params['status'] == 'success' ? $user->id : null);
-        return redirect('user')->with($params);
+        return redirect(self::url_redirect)->with($params);
     }
 
     /**
@@ -171,7 +164,7 @@ class UserController extends Controller
             ->get()->first();
 
         // jika profile bukan dari sendiri
-        if( $data->id != Auth::user()->id && getUserLevel('users')  < CAN_CRUD ) {
+        if( $data->id != Auth::user()->id && getUserLevel(self::privilege)  < CAN_CRUD ) {
             $params = [
                 'status'    => 'warning',
                 'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
@@ -186,7 +179,7 @@ class UserController extends Controller
             'title' => ucwords($data->name)
         ];
 
-        return view('layout.user.profile', $params);
+        return view(self::blade_view.'.profile', $params);
     }
 
     /**
@@ -198,17 +191,17 @@ class UserController extends Controller
     public function edit($id)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel(self::privilege, CAN_CRUD);
 
         // penguraian data
         $params = [
             'data'  => User::find($id),
             'data2' => UserPrivilege::all(),
             'type'  => 'edit',
-            'title' => 'Edit User / Employee'
+            'title' => 'Edit '.self::name
         ];
 
-        return view('layout.user.input', $params);
+        return view(self::blade_view.'.input', $params);
     }
 
     /**
@@ -221,7 +214,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel(self::privilege, CAN_CRUD);
 
         // validasi
         $rules = [
@@ -296,19 +289,10 @@ class UserController extends Controller
                 ]);
         }
 
-        if($hasil){
-            $params = [
-                'status'    => 'success',
-                'message'   => 'Sukses mengubah user'
-            ];
-        } else {
-            $params = [
-                'status'    => 'error',
-                'message'   => 'Gagal mengubah user'
-            ];
-        }
-//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user')->with($params);
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::name);
+
+        return redirect(self::url_redirect)->with($params);
     }
 
     /**
@@ -320,46 +304,36 @@ class UserController extends Controller
     public function destroy($id)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel(self::privilege, CAN_CRUD);
 
         $hasil = User::find($id);
         $hasil->delete();
 
-        if($hasil){
-            $params = [
-                'status'    => 'success',
-                'message'   => 'Sukses menghapus user'
-            ];
-        } else {
-            $params = [
-                'status'    => 'error',
-                'message'   => 'Gagal menghapus user'
-            ];
-        }
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'delete', self::name);
 
-//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user')->with($params);
+        return redirect(self::url_redirect)->with($params);
     }
 
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel(self::privilege, ALL_ACCESS);
 
         // penguraian data
         $params = [
             'data'  => User::onlyTrashed()->get(),
             'type'  => 'trash',
-            'title' => 'Deleted User / Employee'
+            'title' => 'Deleted '.self::name
         ];
 
-        return view('layout.user.data', $params);
+        return view(self::blade_view.'.data', $params);
     }
 
     public function restore($id = null)
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel(self::privilege, ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -369,25 +343,16 @@ class UserController extends Controller
             $hasil = User::onlyTrashed()->restore();
         }
 
-        if($hasil){
-            $params = [
-                'status'    => 'success',
-                'message'   => 'Sukses mengembalikan user'
-            ];
-        } else {
-            $params = [
-                'status'    => 'error',
-                'message'   => 'Gagal mengembalikan user'
-            ];
-        }
-//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user/trash')->with($params);
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::name);
+
+        return redirect(self::url_redirect.'/trash')->with($params);
     }
 
     public function delete($id = null)
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel(self::privilege, ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -397,18 +362,9 @@ class UserController extends Controller
             $hasil = User::onlyTrashed()->forceDelete();
         }
 
-        if($hasil){
-            $params = [
-                'status'    => 'success',
-                'message'   => 'Sukses menghapus permanen user'
-            ];
-        } else {
-            $params = [
-                'status'    => 'error',
-                'message'   => 'Gagal menghapus permanen user'
-            ];
-        }
-//        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user/trash')->with($params);
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::name);
+
+        return redirect(self::url_redirect.'/trash')->with($params);
     }
 }

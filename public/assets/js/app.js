@@ -79,6 +79,26 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
+    // table data
+    let table_data = new JSTable('#table-data', {
+        classes: {
+            dropdown: "align-self-center",
+            input: "form-control",
+            search: "align-self-center",
+            selector: "form-select",
+            pagination: "pagination",
+        },
+        labels: {
+            perPage: "<div class='d-flex justify-content-start align-items-center'>{select} <span class='ms-2 w-100'>entries per page</span></div>",
+            loading: "<div class='spinner-border spinner-border-sm text-primary' role='status' aria-hidden='true'></div><span class='ms-2'>Loading...</span>",
+        },
+        // serverSide: false,
+        // ajax: '/user/privilege/table',
+        // ajaxParams: {
+        //     type : $('#table-data').dataset.type
+        // }
+    });
 });
 
 function $(query) {
@@ -127,4 +147,28 @@ function confirm_delete_link(id) {
             window.location = el.href;
         }
     });
+}
+
+function choose(name, value, opt_name = null, opt_privilege = null, opt_privilege_color = null) {
+    let input = $('input[name="'+name+'"]');
+    if (input && value) {
+        input.value = value
+    }
+
+    // update nama user
+    if (opt_name) {
+        let input_name = $('#name');
+        if (input_name) {
+            input_name.innerText = opt_name;
+        }
+    }
+
+    // update privilege badge
+    if (opt_privilege && opt_privilege_color) {
+        let input_privilege = $('#privilege');
+        if (input_privilege) {
+            input_privilege.className = "badge bg-"+opt_privilege_color+" text-"+opt_privilege_color+"  bg-opacity-25";
+            input_privilege.innerText = opt_privilege;
+        }
+    }
 }

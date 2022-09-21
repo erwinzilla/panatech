@@ -45,27 +45,27 @@
                     @endif
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
+                    <table id="table-data" class="table table-striped mb-0" data-type="{{ $type }}">
                         <thead>
                             <tr>
-                                <th class="ps-3">#</th>
+                                <th class="text-center">#</th>
                                 <th>Name</th>
                                 <th>Color</th>
 {{--                                Jika can CRUD maka munculkan tombol--}}
                                 @if(getUserLevel('users') >= CAN_CRUD)
-                                    <th class="pe-3 text-center">Action</th>
+                                    <th class="text-center" data-sortable="false">Action</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @if($data->count() > 0)
                                 @foreach($data as $row)
-                                    <tr class="align-middle">
+                                    <tr>
                                         <td class="ps-3 text-muted w-1-slot">{{ $loop->iteration }}</td>
                                         <td>{{ $row->name }}</td>
                                         <td>
                                             @if($row->color)
-                                                <span class="badge bg-{{ $row->color }} text-{{ $row->color }} bg-opacity-25">{{ ucwords($row->color) }}</span>
+                                                <span class="{{ getBadge($row->color) }}">{{ ucwords($row->color) }}</span>
                                             @else
                                                 <span>Unset</span>
                                             @endif

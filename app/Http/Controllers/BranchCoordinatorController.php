@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
+use App\Models\BranchCoordinator;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Validator;
 
-class BranchController extends Controller
+class BranchCoordinatorController extends Controller
 {
-    const blade_view = 'layout.branch';
-    const url_redirect ='branch';
-    const name = 'branch';
+    const blade_view = 'layout.branch.coordinator';
+    const url_redirect ='branch/coordinator';
+    const name = 'branch coordinator';
     const privilege = 'branches';
 
     /**
@@ -25,7 +26,7 @@ class BranchController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => Branch::all(),
+            'data'  => BranchCoordinator::all(),
             'type'  => 'data',
             'title' => self::name
         ];
@@ -46,6 +47,7 @@ class BranchController extends Controller
         $data = [
             'id'        => null,
             'name'      => null,
+            'user'      => null
         ];
 
         $data = (object) $data;
@@ -53,6 +55,7 @@ class BranchController extends Controller
         // penguraian data
         $params = [
             'data'  => $data,
+            'data2' => User::all(),
             'type'  => 'create',
             'title' => 'Create '.self::name
         ];
@@ -73,7 +76,7 @@ class BranchController extends Controller
 
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branches,name',
+            'name'                  => 'required|min:3|max:100|unique:branch_coordinators,name',
         ];
 
         $messages = [
@@ -89,7 +92,7 @@ class BranchController extends Controller
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $hasil = Branch::create($request->all());
+        $hasil = BranchCoordinator::create($request->all());
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'create', self::name);
@@ -100,10 +103,10 @@ class BranchController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Branch  $branch
+     * @param  \App\Models\BranchCoordinator  $branchCoordinator
      * @return \Illuminate\Http\Response
      */
-    public function show(Branch $branch)
+    public function show(BranchCoordinator $branchCoordinator)
     {
         //
     }
@@ -111,19 +114,22 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Branch  $branch
+     * @param  \App\Models\BranchCoordinator  $branchCoordinator
      * @return \Illuminate\Http\Response
      */
-    public function edit(Branch $branch)
+    public function edit(BranchCoordinator $branchCoordinator, $id)
     {
         // cek privilege
         privilegeLevel(self::privilege, CAN_CRUD);
 
+        $branchCoordinator = BranchCoordinator::find($id);
+
         // penguraian data
         $params = [
-            'data'  => $branch,
+            'data'  => $branchCoordinator,
+            'data2' => User::all(),
             'type'  => 'edit',
-            'title' => 'Edit '.self::name
+            'title' => 'Edit Branch'
         ];
 
         return view(self::blade_view.'.input', $params);
@@ -133,17 +139,19 @@ class BranchController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Branch  $branch
+     * @param  \App\Models\BranchCoordinator  $branchCoordinator
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Branch $branch)
+    public function update(Request $request, BranchCoordinator $branchCoordinator, $id)
     {
         // cek privilege
         privilegeLevel(self::privilege, CAN_CRUD);
 
+        $branchCoordinator = BranchCoordinator::find($id);
+
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$branch->id,
+            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$branchCoordinator->id,
         ];
 
         $messages = [
@@ -159,7 +167,7 @@ class BranchController extends Controller
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $hasil = $branch->fill($request->all())->save();
+        $hasil = $branchCoordinator->fill($request->all())->save();
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::name);
@@ -170,16 +178,18 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Branch  $branch
+     * @param  \App\Models\BranchCoordinator  $branchCoordinator
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Branch $branch)
+    public function destroy(BranchCoordinator $branchCoordinator, $id)
     {
         // cek privilege
         privilegeLevel(self::privilege, CAN_CRUD);
 
+        $branchCoordinator = BranchCoordinator::find($id);
+
         // send result
-        $params = getStatus($branch->delete() ? 'success' : 'error', 'delete', self::name);
+        $params = getStatus($branchCoordinator->delete() ? 'success' : 'error', 'delete', self::name);
 
         return redirect(self::url_redirect)->with($params);
     }
@@ -191,7 +201,7 @@ class BranchController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => Branch::onlyTrashed()->get(),
+            'data'  => BranchCoordinator::onlyTrashed()->get(),
             'type'  => 'trash',
             'title' => 'Trash'
         ];
@@ -205,11 +215,11 @@ class BranchController extends Controller
         privilegeLevel(self::privilege, ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Branch::onlyTrashed()
+            $hasil = BranchCoordinator::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = Branch::onlyTrashed()->restore();
+            $hasil = BranchCoordinator::onlyTrashed()->restore();
         }
 
         // send result
@@ -224,11 +234,11 @@ class BranchController extends Controller
         privilegeLevel(self::privilege, ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Branch::onlyTrashed()
+            $hasil = BranchCoordinator::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = Branch::onlyTrashed()->forceDelete();
+            $hasil = BranchCoordinator::onlyTrashed()->forceDelete();
         }
 
         // send result

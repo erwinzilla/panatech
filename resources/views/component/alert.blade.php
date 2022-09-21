@@ -31,8 +31,9 @@ if (session('status')) {
     @svg('heroicon-s-'.$icon, 'icon opacity-75 mt-0')
     <div class="ms-2">
         <b>{{ ucfirst(session('status')) }}</b>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <b class="mx-1">&#8226;</b>
         {{ session('message') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </div>
 <?php

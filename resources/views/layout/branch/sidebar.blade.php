@@ -8,7 +8,7 @@
             <a href="{{ $type == 'create' ? '#main' : url('branch/create') }}" class="nav-link">@svg('heroicon-o-plus', 'icon') Create new</a>
         </li>
         {{--            Jika all access maka munculkan element--}}
-        @if(getUserLevel('users') >= ALL_ACCESS)
+        @if(getUserLevel('branches') >= ALL_ACCESS)
             <li class="nav-item">
                 <a href="{{ $type == 'trash' ? '#main' : url('branch/trash') }}" class="nav-link text-danger">@svg('heroicon-o-trash', 'icon') Trash</a>
             </li>

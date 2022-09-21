@@ -6,7 +6,7 @@
     @endif
     <div class="mx-2">
         <b class="text-black">{{ ucwords(Auth::user()->name) }}</b><br>
-        <span class="badge bg-{{ Auth::user()->privileges->color }} bg-opacity-25 text-{{ Auth::user()->privileges->color }}">{{ ucwords(Auth::user()->privileges->name) }}</span>
+        <span class="{{ getBadge(Auth::user()->privileges->color) }}">{{ ucwords(Auth::user()->privileges->name) }}</span>
     </div>
     <div class="dropdown ms-auto align-self-center">
         <button class="btn dropdown-toggle no-caret btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-adjustments-horizontal', 'icon')</button>

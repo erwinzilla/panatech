@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserPrivilegeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BranchCoordinatorController;
 use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,11 +32,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
     Route::get('user/privilege/restore/{id?}', [UserPrivilegeController::class, 'restore']);
     Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
+    Route::get('user/privilege/table', [UserPrivilegeController::class, 'get_table']);
 
     // User
     Route::get('user/trash', [UserController::class, 'trash']);
     Route::get('user/restore/{id?}', [UserController::class, 'restore']);
     Route::get('user/delete/{id?}', [UserController::class, 'delete']);
+
+    // Branch Coordinator
+    Route::get('branch/coordinator/trash', [BranchCoordinatorController::class, 'trash']);
+    Route::get('branch/coordinator/restore/{id?}', [BranchCoordinatorController::class, 'restore']);
+    Route::get('branch/coordinator/delete/{id?}', [BranchCoordinatorController::class, 'delete']);
 
     // Branch
     Route::get('branch/trash', [BranchController::class, 'trash']);
@@ -44,8 +51,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // resources route
     Route::resources([
-        'user/privilege'    => UserPrivilegeController::class,
-        'user'              => UserController::class,
-        'branch'            => BranchController::class
+        'user/privilege'     => UserPrivilegeController::class,
+        'user'               => UserController::class,
+        'branch/coordinator' => BranchCoordinatorController::class,
+        'branch'             => BranchController::class
     ]);
 });

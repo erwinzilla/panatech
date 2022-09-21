@@ -5,7 +5,9 @@
         <form class="w-50" role="search">
             <div class="input-group">
                 <input class="form-control border-end-0" type="search" placeholder="Coba ketikan 'Daftar Produk' ..." aria-label="Search">
-                <span class="input-group-text border-start-0"><i class="bi-search"></i></span>
+                <span class="input-group-text border-start-0 text-muted">
+                    @svg('heroicon-s-magnifying-glass', 'icon')
+                </span>
             </div>
         </form>
     </div>

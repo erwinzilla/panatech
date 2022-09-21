@@ -14,7 +14,7 @@
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('branch') }}" class="dropdown-item">@svg('heroicon-s-building-office-2', 'icon-sm me-1') Branch</a></li>
-                            <li><a href="{{ url('') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon-sm me-1') Coming Soon</a></li>
+                            <li><a href="{{ url('branch/coordinator') }}" class="dropdown-item">@svg('heroicon-s-user-group', 'icon-sm me-1') Coordinator</a></li>
                         </ul>
                     </li>
                 @endif
