@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserPrivilegeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,9 +37,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/restore/{id?}', [UserController::class, 'restore']);
     Route::get('user/delete/{id?}', [UserController::class, 'delete']);
 
+    // Branch
+    Route::get('branch/trash', [BranchController::class, 'trash']);
+    Route::get('branch/restore/{id?}', [BranchController::class, 'restore']);
+    Route::get('branch/delete/{id?}', [BranchController::class, 'delete']);
+
     // resources route
     Route::resources([
-        'user/privilege' => UserPrivilegeController::class,
-        'user' => UserController::class
+        'user/privilege'    => UserPrivilegeController::class,
+        'user'              => UserController::class,
+        'branch'            => BranchController::class
     ]);
 });

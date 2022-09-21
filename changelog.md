@@ -5,6 +5,10 @@
 - Run Migrate
 - Run Composer
 
+1.3.0 **Add Completely Branch Function**
+- Add branches database
+- Add branch controller and model
+
 1.2.2 **Add Completely User Function**
 - Completely User Function
 - Add Constants Privilege Level

@@ -52,6 +52,9 @@
                             <div class="mb-3">
                                 @include('form.privilege', ['name' => 'users'])
                             </div>
+                            <div class="mb-3">
+                                @include('form.privilege', ['name' => 'branches'])
+                            </div>
                             <hr class="border-dashed">
                             <div class="mb-3">
                                 @include('form.color')

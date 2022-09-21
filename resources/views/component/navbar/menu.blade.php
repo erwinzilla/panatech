@@ -9,6 +9,15 @@
                 <li class="nav-item me-2">
                     <a href="{{ url('home') }}" class="nav-link {{ Request::segment(1) == 'home' ? 'active' : '' }}" aria-expanded="false">Home</a>
                 </li>
+                @if(getUserLevel('branches') > 0)
+                    <li class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('branch') }}" class="dropdown-item">@svg('heroicon-s-building-office-2', 'icon-sm me-1') Branch</a></li>
+                            <li><a href="{{ url('') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon-sm me-1') Coming Soon</a></li>
+                        </ul>
+                    </li>
+                @endif
                 {{--                    Jika only see maka munculkan tombol--}}
                 @if(getUserLevel('users') > 0)
                     <li class="nav-item dropdown me-2">

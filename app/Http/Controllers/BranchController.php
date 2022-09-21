@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPrivilege;
+use App\Models\Branch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class UserPrivilegeController extends Controller
+class BranchController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,12 +20,12 @@ class UserPrivilegeController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => UserPrivilege::all(),
+            'data'  => Branch::all(),
             'type'  => 'data',
-            'title' => 'User Privilege'
+            'title' => 'Branch'
         ];
 
-        return view('layout.user.privilege.data', $params);
+        return view('layout.branch.data', $params);
     }
 
     /**
@@ -37,18 +36,11 @@ class UserPrivilegeController extends Controller
     public function create()
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel('branches', CAN_CRUD);
 
         $data = [
             'id'        => null,
             'name'      => null,
-            'tickets'   => 0,
-            'customers' => 0,
-            'products'  => 0,
-            'reports'   => 0,
-            'users'     => 0,
-            'branches'  => 0,
-            'color'     => 'primary'
         ];
 
         $data = (object) $data;
@@ -57,10 +49,10 @@ class UserPrivilegeController extends Controller
         $params = [
             'data'  => $data,
             'type'  => 'create',
-            'title' => 'Create User Privilege'
+            'title' => 'Create Branch'
         ];
 
-        return view('layout.user.privilege.input', $params);
+        return view('layout.branch.input', $params);
     }
 
     /**
@@ -72,11 +64,11 @@ class UserPrivilegeController extends Controller
     public function store(Request $request)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel('branches', CAN_CRUD);
 
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:user_privileges,name',
+            'name'                  => 'required|min:3|max:100|unique:branches,name',
         ];
 
         $messages = [
@@ -92,7 +84,7 @@ class UserPrivilegeController extends Controller
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $hasil = UserPrivilege::create($request->all());
+        $hasil = Branch::create($request->all());
 
         if($hasil){
             $params = [
@@ -107,16 +99,16 @@ class UserPrivilegeController extends Controller
         }
 
 //        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'privilege', $params['status'] == 'success' ? $privilege->id : null);
-        return redirect('user/privilege')->with($params);
+        return redirect('branch')->with($params);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function show(UserPrivilege $userPrivilege)
+    public function show(Branch $branch)
     {
         //
     }
@@ -124,39 +116,39 @@ class UserPrivilegeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserPrivilege $userPrivilege, $id)
+    public function edit(Branch $branch)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel('branches', CAN_CRUD);
 
         // penguraian data
         $params = [
-            'data'  => $userPrivilege->find($id),
+            'data'  => $branch,
             'type'  => 'edit',
-            'title' => 'Edit Data User Privilege'
+            'title' => 'Edit Branch'
         ];
 
-        return view('layout.user.privilege.input', $params);
+        return view('layout.branch.input', $params);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserPrivilege $userPrivilege, $id)
+    public function update(Request $request, Branch $branch)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel('branches', CAN_CRUD);
 
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:user_privileges,name,'.$id,
+            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$branch->id,
         ];
 
         $messages = [
@@ -172,123 +164,119 @@ class UserPrivilegeController extends Controller
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $userPrivilege = $userPrivilege->find($id);
-        $hasil = $userPrivilege->fill($request->all())->save();
+        $hasil = $branch->fill($request->all())->save();
 
         if($hasil){
             $params = [
                 'status'    => 'success',
-                'message'   => 'Sukses mengubah user privilege'
+                'message'   => 'Sukses mengubah branch'
             ];
         } else {
             $params = [
                 'status'    => 'error',
-                'message'   => 'Gagal mengubah user privilege'
+                'message'   => 'Gagal mengubah branch'
             ];
         }
 
 //        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'privilege', $id ? $id : null);
-        return redirect('user/privilege')->with($params);
+        return redirect('branch')->with($params);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserPrivilege $userPrivilege, $id)
+    public function destroy(Branch $branch)
     {
         // cek privilege
-        privilegeLevel('users', CAN_CRUD);
+        privilegeLevel('branches', CAN_CRUD);
 
-        $hasil = UserPrivilege::find($id);
-        $hasil->delete();
-
-        if($hasil){
+        if($branch->delete()){
             $params = [
                 'status'    => 'success',
-                'message'   => 'Sukses menghapus user privilege'
+                'message'   => 'Sukses menghapus branch'
             ];
         } else {
             $params = [
                 'status'    => 'error',
-                'message'   => 'Gagal menghapus user privilege'
+                'message'   => 'Gagal menghapus branch'
             ];
         }
 
 //        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'privilege', $id ? $id : null);
-        return redirect('user/privilege')->with($params);
+        return redirect('branch')->with($params);
     }
 
     public function trash()
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel('branches', ALL_ACCESS);
 
         // penguraian data
         $params = [
-            'data'  => UserPrivilege::onlyTrashed()->get(),
+            'data'  => Branch::onlyTrashed()->get(),
             'type'  => 'trash',
             'title' => 'Trash'
         ];
 
-        return view('layout.user.privilege.data', $params);
+        return view('layout.branch.data', $params);
     }
 
     public function restore($id = null)
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel('branches', ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = Branch::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->restore();
+            $hasil = Branch::onlyTrashed()->restore();
         }
 
         if($hasil){
             $params = [
                 'status'    => 'success',
-                'message'   => 'Sukses mengembalikan user privilege'
+                'message'   => 'Sukses mengembalikan branch'
             ];
         } else {
             $params = [
                 'status'    => 'error',
-                'message'   => 'Gagal mengembalikan user privilege'
+                'message'   => 'Gagal mengembalikan branch'
             ];
         }
 //        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user/privilege/trash')->with($params);
+        return redirect('branch/trash')->with($params);
     }
 
     public function delete($id = null)
     {
         // cek privilege
-        privilegeLevel('users', ALL_ACCESS);
+        privilegeLevel('branches', ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = Branch::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->forceDelete();
+            $hasil = Branch::onlyTrashed()->forceDelete();
         }
 
         if($hasil){
             $params = [
                 'status'    => 'success',
-                'message'   => 'Sukses menghapus permanen user privilege'
+                'message'   => 'Sukses menghapus permanen branch'
             ];
         } else {
             $params = [
                 'status'    => 'error',
-                'message'   => 'Gagal menghapus permanen user privilege'
+                'message'   => 'Gagal menghapus permanen branch'
             ];
         }
 //        AddLog::add('<b>'.ucwords(Auth::user()->name).'</b> telah '.strtolower($params['message']), 'user', $id ? $id : null);
-        return redirect('user/privilege/trash')->with($params);
+        return redirect('branch/trash')->with($params);
     }
 }
