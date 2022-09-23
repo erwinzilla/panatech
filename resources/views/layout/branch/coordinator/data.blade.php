@@ -45,55 +45,9 @@
                     @endif
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead>
-                        <tr>
-                            <th class="ps-3">#</th>
-                            <th>Name</th>
-                            <th>Coordinator</th>
-                            {{--                                Jika can CRUD maka munculkan tombol--}}
-                            @if(getUserLevel('branches') >= CAN_CRUD)
-                                <th class="pe-3 text-center">Action</th>
-                            @endif
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if($data->count() > 0)
-                            @foreach($data as $row)
-                                <tr class="align-middle">
-                                    <td class="ps-3 text-muted w-1-slot">{{ $loop->iteration }}</td>
-                                    <td>{{ $row->name }}</td>
-                                    <td>
-                                        @if($row->user)
-                                            <span>{{ $row->users->name }}</span>
-                                            <br><span class="{{ getBadge($row->users->privileges->color) }}">{{ $row->users->privileges->name }}</span>
-                                        @else
-                                            <span>-</span>
-                                        @endif
-                                    </td>
-                                    {{--                                    Jika can CRUD maka munculkan tombol--}}
-                                    @if(getUserLevel('branches') >= CAN_CRUD)
-                                        <td class="pe-3 w-2-slot">
-                                            <div class="d-flex justify-content-center">
-                                                @include('form.button.crud', ['url' => 'branch/coordinator/', 'type' => $type, 'id' => $row->id])
-                                            </div>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                @php
-                                    $colspan = 3;
-                                    if (getUserLevel('branches') >= CAN_CRUD) {
-                                        $colspan += 1; // ada baguian untuk action button
-                                    }
-                                @endphp
-                                <td class="text-muted text-center" colspan="{{ $colspan }}">Tidak Ada Data</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
+                    <div id="table-data">
+                        @include('layout.branch.coordinator.table')
+                    </div>
                 </div>
             </div>
         </div>

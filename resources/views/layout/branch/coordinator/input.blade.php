@@ -40,7 +40,7 @@
                             <label class="form-label">Coodinator</label>
                             <input type="hidden" name="user" value="{{ old('user', $data->user) }}">
                             <div class="d-flex justify-content-start">
-                                <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#user-modal">@svg('heroicon-s-user', 'icon') Select User</button>
+                                <button id="btn-user" type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#user-modal">@svg('heroicon-s-user', 'icon') Select User</button>
                                 <div>
                                     <span id="name">{{ $data->user ? $data->users->name : 'Select user first'}}</span>
                                     <br><span id="privilege" class="{{ $data->user ? getBadge($data->users->privileges->color) : '' }}">{{ $data->user ? $data->users->privileges->name : '-' }}</span>
@@ -65,43 +65,15 @@
 
 {{--    Modal User--}}
     <div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-modal-label" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="user-modal-label">User</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th>Name / Detail</th>
-                            <th>Privilege</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($data2 as $row)
-                            <tr class="align-middle">
-                                <td class="w-1-slot text-center">{{ $loop->iteration }}</td>
-                                <td>
-                                    <b>{{ $row->name }}</b>
-                                    <br><small>{{ $row->phone }}</small>
-                                    <br><small class="text-muted">{{ $row->address }}</small>
-                                </td>
-                                <td>
-                                    <span class="{{ getBadge($row->privileges->color) }}">{{ $row->privileges->name }}</span>
-                                </td>
-                                <td class="w-1-slot text-center">
-                                    <button type="button" class="btn btn-success btn-icon" data-bs-toggle="tooltip" data-bs-title="Choose" onclick="choose('user', {{ $row->id }}, '{{ $row->name }}', '{{ $row->privileges->name }}', '{{ $row->privileges->color }}');return false;" data-bs-dismiss="modal">
-                                        @svg('heroicon-s-check-circle', 'icon')
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                    <div id="table-data-modal">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -35,7 +35,7 @@ $theme-colors: (
 $content-bg: #f0f2f5;
 
 $border-color: rgba($dark, 0.15);
-$radius: .5rem;
+$radius: .7rem;
 $min-contrast-ratio: 1;
 
 // Font
@@ -54,6 +54,7 @@ $card-border-color: $border-color;
 $card-border-radius: $radius;
 $card-cap-padding-y: 1rem;
 $card-cap-bg: $white;
+$card-inner-border-radius: subtract($card-border-radius, $card-border-width);
 
 // Form Control
 $form-feedback-icon-invalid: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$form-feedback-icon-invalid-color}" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>');
@@ -66,6 +67,8 @@ $input-font-size: .8rem;
 $input-focus-bg: $input-bg;
 $input-padding-x: .75rem;
 $input-padding-y: .5rem;
+$input-border-radius: $radius;
+$input-border-radius-lg: $radius;
 
 // select
 $form-select-bg: $input-bg;
@@ -73,9 +76,11 @@ $form-select-font-size: $input-font-size;
 $form-select-padding-y: $input-padding-y;
 $form-select-padding-x: $input-padding-x;
 $form-select-border-color: $input-border-color;
+$form-select-border-radius: $input-border-radius;
 
 // Button
 $btn-font-size: .8rem;
+$btn-border-radius: $radius;
 
 // Navbar
 $navbar-padding-y: .25rem;
@@ -95,12 +100,19 @@ $dropdown-font-size: .8rem;
 $dropdown-color: $navbar-light-color;
 $dropdown-link-color: $navbar-light-color;
 $dropdown-link-active-bg: $primary;
+$dropdown-border-radius: $radius;
 
 // Modal
 $modal-content-border-color: $border-color;
 $modal-header-border-width: 0;
 $modal-footer-border-width: 0;
 $modal-footer-bg: $content-bg;
+$modal-content-border-radius: $radius;
+
+// Pagination
+$pagination-border-radius: $radius;
+$pagination-active-bg: $primary;
+$pagination-active-border-color: $pagination-active-bg;
 
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
@@ -200,7 +212,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     margin-top: -1px;
 }
 .input-group {
-    border-radius: $input-border-radius;
+    border-radius: $input-border-radius!important;
     &.is-invalid {
         &:focus-within {
             border-color: $form-feedback-invalid-color;
@@ -341,7 +353,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     }
 }
 .table {
-    &:not(.dt-table) {
+    &:not(.data-table) {
         tbody {
             tr {
                 &:last-child {
@@ -356,6 +368,52 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
                     }
                 }
             }
+        }
+    }
+}
+.table-footer {
+    margin: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    nav {
+        width: 100%;
+    }
+    .table-pagination {
+        flex: 0 0 auto;
+        width: 50%;
+        align-self: center;
+    }
+    .table-footer-text {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+.table-header {
+    margin: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    .table-search {
+        flex: 0 0 auto;
+        width: 50%;
+        .input-group {
+            width: 50%;
+            float: right;
+            .form-control {
+                border-right: 0;
+            }
+            .btn {
+                padding: 0.505rem 1rem;
+                border-left: 0;
+            }
+        }
+    }
+    .table-select {
+        display: inline-flex;
+        flex: 0 0 auto;
+        width: 50%;
+        .form-select {
+            width: 5rem;
+            margin-right: .5rem;
         }
     }
 }

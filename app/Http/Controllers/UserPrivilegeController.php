@@ -13,23 +13,56 @@ class UserPrivilegeController extends Controller
     const name = 'user privilege';
     const privilege = 'users';
 
+    // table
+    const perPage = 10;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // cek privilege
         privilegeLevel(self::privilege, ONLY_SEE);
 
-        // penguraian data
-        $params = [
-            'data'  => UserPrivilege::all(),
-            'type'  => 'data',
-            'title' => self::name
+        $data = UserPrivilege::select('*');
+
+        $search = $request->search;
+        if (strlen($search) > 2) {
+            $data = $data->where('name','LIKE','%'.$search.'%')
+                ->orWhere('color','LIKE','%'.$search.'%');
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: null;
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
         ];
 
+        // penguraian data
+        $params = [
+            'data'  => $data->paginate($perPage)->appends($table),
+            'type'  => 'data',
+            'title' => self::name,
+            'table' => $table
+        ];
+
+        // jika hanya ingin mendapatkan data table saja
+        if ($target == 'table') {
+            return view(self::blade_view.'.table', $params);
+        }
         return view(self::blade_view.'.data', $params);
     }
 
@@ -195,18 +228,48 @@ class UserPrivilegeController extends Controller
         return redirect(self::url_redirect)->with($params);
     }
 
-    public function trash()
+    public function trash(Request $request)
     {
         // cek privilege
         privilegeLevel(self::privilege, ALL_ACCESS);
 
-        // penguraian data
-        $params = [
-            'data'  => UserPrivilege::onlyTrashed()->get(),
-            'type'  => 'trash',
-            'title' => 'Trash'
+        $data = UserPrivilege::onlyTrashed();
+
+        $search = $request->search;
+        if (strlen($search) > 2) {
+            $data = $data->where('name','LIKE','%'.$search.'%')
+                ->orWhere('color','LIKE','%'.$search.'%');
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: null;
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
         ];
 
+        // penguraian data
+        $params = [
+            'data'  => $data->paginate($perPage)->appends($table),
+            'type'  => 'trash',
+            'title' => 'Trash',
+            'table' => $table
+        ];
+
+        // jika hanya ingin mendapatkan data table saja
+        if ($target == 'table') {
+            return view(self::blade_view.'.table', $params);
+        }
         return view(self::blade_view.'.data', $params);
     }
 
@@ -246,89 +309,5 @@ class UserPrivilegeController extends Controller
         $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::name);
 
         return redirect(self::url_redirect.'/trash')->with($params);
-    }
-
-    public function get_table(Request $request)
-    {
-        /**
-         * Parameters
-         */
-        $start = $request->start ? intval($request->start) : 0;
-        $length = $request->length ? intval($request->length) : 10;
-        $search = empty($request->searchQuery) || $request->searchQuery === "null" ? "" : $request->searchQuery;
-        $sortColumnIndex = $request->sortColumn;
-        $sortDirection = $request->sortDirection;
-        $type = $request->type;
-
-        /**
-         * Raw Data
-         */
-
-        if ($type == 'data') {
-            $list = UserPrivilege::select('*');
-        }
-        if ($type == 'trash') {
-            $list = UserPrivilege::onlyTrashed();
-        }
-
-        // search
-        if ($search) {
-            $list = $list->where('name', 'like', '%'.$search.'%')
-                ->orWhere('color', 'like', '%'.$search.'%');
-        }
-        $list = $list->get();
-
-        $data = array();
-
-        $no = $start;
-        foreach ($list as $item) {
-            $no++;
-            $row = array();
-            $row[] = [
-                'data'          => $no,
-                'attributes'    => [
-                    'class'     => 'text-center text-muted w-1-slot'
-                ]
-            ];
-            $row[] = $item->name;
-            $row[] = $item->color ? '<span class="'.getBadge($item->color).'">'.ucwords($item->color).'</span>' : '<span>Unset</span>';
-            if (getUserLevel('users') >= CAN_CRUD) {
-                $row[] =  [
-                    'data'          => '<div class="d-flex justify-content-center">
-                            '.getButtonCRUD($type, self::url_redirect, $item->id).'
-                          </div>',
-                    'attributes'    => [
-                        'class'     => 'w-2-slot'
-                    ]
-                ];
-            };
-            $data[] = $row;
-        }
-
-//        $data = json_decode(UserPrivilege::all()->toJson());
-
-        /**
-         * Search
-         */
-        $filtered = $data;
-
-        /*
-         * Sort
-         */
-        if (!is_null($sortColumnIndex) && $sortColumnIndex !== FALSE && $sortColumnIndex !== "null" && is_numeric($sortColumnIndex)) {
-            array_multisort(array_column($filtered, $sortColumnIndex), ($sortDirection === "asc" ? SORT_ASC : SORT_DESC), $filtered);
-        }
-
-
-        /**
-         * Slice
-         */
-        $response = array_slice($filtered, $start, $length);
-
-        echo json_encode([
-            "recordsTotal" => count($data),
-            "recordsFiltered" => count($filtered),
-            "data" => $response
-        ]);
     }
 }

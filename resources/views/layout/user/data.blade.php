@@ -45,68 +45,9 @@
                     @endif
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead>
-                        <tr>
-                            <th class="ps-3">#</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Address</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Privilege</th>
-                            {{--                                Jika can CRUD maka munculkan tombol--}}
-                            @if(getUserLevel('users') >= CAN_CRUD)
-                                <th class="pe-3 text-center">Action</th>
-                            @endif
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if($data->count() > 0)
-                            @foreach($data as $row)
-                                <tr class="align-middle">
-                                    <td class="ps-3 text-muted w-1-slot">{{ $loop->iteration }}</td>
-                                    <td>
-                                        @if($row->image)
-                                            <img src="{{ asset('uploads/images/users/'.$row->image) }}" class="avatar rounded-circle" alt="Avatar">
-                                        @else
-                                            <img src="{{ asset('uploads/images/users/default.jpg') }}" class="avatar rounded-circle" alt="Avatar">
-                                        @endif
-                                    </td>
-                                    <td>{{ $row->name }}</td>
-                                    <td>{{ $row->username }}</td>
-                                    <td>{{ $row->address }}</td>
-                                    <td><a href="mailto:{{ $row->email }}" target="_blank">{{ $row->email }}</a></td>
-                                    <td>{{ $row->phone }}</td>
-                                    <td>
-                                        @if($row->privilege)
-                                            <span class="{{ getBadge($row->privileges->color) }}">{{ $row->privileges->name }}</span>
-                                        @endif
-                                    </td>
-                                    {{--                                    Jika can CRUD maka munculkan tombol--}}
-                                    @if(getUserLevel('users') >= CAN_CRUD)
-                                        <td class="pe-3 w-2-slot">
-                                            <div class="d-flex">
-                                                @include('form.button.crud', ['url' => 'user/', 'type' => $type, 'id' => $row->id])
-                                            </div>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                @php
-                                    $colspan = 8;
-                                    if (getUserLevel('users') >= CAN_CRUD) {
-                                        $colspan += 1; // ada bagian untuk action button
-                                    }
-                                @endphp
-                                <td class="text-muted text-center" colspan="{{ $colspan }}">Tidak Ada Data</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
+                    <div id="table-data">
+                        @include('layout.user.table')
+                    </div>
                 </div>
             </div>
         </div>

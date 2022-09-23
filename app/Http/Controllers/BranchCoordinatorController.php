@@ -14,23 +14,66 @@ class BranchCoordinatorController extends Controller
     const name = 'branch coordinator';
     const privilege = 'branches';
 
+    // table
+    const perPage = 10;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // cek privilege
         privilegeLevel(self::privilege, ONLY_SEE);
 
-        // penguraian data
-        $params = [
-            'data'  => BranchCoordinator::all(),
-            'type'  => 'data',
-            'title' => self::name
+        $data = BranchCoordinator::select('*');
+
+        $search = $request->search;
+        if (strlen($search) > 2) {
+            $data = $data->where('branch_coordinators.name','LIKE','%'.$search.'%')
+                ->orWhereHas('users', function ($q) use ($search) {
+                    $q->where('users.name','LIKE','%'.$search.'%')
+                        ->orWhere('users.email','LIKE','%'.$search.'%')
+                        ->orWhere('users.username','LIKE','%'.$search.'%')
+                        ->orWhere('users.address','LIKE','%'.$search.'%')
+                        ->orWhere('users.phone','LIKE','%'.$search.'%')
+                        ->orWhereHas('privileges', function ($q) use ($search) {
+                            $q->where('user_privileges.name','LIKE','%'.$search.'%')
+                                ->orWhere('user_privileges.color', 'LIKE','%'.$search.'%');
+                        });
+                });
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: null;
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
         ];
 
+        // penguraian data
+        $params = [
+            'data'  => $data->paginate($perPage)->appends($table),
+            'type'  => 'data',
+            'title' => self::name,
+            'table' => $table
+        ];
+
+        // jika hanya ingin mendapatkan data table saja
+        if ($target == 'table') {
+            return view(self::blade_view.'.table', $params);
+        }
         return view(self::blade_view.'.data', $params);
     }
 
@@ -194,18 +237,58 @@ class BranchCoordinatorController extends Controller
         return redirect(self::url_redirect)->with($params);
     }
 
-    public function trash()
+    public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::privilege, ONLY_SEE);
+
+        $data = BranchCoordinator::onlyTrashed();
+
+        $search = $request->search;
+        if (strlen($search) > 2) {
+            $data = $data->where('branch_coordinators.name','LIKE','%'.$search.'%')
+                ->orWhereHas('users', function ($q) use ($search) {
+                    $q->where('users.name','LIKE','%'.$search.'%')
+                        ->orWhere('users.email','LIKE','%'.$search.'%')
+                        ->orWhere('users.username','LIKE','%'.$search.'%')
+                        ->orWhere('users.address','LIKE','%'.$search.'%')
+                        ->orWhere('users.phone','LIKE','%'.$search.'%')
+                        ->orWhereHas('privileges', function ($q) use ($search) {
+                            $q->where('user_privileges.name','LIKE','%'.$search.'%')
+                                ->orWhere('user_privileges.color', 'LIKE','%'.$search.'%');
+                        });
+                });
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: null;
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
+        ];
 
         // penguraian data
         $params = [
-            'data'  => BranchCoordinator::onlyTrashed()->get(),
+            'data'  => $data->paginate($perPage)->appends($table),
             'type'  => 'trash',
-            'title' => 'Trash'
+            'title' => 'Trash',
+            'table' => $table
         ];
 
+        // jika hanya ingin mendapatkan data table saja
+        if ($target == 'table') {
+            return view(self::blade_view.'.table', $params);
+        }
         return view(self::blade_view.'.data', $params);
     }
 

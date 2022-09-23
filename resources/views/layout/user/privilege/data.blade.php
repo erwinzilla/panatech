@@ -45,54 +45,9 @@
                     @endif
                 </div>
                 <div class="card-body p-0">
-                    <table id="table-data" class="table table-striped mb-0" data-type="{{ $type }}">
-                        <thead>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Name</th>
-                                <th>Color</th>
-{{--                                Jika can CRUD maka munculkan tombol--}}
-                                @if(getUserLevel('users') >= CAN_CRUD)
-                                    <th class="text-center" data-sortable="false">Action</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if($data->count() > 0)
-                                @foreach($data as $row)
-                                    <tr>
-                                        <td class="ps-3 text-muted w-1-slot">{{ $loop->iteration }}</td>
-                                        <td>{{ $row->name }}</td>
-                                        <td>
-                                            @if($row->color)
-                                                <span class="{{ getBadge($row->color) }}">{{ ucwords($row->color) }}</span>
-                                            @else
-                                                <span>Unset</span>
-                                            @endif
-                                        </td>
-    {{--                                    Jika can CRUD maka munculkan tombol--}}
-                                        @if(getUserLevel('users') >= CAN_CRUD)
-                                            <td class="pe-3 w-2-slot">
-                                                <div class="d-flex justify-content-center">
-                                                    @include('form.button.crud', ['url' => 'user/privilege/', 'type' => $type, 'id' => $row->id])
-                                                </div>
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    @php
-                                    $colspan = 3;
-                                    if (getUserLevel('users') >= CAN_CRUD) {
-                                        $colspan += 1; // ada baguian untuk action button
-                                    }
-                                    @endphp
-                                    <td class="text-muted text-center" colspan="{{ $colspan }}">Tidak Ada Data</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                    <div id="table-data">
+                        @include('layout.user.privilege.table')
+                    </div>
                 </div>
             </div>
         </div>

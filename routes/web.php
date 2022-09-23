@@ -32,12 +32,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
     Route::get('user/privilege/restore/{id?}', [UserPrivilegeController::class, 'restore']);
     Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
-    Route::get('user/privilege/table', [UserPrivilegeController::class, 'get_table']);
 
     // User
     Route::get('user/trash', [UserController::class, 'trash']);
     Route::get('user/restore/{id?}', [UserController::class, 'restore']);
     Route::get('user/delete/{id?}', [UserController::class, 'delete']);
+    Route::get('user/choose', [UserController::class, 'chooseUser']);
 
     // Branch Coordinator
     Route::get('branch/coordinator/trash', [BranchCoordinatorController::class, 'trash']);

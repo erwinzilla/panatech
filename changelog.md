@@ -5,6 +5,9 @@
 - Run Migrate
 - Run Composer
 
+1.4.1 **Data Table Function On Modal Too**
+- Add data table function
+
 1.4.0 **Completely Branch Coordinator Function & Datatables For Privilege**
 - Add branch coordinator database
 - Add branch coordinator controller and model
