@@ -5,6 +5,10 @@
 - Run Migrate
 - Run Composer
 
+1.5.1 **On-Process Dark Mode And Simply Function**
+- Add dark mode (On Process)
+- Fix function make simply (On Process)
+
 1.5.0 **Branch Service Function**
 - Add branch service database
 - Add branch service controller and model

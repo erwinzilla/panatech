@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AuthController::class, 'showFormLogin'])->name('login');
 Route::get('login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
+Route::get('theme/{mode}', [HomeController::class, 'theme']);
+Route::get('theme/{mode}/icon', [HomeController::class, 'themeIcon']);
 
 Route::group(['middleware' => 'auth'], function () {
     // auth

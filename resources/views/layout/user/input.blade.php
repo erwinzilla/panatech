@@ -3,22 +3,14 @@
 @section('title', ucwords($title))
 
 @section('sidebar')
-    @include('layout.user.sidebar')
+    @include($config['blade'].'.sidebar')
 @endsection
 
 @section('content')
     @include('component.breadcrumb')
-    <h1 class="fw-bold">{{ ucwords($title) }}</h1>
 
     {{--    Body--}}
-    @if($type == 'create')
-        <form action="{{ url('user') }}" method="post" enctype="multipart/form-data">
-    @endif
-    @if($type == 'edit')
-        <form action="{{ url('user/'.$data->id) }}" method="post" enctype="multipart/form-data">
-            @method('put')
-    @endif
-    @csrf
+    @include('form.header.start')
     <div class="row mt-3">
         <div class="col-md-3">
             <h5 class="text-black mb-0">Account</h5>
@@ -30,7 +22,7 @@
                     <div class="mb-3 g-3">
                         <label class="form-label">Username<span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light text-muted">{{ env('APP_DOMAIN').'/user/' }}</span>
+                            <span class="input-group-text text-default">{{ env('APP_DOMAIN').'/user/' }}</span>
                             <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $data->username) }}" placeholder="Masukan username">
                         </div>
                         <small class="text-info form-text">
@@ -144,9 +136,9 @@
                     <div class="mb-3">
                         <label class="form-label">Privilege<span class="text-danger">*</span></label>
                         <div>
-                            @foreach($data2 as $row)
+                            @foreach($data_additional['user_privilege'] as $row)
                                 <input type="radio" class="btn-check" name="privilege" id="option-privilege-{{ $row->id }}" value="{{ $row->id }}" {{ old('privilege', $data->privilege) == $row->id ? 'checked' : ''}}>
-                                <label class="btn btn-outline-{{ $row->color }} rounded-5" for="option-privilege-{{ $row->id }}">{{ $row->name }}</label>
+                                <label class="btn btn-outline-{{ $row->color }} rounded-5 mb-1" for="option-privilege-{{ $row->id }}">{{ $row->name }}</label>
                             @endforeach
                         </div>
                         @error('privilege')
@@ -173,5 +165,5 @@
             </div>
         </div>
     </div>
-    </form>
+    @include('form.header.end')
 @endsection

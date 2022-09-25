@@ -49,4 +49,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\UserPrivilege', 'privilege')->withTrashed();
     }
+
+    public function getThemeAttribute()
+    {
+        $theme = session('theme');
+        if (!$theme) {
+            $theme = 'light';
+            session('theme', 'light');
+        }
+        return $theme;
+    }
 }

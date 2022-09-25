@@ -24,4 +24,16 @@ class HomeController extends Controller
 
         return view('layout.home.main', $params);
     }
+
+    public function theme(Request $request, $mode)
+    {
+        $request->session()->put('theme', $mode);
+        $theme = $request->session()->get('theme');
+        return $theme == $mode ? 'success' : 'error';
+    }
+
+    public function themeIcon($mode)
+    {
+        return view('component.icon.theme.'.$mode);
+    }
 }

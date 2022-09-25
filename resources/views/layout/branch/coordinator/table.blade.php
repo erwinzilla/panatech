@@ -3,9 +3,10 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
-            @include('component.table.title', ['title' => 'Name', 'column' => 'name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Coordinator', 'column' => 'user', 'sortable' => true])
+            @include('component.table.title', ['title' => '#', 'column' => 'branch_coordinators.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Name', 'column' => 'branch_coordinators.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Coordinator', 'column' => 'users.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Privilege', 'column' => 'user_privileges.name', 'sortable' => false, 'class' => 'align-middle'])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel('branches') >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
@@ -31,7 +32,13 @@
                     <td>
                         @if($row->user)
                             <span>{{ $row->users->name }}</span>
-                            <br><span class="{{ getBadge($row->users->privileges->color) }}">{{ $row->users->privileges->name }}</span>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if($row->user)
+                            <span class="{{ getBadge($row->users->privileges->color) }}">{{ $row->users->privileges->name }}</span>
                         @else
                             <span>-</span>
                         @endif

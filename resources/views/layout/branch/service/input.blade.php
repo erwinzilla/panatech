@@ -8,16 +8,8 @@
 
 @section('content')
     @include('component.breadcrumb')
-    <h1 class="fw-bold">{{ ucwords($title) }}</h1>
 
-    @if($type == 'create')
-        <form action="{{ url($config['url']) }}" method="post">
-    @endif
-    @if($type == 'edit')
-        <form action="{{ url($config['url'].'/'.$data->id) }}" method="post">
-            @method('put')
-    @endif
-            @csrf
+    @include('form.header.start')
     {{--    Body--}}
     <div class="row mt-3">
         <div class="col-md-3">
@@ -159,23 +151,6 @@
         </div>
     </div>
 
-    </form>
-    {{-- Modal Data Table--}}
-    <div class="modal fade" id="table-modal" tabindex="-1" aria-labelledby="table-data-modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="table-modal-label"></h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div id="table-data-modal">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('form.header.end')
+    @include('component.modal.table')
 @endsection

@@ -11,13 +11,16 @@ use Validator;
 
 class BranchServiceController extends Controller
 {
-    const blade_view = 'layout.branch.service';
-    const url_redirect ='branch/service';
-    const name = 'branch service';
-    const privilege = 'branches';
-
     // table
     const perPage = 10;
+
+    // config
+    const config = [
+        'blade'     => 'layout.branch.service',
+        'url'       => 'branch/service',
+        'name'      => 'branch service',
+        'privilege' => 'branches'
+    ];
 
     /**
      * Display a listing of the resource.
@@ -27,9 +30,14 @@ class BranchServiceController extends Controller
     public function index(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = BranchService::select('*');
+        $data = BranchService::select('branch_services.*');
+
+        // join
+        $data = $data->join('branches', 'branch_services.branch', '=', 'branches.id');
+        $data = $data->join('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
+        $data = $data->join('users', 'branch_services.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {
@@ -85,26 +93,20 @@ class BranchServiceController extends Controller
             'target'    => $target
         ];
 
-        $config = [
-            'blade'     => self::blade_view,
-            'url'       => self::url_redirect,
-            'privilege' => self::privilege
-        ];
-
         // penguraian data
         $params = [
             'data'      => $data->paginate($perPage)->appends($table),
             'type'      => 'data',
-            'title'     => self::name,
+            'title'     => self::config['name'],
             'table'     => $table,
-            'config'    => $config
+            'config'    => self::config
         ];
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     /**
@@ -115,7 +117,7 @@ class BranchServiceController extends Controller
     public function create()
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
             'id'                    => null,
@@ -133,9 +135,9 @@ class BranchServiceController extends Controller
         $data = (object) $data;
 
         $config = [
-            'blade'     => self::blade_view,
-            'url'       => self::url_redirect,
-            'privilege' => self::privilege
+            'blade'     => self::config['blade'],
+            'url'       => self::config['url'],
+            'privilege' => self::config['privilege']
         ];
 
         // penguraian data
@@ -146,11 +148,11 @@ class BranchServiceController extends Controller
                 'branch_coordinator'    => BranchCoordinator::all(),
             ],
             'type'                      => 'create',
-            'title'                     => 'Create '.self::name,
-            'config'                    => $config
+            'title'                     => 'Create '.self::config['name'],
+            'config'                    => self::config
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -162,7 +164,7 @@ class BranchServiceController extends Controller
     public function store(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // validasi
         $rules = [
@@ -195,9 +197,9 @@ class BranchServiceController extends Controller
         $hasil = BranchService::create($request->all());
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -220,14 +222,14 @@ class BranchServiceController extends Controller
     public function edit(BranchService $branchService, $id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $branchService = BranchService::find($id);
 
         $config = [
-            'blade'     => self::blade_view,
-            'url'       => self::url_redirect,
-            'privilege' => self::privilege
+            'blade'     => self::config['blade'],
+            'url'       => self::config['url'],
+            'privilege' => self::config['privilege']
         ];
 
         // penguraian data
@@ -238,11 +240,11 @@ class BranchServiceController extends Controller
                 'branch_coordinator'    => BranchCoordinator::all(),
             ],
             'type'                      => 'edit',
-            'title'                     => 'Edit '.self::name,
+            'title'                     => 'Edit '.self::config['name'],
             'config'                    => $config
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -255,7 +257,7 @@ class BranchServiceController extends Controller
     public function update(Request $request, BranchService $branchService, $id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $branchService = BranchService::find($id);
 
@@ -290,9 +292,9 @@ class BranchServiceController extends Controller
         $hasil = $branchService->fill($request->all())->save();
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -304,20 +306,20 @@ class BranchServiceController extends Controller
     public function destroy(BranchService $branchService, $id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $branchService = BranchService::find($id);
 
         // send result
-        $params = getStatus($branchService->delete() ? 'success' : 'error', 'delete', self::name);
+        $params = getStatus($branchService->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         $data = BranchService::onlyTrashed();
 
@@ -376,9 +378,9 @@ class BranchServiceController extends Controller
         ];
 
         $config = [
-            'blade'     => self::blade_view,
-            'url'       => self::url_redirect,
-            'privilege' => self::privilege
+            'blade'     => self::config['blade'],
+            'url'       => self::config['url'],
+            'privilege' => self::config['privilege']
         ];
 
         // penguraian data
@@ -392,15 +394,15 @@ class BranchServiceController extends Controller
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     public function restore($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = BranchService::onlyTrashed()
@@ -411,15 +413,15 @@ class BranchServiceController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 
     public function delete($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = BranchService::onlyTrashed()
@@ -430,8 +432,8 @@ class BranchServiceController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 }

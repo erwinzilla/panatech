@@ -1,4 +1,4 @@
-@extends('blank')
+@extends('blank', ['class' => Auth::user()->theme.'-theme'])
 
 @section('title')
     @yield('title')

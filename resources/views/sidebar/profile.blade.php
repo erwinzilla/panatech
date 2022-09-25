@@ -5,7 +5,7 @@
         <img src="{{ asset('uploads/images/users/default.jpg') }}" class="avatar rounded-circle" alt="Avatar">
     @endif
     <div class="mx-2">
-        <b class="text-black">{{ ucwords(Auth::user()->name) }}</b><br>
+        <b class="text-default">{{ ucwords(Auth::user()->name) }}</b><br>
         <span class="{{ getBadge(Auth::user()->privileges->color) }}">{{ ucwords(Auth::user()->privileges->name) }}</span>
     </div>
     <div class="dropdown ms-auto align-self-center">

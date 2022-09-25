@@ -32,6 +32,70 @@ let Toast = Swal.mixin({
 
 // saat semua telah ter-load
 document.addEventListener("DOMContentLoaded", function() {
+    let prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    let currentTheme = localStorage.getItem("theme");
+
+    // jika tidak ada data di storage maka
+    if (!currentTheme) {
+        currentTheme = prefersDarkScheme.matches ? 'dark' : 'light';
+        const load_url = url('theme/'+currentTheme);
+        send_http(load_url, function (data) {
+            if (data === 'success') {
+                toggle_theme(currentTheme)
+            }
+        }, 'get', null, false);
+
+    }
+
+    // Toggle Dark Mode
+    let btn_mode = $('#btn-mode');
+    if (btn_mode) {
+        btn_mode.addEventListener('click', function () {
+            let currentTheme = localStorage.getItem("theme");
+            let cur_theme = 'dark';
+
+            if (currentTheme == "dark") {
+                cur_theme = 'light';
+            } else if (currentTheme == "light") {
+                cur_theme = 'dark';
+            }
+
+            let load_url = url('theme/'+cur_theme);
+            send_http(load_url, function (data) {
+                if (data === 'success') {
+                    toggle_theme(cur_theme);
+                }
+            }, 'get', null, false);
+
+            // Finally, let's save the current preference to localStorage to keep using it
+            if (localStorage.setItem("theme", cur_theme)) {
+                console.log(cur_theme)
+            }
+        });
+    }
+
+    // Toggle Dark Mode for Login
+    let btn_mode_login = document.querySelector('#btn-mode-login');
+    if (btn_mode_login) {
+        btn_mode_login.addEventListener('click', function () {
+            let currentTheme = localStorage.getItem("theme");
+            let cur_theme = 'dark';
+
+            if (currentTheme === "dark") {
+                cur_theme = 'light';
+            } else if (currentTheme === "light") {
+                cur_theme = 'dark';
+            }
+
+            toggle_theme(cur_theme);
+
+            // Finally, let's save the current preference to localStorage to keep using it
+            if (localStorage.setItem("theme", cur_theme)) {
+                console.log(cur_theme)
+            }
+        });
+    }
+
     // confirmation restore data
     let res_act = $s('.restore-action-link');
     if (res_act) {
@@ -328,5 +392,30 @@ function url(query) {
 function ucwords (str) {
     return (str + '').replace(/^([a-z])|\s+([a-z])/g, function ($1) {
         return $1.toUpperCase();
+    });
+}
+
+function toggle_theme(mode) {
+    if (mode === 'dark'){
+        // ganti tema
+        if (document.body.classList.contains('light-theme')){
+            document.body.classList.remove('light-theme');
+        }
+        document.body.classList.add('dark-theme');
+    }
+
+    if (mode === 'light'){
+        // Ganti tema
+        if (document.body.classList.contains('dark-theme')){
+            document.body.classList.remove('dark-theme');
+        }
+        document.body.classList.add('light-theme');
+    }
+
+    // ganti icon
+    const load_url = url('theme/'+mode+'/icon');
+    send_http(load_url, function (data) {
+        let btn_mode = $('#btn-mode');
+        btn_mode.innerHTML = data;
     });
 }

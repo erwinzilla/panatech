@@ -3,16 +3,16 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
-            @include('component.table.title', ['title' => 'Branch', 'column' => 'branch', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Service Center', 'column' => 'name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Coordinator', 'column' => 'branch_coordinator', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Code', 'column' => 'code', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Head Service', 'column' => 'user', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Address', 'column' => 'address', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Phone', 'column' => 'phone', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Fax', 'column' => 'fax', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Email', 'column' => 'email', 'sortable' => true])
+            @include('component.table.title', ['title' => '#', 'column' => 'branch_services.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Branch', 'column' => 'branches.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Service Center', 'column' => 'branch_services.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Coordinator', 'column' => 'branch_coordinators.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Code', 'column' => 'branch_services.code', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Head Service', 'column' => 'users.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Address', 'column' => 'branch_services.address', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Phone', 'column' => 'branch_services.phone', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Fax', 'column' => 'branch_services.fax', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Email', 'column' => 'branch_services.email', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])

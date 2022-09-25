@@ -12,13 +12,16 @@ use File;
 
 class UserController extends Controller
 {
-    const blade_view = 'layout.user';
-    const url_redirect ='user';
-    const name = 'user / employee';
-    const privilege = 'users';
-
     // table
     const perPage = 10;
+
+    // config
+    const config = [
+        'blade'     => 'layout.user',
+        'url'       => 'user',
+        'name'      => 'user / employee',
+        'privilege' => 'users'
+    ];
 
     /**
      * Display a listing of the resource.
@@ -28,9 +31,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = User::select('*');
+        $data = User::select('users.*');
+
+        // join
+        $data = $data->join('user_privileges', 'users.privilege', '=', 'user_privileges.id');
 
         $search = $request->search;
         if (strlen($search) > 0) {
@@ -64,17 +70,18 @@ class UserController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'data',
-            'title' => self::name,
-            'table' => $table
+            'data'      => $data->paginate($perPage)->appends($table),
+            'type'      => 'data',
+            'title'     => self::config['name'],
+            'table'     => $table,
+            'config'    => self::config
         ];
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     /**
@@ -85,7 +92,7 @@ class UserController extends Controller
     public function create()
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
             'name'              => null,
@@ -103,13 +110,16 @@ class UserController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $data,
-            'data2' => UserPrivilege::all(),
-            'type'  => 'create',
-            'title' => 'Create '.self::name
+            'data'                  => $data,
+            'data_additional'       => [
+                'user_privilege'    => UserPrivilege::all()
+            ],
+            'type'                  => 'create',
+            'title'                 => 'Create '.self::config['name'],
+            'config'                => self::config
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -121,7 +131,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // validasi
         $rules = [
@@ -186,9 +196,9 @@ class UserController extends Controller
         // User::create($request->all());
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -205,7 +215,7 @@ class UserController extends Controller
             ->get()->first();
 
         // jika profile bukan dari sendiri
-        if( $data->id != Auth::user()->id && getUserLevel(self::privilege)  < CAN_CRUD ) {
+        if( $data->id != Auth::user()->id && getUserLevel(self::config['privilege'])  < CAN_CRUD ) {
             $params = [
                 'status'    => 'warning',
                 'message'   => 'Maaf anda tidak memiliki akses untuk melihat halaman ini'
@@ -220,7 +230,7 @@ class UserController extends Controller
             'title' => ucwords($data->name)
         ];
 
-        return view(self::blade_view.'.profile', $params);
+        return view(self::config['blade'].'.profile', $params);
     }
 
     /**
@@ -232,17 +242,17 @@ class UserController extends Controller
     public function edit($id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // penguraian data
         $params = [
             'data'  => User::find($id),
             'data2' => UserPrivilege::all(),
             'type'  => 'edit',
-            'title' => 'Edit '.self::name
+            'title' => 'Edit '.self::config['name']
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -255,7 +265,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // validasi
         $rules = [
@@ -331,9 +341,9 @@ class UserController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -345,21 +355,21 @@ class UserController extends Controller
     public function destroy($id)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $hasil = User::find($id);
         $hasil->delete();
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'delete', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         $data = User::onlyTrashed();
 
@@ -403,15 +413,15 @@ class UserController extends Controller
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     public function restore($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -422,15 +432,15 @@ class UserController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 
     public function delete($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = User::onlyTrashed()
@@ -441,15 +451,15 @@ class UserController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 
     public function chooseUser(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         $data = User::select('*');
 
@@ -493,8 +503,8 @@ class UserController extends Controller
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 }

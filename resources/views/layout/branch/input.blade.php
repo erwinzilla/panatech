@@ -3,12 +3,11 @@
 @section('title', ucwords($title))
 
 @section('sidebar')
-    @include('layout.branch.sidebar')
+    @include($config['blade'].'.sidebar')
 @endsection
 
 @section('content')
     @include('component.breadcrumb')
-    <h1 class="fw-bold">{{ ucwords($title) }}</h1>
 
     {{--    Body--}}
     <div class="row mt-3">
@@ -17,14 +16,7 @@
             <small class="text-muted">Data ini yang nanti akan digunakan saat memberikan nama cabang</small>
         </div>
         <div id="main" class="col-md-9">
-            @if($type == 'create')
-                <form action="{{ url('branch') }}" method="post">
-            @endif
-            @if($type == 'edit')
-                <form action="{{ url('branch/'.$data->id) }}" method="post">
-                @method('put')
-            @endif
-            @csrf
+            @include('form.header.start')
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="mb-3">
@@ -43,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            </form>
+            @include('form.header.end')
         </div>
     </div>
 @endsection

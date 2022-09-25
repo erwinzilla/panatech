@@ -23,3 +23,4 @@
         @endif
     </ol>
 </nav>
+<h1 class="text-default fw-bold">{{ ucwords($title) }}</h1>

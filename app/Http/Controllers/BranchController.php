@@ -8,13 +8,16 @@ use Validator;
 
 class BranchController extends Controller
 {
-    const blade_view = 'layout.branch';
-    const url_redirect ='branch';
-    const name = 'branch';
-    const privilege = 'branches';
-
     // table
     const perPage = 10;
+
+    // config
+    const config = [
+        'blade'     => 'layout.branch',
+        'url'       => 'branch',
+        'name'      => 'branch',
+        'privilege' => 'branches'
+    ];
 
     /**
      * Display a listing of the resource.
@@ -24,12 +27,12 @@ class BranchController extends Controller
     public function index(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         $data = Branch::select('*');
 
         $search = $request->search;
-        if (strlen($search) > 2) {
+        if (strlen($search) > 1) {
             $data = $data->where('name','LIKE','%'.$search.'%');
         }
 
@@ -52,17 +55,18 @@ class BranchController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'data',
-            'title' => self::name,
-            'table' => $table
+            'data'      => $data->paginate($perPage)->appends($table),
+            'type'      => 'data',
+            'title'     => self::config['name'],
+            'table'     => $table,
+            'config'    => self::config
         ];
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     /**
@@ -73,7 +77,7 @@ class BranchController extends Controller
     public function create()
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
             'id'        => null,
@@ -86,10 +90,11 @@ class BranchController extends Controller
         $params = [
             'data'  => $data,
             'type'  => 'create',
-            'title' => 'Create '.self::name
+            'title' => 'Create '.self::config['name'],
+            'config'    => self::config
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -101,7 +106,7 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // validasi
         $rules = [
@@ -124,9 +129,9 @@ class BranchController extends Controller
         $hasil = Branch::create($request->all());
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -149,16 +154,16 @@ class BranchController extends Controller
     public function edit(Branch $branch)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // penguraian data
         $params = [
             'data'  => $branch,
             'type'  => 'edit',
-            'title' => 'Edit '.self::name
+            'title' => 'Edit '.self::config['name']
         ];
 
-        return view(self::blade_view.'.input', $params);
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -171,7 +176,7 @@ class BranchController extends Controller
     public function update(Request $request, Branch $branch)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // validasi
         $rules = [
@@ -194,9 +199,9 @@ class BranchController extends Controller
         $hasil = $branch->fill($request->all())->save();
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -208,18 +213,18 @@ class BranchController extends Controller
     public function destroy(Branch $branch)
     {
         // cek privilege
-        privilegeLevel(self::privilege, CAN_CRUD);
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         // send result
-        $params = getStatus($branch->delete() ? 'success' : 'error', 'delete', self::name);
+        $params = getStatus($branch->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
-        return redirect(self::url_redirect)->with($params);
+        return redirect(self::config['url'])->with($params);
     }
 
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         $data = Branch::onlyTrashed();
 
@@ -255,15 +260,15 @@ class BranchController extends Controller
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 
     public function restore($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = Branch::onlyTrashed()
@@ -274,15 +279,15 @@ class BranchController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 
     public function delete($id = null)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
             $hasil = Branch::onlyTrashed()
@@ -293,15 +298,15 @@ class BranchController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::name);
+        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
 
-        return redirect(self::url_redirect.'/trash')->with($params);
+        return redirect(self::config['url'].'/trash')->with($params);
     }
 
     public function choose(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::privilege, ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         $data = Branch::select('*');
 
@@ -337,8 +342,8 @@ class BranchController extends Controller
 
         // jika hanya ingin mendapatkan data table saja
         if ($target == 'table') {
-            return view(self::blade_view.'.table', $params);
+            return view(self::config['blade'].'.table', $params);
         }
-        return view(self::blade_view.'.data', $params);
+        return view(self::config['blade'].'.data', $params);
     }
 }

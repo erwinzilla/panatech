@@ -5,11 +5,6 @@
 @import "../../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-
-// 3. Include remainder of required Bootstrap stylesheets
-@import "../../node_modules/bootstrap/scss/variables";
-
-// 4. Include any default map overrides here
 // color
 $primary: #5D9CEC;
 $secondary: #AC92EC;
@@ -36,7 +31,9 @@ $content-bg: #f0f2f5;
 
 $border-color: rgba($dark, 0.15);
 $border-width: 0;
-$radius: .7rem;
+$border-radius: .7rem;
+$border-radius-sm: .7rem;
+$border-radius-lg: .7rem;
 $min-contrast-ratio: 1;
 
 // Font
@@ -52,69 +49,124 @@ $body-color: #434A54;
 
 // Card
 $card-border-color: $border-color;
-$card-border-radius: $radius;
 $card-cap-padding-y: 1rem;
-$card-cap-bg: $white;
-$card-inner-border-radius: subtract($card-border-radius, $card-border-width);
-$card-border-width: $border-width;
 
 // Form Control
-$form-feedback-icon-invalid: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$form-feedback-icon-invalid-color}" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>');
 $form-label-margin-bottom: .25rem;
 
 // Input
 $input-bg: #e9ecef;
 $input-border-color: #d9d9d9;
+$input-btn-border-width: 1px;
 $input-font-size: .8rem;
-$input-focus-bg: $input-bg;
 $input-padding-x: .75rem;
 $input-padding-y: .5rem;
-$input-border-radius: $radius;
-$input-border-radius-lg: $radius;
-
-// select
-$form-select-bg: $input-bg;
-$form-select-font-size: $input-font-size;
-$form-select-padding-y: $input-padding-y;
-$form-select-padding-x: $input-padding-x;
-$form-select-border-color: $input-border-color;
-$form-select-border-radius: $input-border-radius;
 
 // Button
 $btn-font-size: .8rem;
-$btn-border-radius: $radius;
 
 // Navbar
 $navbar-padding-y: .25rem;
 
-// Nav
-$nav-pills-border-radius: $radius;
-$nav-pills-link-active-bg: $primary;
-
 // Breadcrumb
-$breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="12" height="12" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$breadcrumb-divider-color}"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>');
 $breadcrumb-font-size: 1rem;
 $breadcrumb-item-padding-x: 1rem;
 
 // Dropdown
-$dropdown-border-color: $border-color;
+$dropdown-border-width: 1px;
 $dropdown-font-size: .8rem;
-$dropdown-color: $navbar-light-color;
-$dropdown-link-color: $navbar-light-color;
-$dropdown-link-active-bg: $primary;
-$dropdown-border-radius: $radius;
-
-// Modal
-$modal-content-border-color: $border-color;
-$modal-header-border-width: 0;
-$modal-footer-border-width: 0;
-$modal-footer-bg: $content-bg;
-$modal-content-border-radius: $radius;
 
 // Pagination
-$pagination-border-radius: $radius;
-$pagination-active-bg: $primary;
-$pagination-active-border-color: $pagination-active-bg;
+$pagination-border-width: 1px;
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../../node_modules/bootstrap/scss/variables";
+
+// 4. Include any default map overrides here
+//  Form
+$form-feedback-icon-invalid: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$form-feedback-icon-invalid-color}" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>');
+
+// Breadcrumb
+$breadcrumb-divider: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="12" height="12" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$breadcrumb-divider-color}"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>');
+
+// Themes
+// set for themes
+$theme-map: ();
+$theme-map-top: ();
+
+$themes: (
+        light: (
+                body-bg: $body-bg,
+                body-color: $body-color,
+                border-color: $border-color,
+                card-bg: $card-bg,
+                card-color: $card-color,
+                card-footer-bg: rgba(#000, 0.1),
+                color: #000,
+                color-hover: rgba(#000, 0.7),
+                color-disabled: rgba(#000, 0.3),
+                color-active: rgba(#000, 0.9),
+                content-bg: #e9ecef,
+                input-bg: #e9ecef,
+                input-color: #262626,
+                navbar-bg: $body-bg,
+                navbar-color: $body-color,
+                table-striped-bg: $table-striped-bg,
+        ),
+        dark: (
+                body-bg: #171717,
+                body-color: #838383,
+                border-color: $border-color,
+                card-footer-bg: rgba(#fff, 0.1),
+                card-bg: #171717,
+                card-color: #838383,
+                color: #fff,
+                color-hover: rgba(#fff, 0.7),
+                color-disabled: rgba(#fff, 0.3),
+                color-active: rgba(#fff, 0.9),
+                content-bg: #1e1e1e,
+                input-bg: #1e1e1e,
+                input-color: #8f8f8f,
+                navbar-bg: #171717,
+                navbar-color: #838383,
+                table-striped-bg: rgba(0, 0, 0, 0.175),
+        ),
+);
+
+@mixin theme-top() {
+    @each $theme, $map in $themes {
+        &.#{$theme}-theme{
+            $theme-map-top: () !global;
+            @each $key, $submap in $map {
+                $value: map-get(map-get($themes, $theme), '#{$key}');
+                $theme-map-top: map-merge($theme-map-top, ($key: $value)) !global;
+            }
+            @content;
+            $theme-map-top: null !global;
+        }
+    }
+}
+
+@mixin theme() {
+    @each $theme, $map in $themes {
+        body.#{$theme}-theme & {
+            $theme-map: () !global;
+            @each $key, $submap in $map {
+                $value: map-get(map-get($themes, $theme), '#{$key}');
+                $theme-map: map-merge($theme-map, ($key: $value)) !global;
+            }
+            @content;
+            $theme-map: null !global;
+        }
+    }
+}
+
+@function t($key) {
+    @return map-get($theme-map, $key);
+}
+@function t-top($key) {
+    @return map-get($theme-map-top, $key);
+}
 
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
@@ -171,27 +223,24 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 @import "../../node_modules/bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+body {
+    @include theme-top() {
+        --bs-body-bg: #{t-top('body-bg')};
+        --bs-body-color: #{t-top('body-color')};
+        --bs-border-color: #{t-top('border-color')};
+        --bs-color: #{t-top('color')};
+        --bs-color-hover: #{t-top('color-hover')};
+        --bs-sweet-alert-2-bg: #{t-top('card-bg')};
+    }
+}
+hr {
+    border: 1px solid var(--bs-border-color);
+}
 .avatar {
     width: 3rem;
     height: 3rem;
     object-fit: cover;
     object-position: center;
-}
-.border-dashed {
-    border-style: dashed !important;
-}
-.border-dashed-bottom {
-    border-bottom: $border-width dashed $border-color !important;
-}
-.btn-icon {
-    min-width: 2.25rem;
-    min-height: 2.25rem;
-    padding: .5rem;
-}
-.content {
-    padding-left: 16.5rem;
-    padding-top: 1rem;
-    background-color: #f0f2f5;
 }
 .bg-login {
     background: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 2355, 255, 1)), url('/assets/images/backgrounds/bg-login-min.jpg');
@@ -200,8 +249,87 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     background-position: center;
     background-attachment: fixed;
 }
+.border-dashed {
+    border-style: dashed !important;
+}
+.border-dashed-bottom {
+    border-bottom: $border-width dashed $border-color !important;
+}
+.btn-close {
+    color: var(--bs-color);
+    &:hover {
+        color: var(--bs-color-hover);
+    }
+}
+.btn-icon {
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    padding: .5rem;
+}
+.card {
+    @include theme(){
+        --bs-card-border-color: #{t('border-color')};
+        --bs-card-cap-bg: #{t('card-bg')};
+        --bs-card-cap-color: #{t('card-color')};
+        --bs-card-bg: #{t('card-bg')};
+        --bs-card-color: #{t('card-color')};
+    }
+}
+.content {
+    @include theme() {
+        --bs-content-bg: #{t('content-bg')};
+    }
+    padding-left: 16.5rem;
+    padding-top: 1rem;
+    background-color: var(--bs-content-bg);
+}
+.dropdown-menu {
+    @include theme() {
+        --bs-dropdown-bg: #{t('navbar-bg')};
+        --bs-dropdown-color: #{t('navbar-color')};
+        --bs-dropdown-border-color: #{t('border-color')};
+        --bs-dropdown-link-color: #{t('color')};
+        --bs-dropdown-link-hover-color: #{t('color-hover')};
+        --bs-dropdown-link-hover-bg: #{t('input-bg')};
+        --bs-navbar-active-color: #{t('color-active')};
+    }
+}
 .font-logo {
     font-family: 'Righteous';
+}
+.form-control {
+    @include theme() {
+        --bs-input-bg: #{t('input-bg')};
+        --bs-input-color: #{t('input-color')};
+        --bs-input-border-color: #{t('border-color')};
+        --bs-input-focus-bg: #{t('input-bg')};
+        --bs-input-focus-color: #{t('input-color')};
+    }
+    background-color: var(--bs-input-bg);
+    color: var(--bs-input-color);
+    border-color: var(--bs-input-border-color);
+    &:focus {
+        background-color: var(--bs-input-focus-bg);
+        color: var(--bs-input-focus-color);
+    }
+    transition: $btn-transition;
+}
+.form-select {
+    @include theme() {
+        --bs-input-bg: #{t('input-bg')};
+        --bs-input-color: #{t('input-color')};
+        --bs-input-border-color: #{t('border-color')};
+        --bs-input-focus-bg: #{t('input-bg')};
+        --bs-input-focus-color: #{t('input-color')};
+    }
+    background-color: var(--bs-input-bg);
+    color: var(--bs-input-color);
+    border-color: var(--bs-input-border-color);
+    &:focus {
+        background-color: var(--bs-input-focus-bg);
+        color: var(--bs-input-focus-color);
+    }
+    transition: $btn-transition;
 }
 .icon {
     width: 1.25rem;
@@ -251,30 +379,74 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
         }
     }
 }
+.input-group-text {
+    @include theme() {
+        --bs-input-bg: #{t('input-bg')};
+        --bs-input-color: #{t('input-color')};
+        --bs-input-border-color: #{t('border-color')};
+    }
+    background-color: var(--bs-input-bg);
+    color: var(--bs-input-color);
+    border-color: var(--bs-input-border-color);
+    transition: $btn-transition;
+}
 .main-content {
     position: relative;
 }
 .main-sidebar {
-    background-color: $card-bg;
+    @include theme() {
+        --bs-sidebar-bg: #{t('card-bg')};
+        --bs-sidebar-color: #{t('card-color')};
+        --bs-sidebar-border-color: #{t('border-color')};
+    }
+    background-color: var(--bs-sidebar-bg);
+    color: var(--bs-sidebar-color);
     padding: 1rem;
     border-radius: $card-border-radius;
-    border: $card-border-width $border-style $card-border-color;
+    border: $card-border-width $border-style var(--bs-sidebar-border-color);
+}
+.modal-content {
+    @include theme() {
+        --bs-modal-bg: #{t('card-bg')};
+        --bs-modal-color: #{t('card-color')};
+        --bs-modal-border-color: #{t('border-color')};
+        --bs-modal-footer-bg: #{t('card-footer-bg')};
+    }
 }
 .navbar {
+    @include theme() {
+        --bs-navbar-bg: #{t('navbar-bg')};
+        --bs-navbar-color: #{t('navbar-color')};
+        --bs-navbar-hover-color: #{t('color-hover')};
+        --bs-navbar-disabled-color: #{t('color-disabled')};
+        --bs-navbar-active-color: #{t('color-active')};
+        --bs-navbar-brand-color: #{t('color')};
+        --bs-navbar-brand-hover-color: #{t('color')};
+    }
     border-bottom: $border-width $border-style rgba($dark, .1);
-    color: rgba($dark, .75);
-    background-color: $white;
+    color: var(--bs-navbar-color);
+    background-color: var(--bs-navbar-bg);
     .nav-item {
         .dropdown-menu {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
-            margin-top: .3rem;
+            margin-top: .21rem;
         }
     }
 }
 .no-caret {
     &:after {
         display: none;
+    }
+}
+.pagination {
+    @include theme() {
+        --bs-pagination-bg: #{t('input-bg')};
+        --bs-pagination-border-color: #{t('border-color')};
+        --bs-pagination-disabled-bg: #{t('card-bg')};
+        --bs-pagination-disabled-border-color: #{t('border-color')};
+        --bs-pagination-hover-bg: #{t('border-color')};
+        --bs-pagination-hover-border-color: #{t('border-color')};
     }
 }
 .profile-widget {
@@ -327,7 +499,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     .section-title {
         &:before {
             content: ' ';
-            border-radius: $radius;
+            border-radius: $border-radius;
             height: .5rem;
             width: 1.5rem;
             background-color: $primary;
@@ -342,6 +514,10 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     }
 }
 .sidebar {
+    @include theme(){
+        --bs-sidebar-nav-link-active-bg: #{t('content-bg')};
+        --bs-sidebar-nav-link-color: #{t('navbar-color')};
+    }
     position: absolute;
     width: 18rem;
     height: 100%;
@@ -350,16 +526,35 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
         &.nav-pills {
             .nav-item {
                 .nav-link {
-                    color: $navbar-light-color;
+                    color: var(--bs-sidebar-nav-link-color);
                     &.active {
-                        background-color: $content-bg;
+                        background-color: var(--bs-sidebar-nav-link-active-bg);
                     }
                 }
             }
         }
     }
 }
+.swal2-popup {
+    background-color: var(--bs-sweet-alert-2-bg) !important;
+}
 .table {
+    @include theme() {
+        --bs-table-color: #{t('color')};
+        --bs-table-head-color: #{t('body-color')};
+        --bs-table-striped-bg: #{t('table-striped-bg')};
+        --bs-table-striped-color: #{t('color')};
+    }
+    thead {
+        tr {
+            th {
+                color: var(--bs-table-head-color);
+                &:first-child {
+                    padding-left: 1rem;
+                }
+            }
+        }
+    }
     &:not(.data-table) {
         tbody {
             tr {
@@ -367,10 +562,10 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
                     td {
                         border-bottom: 0;
                         &:first-child {
-                            border-bottom-left-radius: $radius;
+                            border-bottom-left-radius: $border-radius;
                         }
                         &:last-child {
-                            border-bottom-right-radius: $radius;
+                            border-bottom-right-radius: $border-radius;
                         }
                     }
                 }
@@ -423,6 +618,9 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
             margin-right: .5rem;
         }
     }
+}
+.text-default {
+    color: var(--bs-color);
 }
 .w-1-slot {
     width: 3.5rem;

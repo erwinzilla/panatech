@@ -3,18 +3,18 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => '#', 'column' => 'users.id', 'sortable' => true, 'class' => 'text-center'])
             @if($type == 'data' || $type == 'trash')
-                @include('component.table.title', ['title' => 'Image', 'column' => 'image', 'sortable' => false, 'class' => 'align-middle'])
+                @include('component.table.title', ['title' => 'Image', 'column' => 'users.image', 'sortable' => false, 'class' => 'align-middle'])
             @endif
             @include('component.table.title', ['title' => $type == 'data' || $type == 'trash' ? 'Name' : 'Name / Detail', 'column' => 'name', 'sortable' => true])
             @if($type == 'data' || $type == 'trash')
-                @include('component.table.title', ['title' => 'Username', 'column' => 'username', 'sortable' => true])
-                @include('component.table.title', ['title' => 'Address', 'column' => 'address', 'sortable' => true])
-                @include('component.table.title', ['title' => 'Email', 'column' => 'email', 'sortable' => true])
+                @include('component.table.title', ['title' => 'Username', 'column' => 'users.username', 'sortable' => true])
+                @include('component.table.title', ['title' => 'Address', 'column' => 'users.address', 'sortable' => true])
+                @include('component.table.title', ['title' => 'Email', 'column' => 'users.email', 'sortable' => true])
             @endif
-            @include('component.table.title', ['title' => 'Phone', 'column' => 'phone', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Privilege', 'column' => 'privilege', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Phone', 'column' => 'users.phone', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Privilege', 'column' => 'user_privileges.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel('users') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
