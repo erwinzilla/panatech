@@ -5,6 +5,10 @@
 - Run Migrate
 - Run Composer
 
+1.5.0 **Branch Service Function**
+- Add branch service database
+- Add branch service controller and model
+
 1.4.1 **Data Table Function On Modal Too**
 - Add data table function
 

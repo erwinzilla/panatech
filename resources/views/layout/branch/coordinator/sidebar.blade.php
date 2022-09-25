@@ -1,4 +1,4 @@
-<div class="bg-white">
+<div class="main-sidebar">
     @include('sidebar.profile')
     <ul class="nav nav-pills flex-column" id="sidebar">
         <li class="nav-item mb-1">
@@ -9,6 +9,9 @@
         </li>
         <li class="nav-item mb-1">
             <a href="{{ url('branch') }}" class="nav-link">@svg('heroicon-o-building-office-2', 'icon') Branch</a>
+        </li>
+        <li class="nav-item mb-1">
+            <a href="{{ url('branch/service') }}" class="nav-link">@svg('heroicon-o-building-storefront', 'icon') Service</a>
         </li>
         {{--            Jika all access maka munculkan element--}}
         @if(getUserLevel('branches') >= ALL_ACCESS)

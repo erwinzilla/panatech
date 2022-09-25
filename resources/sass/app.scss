@@ -35,6 +35,7 @@ $theme-colors: (
 $content-bg: #f0f2f5;
 
 $border-color: rgba($dark, 0.15);
+$border-width: 0;
 $radius: .7rem;
 $min-contrast-ratio: 1;
 
@@ -55,6 +56,7 @@ $card-border-radius: $radius;
 $card-cap-padding-y: 1rem;
 $card-cap-bg: $white;
 $card-inner-border-radius: subtract($card-border-radius, $card-border-width);
+$card-border-width: $border-width;
 
 // Form Control
 $form-feedback-icon-invalid: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#{$form-feedback-icon-invalid-color}" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>');
@@ -187,7 +189,7 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
     padding: .5rem;
 }
 .content {
-    padding-left: 17rem;
+    padding-left: 16.5rem;
     padding-top: 1rem;
     background-color: #f0f2f5;
 }
@@ -251,6 +253,12 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 }
 .main-content {
     position: relative;
+}
+.main-sidebar {
+    background-color: $card-bg;
+    padding: 1rem;
+    border-radius: $card-border-radius;
+    border: $card-border-width $border-style $card-border-color;
 }
 .navbar {
     border-bottom: $border-width $border-style rgba($dark, .1);
@@ -335,10 +343,9 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 }
 .sidebar {
     position: absolute;
-    width: 17rem;
+    width: 18rem;
     height: 100%;
     padding: 1rem;
-    border-right: $border-width $border-style $border-color;
     .nav {
         &.nav-pills {
             .nav-item {

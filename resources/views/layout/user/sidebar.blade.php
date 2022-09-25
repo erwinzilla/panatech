@@ -1,4 +1,4 @@
-<div class="bg-white">
+<div class="main-sidebar">
     @include('sidebar.profile')
     <ul class="nav nav-pills flex-column" id="sidebar">
         @if($type != 'profile')

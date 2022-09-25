@@ -70,7 +70,7 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #434A54;
   --bs-body-bg: #ffffff;
-  --bs-border-width: 1px;
+  --bs-border-width: 0;
   --bs-border-style: solid;
   --bs-border-color: rgba(101, 109, 120, 0.15);
   --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
@@ -2712,7 +2712,7 @@ progress {
   --bs-card-spacer-y: 1rem;
   --bs-card-spacer-x: 1rem;
   --bs-card-title-spacer-y: 0.5rem;
-  --bs-card-border-width: 1px;
+  --bs-card-border-width: 0;
   --bs-card-border-color: rgba(101, 109, 120, 0.15);
   --bs-card-border-radius: 0.7rem;
   --bs-card-box-shadow: ;
@@ -9843,7 +9843,7 @@ textarea.form-control-lg {
 }
 
 .border-dashed-bottom {
-  border-bottom: 1px dashed rgba(101, 109, 120, 0.15) !important;
+  border-bottom: 0 dashed rgba(101, 109, 120, 0.15) !important;
 }
 
 .btn-icon {
@@ -9853,7 +9853,7 @@ textarea.form-control-lg {
 }
 
 .content {
-  padding-left: 17rem;
+  padding-left: 16.5rem;
   padding-top: 1rem;
   background-color: #f0f2f5;
 }
@@ -9918,8 +9918,15 @@ textarea.form-control-lg {
   position: relative;
 }
 
+.main-sidebar {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 0.7rem;
+  border: 0 solid rgba(101, 109, 120, 0.15);
+}
+
 .navbar {
-  border-bottom: 1px solid rgba(101, 109, 120, 0.1);
+  border-bottom: 0 solid rgba(101, 109, 120, 0.1);
   color: rgba(101, 109, 120, 0.75);
   background-color: #fff;
 }
@@ -9953,7 +9960,7 @@ textarea.form-control-lg {
   flex: 1;
   text-align: center;
   padding: 0.75rem 0;
-  border-right: 1px solid rgba(101, 109, 120, 0.15);
+  border-right: 0 solid rgba(101, 109, 120, 0.15);
 }
 .profile-widget .profile-widget-items .profile-widget-item:last-child {
   border: none !important;
@@ -9997,10 +10004,9 @@ textarea.form-control-lg {
 
 .sidebar {
   position: absolute;
-  width: 17rem;
+  width: 18rem;
   height: 100%;
   padding: 1rem;
-  border-right: 1px solid rgba(101, 109, 120, 0.15);
 }
 .sidebar .nav.nav-pills .nav-item .nav-link {
   color: rgba(0, 0, 0, 0.55);

@@ -297,4 +297,48 @@ class BranchController extends Controller
 
         return redirect(self::url_redirect.'/trash')->with($params);
     }
+
+    public function choose(Request $request)
+    {
+        // cek privilege
+        privilegeLevel(self::privilege, ONLY_SEE);
+
+        $data = Branch::select('*');
+
+        $search = $request->search;
+        if (strlen($search) > 1) {
+            $data = $data->where('name','LIKE','%'.$search.'%');
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: null;
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
+        ];
+
+        // penguraian data
+        $params = [
+            'data'  => $data->paginate($perPage)->appends($table),
+            'type'  => 'choose',
+            'title' => 'Choose',
+            'table' => $table
+        ];
+
+        // jika hanya ingin mendapatkan data table saja
+        if ($target == 'table') {
+            return view(self::blade_view.'.table', $params);
+        }
+        return view(self::blade_view.'.data', $params);
+    }
 }

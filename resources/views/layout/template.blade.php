@@ -8,7 +8,7 @@
     @include('component.navbar')
     <div class="main-content" data-bs-spy="scroll" data-bs-target="#sidebar" data-bs-smooth-scroll="true">
         {{--    Sidebar --}}
-        <section class="sidebar bg-white">
+        <section class="sidebar">
             @yield('sidebar')
         </section>
 

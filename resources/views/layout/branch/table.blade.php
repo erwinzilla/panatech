@@ -6,7 +6,10 @@
             @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => 'Name', 'column' => 'name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
-            @if(getUserLevel('branches') >= CAN_CRUD)
+            @if(getUserLevel('branches') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
+                @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
+            @endif
+            @if($type == 'choose')
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
             @endif
         </tr>
@@ -28,11 +31,18 @@
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>{{ $row->name }}</td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('users') >= CAN_CRUD)
+                    @if(getUserLevel('branches') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => 'branch/', 'type' => $type, 'id' => $row->id])
                             </div>
+                        </td>
+                    @endif
+                    @if($type == 'choose')
+                        <td class="w-1-slot text-center">
+                            <button type="button" class="btn btn-success btn-icon" data-bs-toggle="tooltip" data-bs-title="Choose" onclick="choose('branch', {{ $row->id }}, '{{ $row->name }}');return false;" data-bs-dismiss="modal">
+                                @svg('heroicon-s-check-circle', 'icon')
+                            </button>
                         </td>
                     @endif
                 </tr>

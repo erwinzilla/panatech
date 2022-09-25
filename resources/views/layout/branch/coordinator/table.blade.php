@@ -37,7 +37,7 @@
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('users') >= CAN_CRUD)
+                    @if(getUserLevel('branches') >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => 'branch/coordinator/', 'type' => $type, 'id' => $row->id])

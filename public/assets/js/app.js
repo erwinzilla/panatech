@@ -124,20 +124,27 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // modal user table show
-    let btn_user = $('#btn-user');
-    if (btn_user) {
-        btn_user.addEventListener('click', function () {
-            let table_data_modal = $('#table-data-modal');
-            if (table_data_modal) {
-                // kirim data untuk menunjukan hasil pencarian
-                let load_url = url('user/choose?target=table');
-                send_http(load_url, function (data) {
-                    table_data_modal.innerHTML = data;
-                    table_data_modal.dataset.url = url('user/choose');
-                });
-            }
+    let btn_table_modal = $s('.btn-table-modal');
+    if (btn_table_modal) {
+        btn_table_modal.forEach(function (el) {
+            el.addEventListener('click', function () {
+                let table_data_modal = $('#table-data-modal');
+                if (table_data_modal) {
+                    let target = el.dataset.target;
 
-            init();
+                    // setting header
+                    table_data_modal.closest('.modal').querySelector('.modal-title').innerText = ucwords(target);
+
+                    // kirim data untuk menunjukan hasil pencarian
+                    let load_url = url(target+'/choose?target=table');
+                    send_http(load_url, function (data) {
+                        table_data_modal.innerHTML = data;
+                        table_data_modal.dataset.url = url(target+'/choose');
+                    });
+                }
+
+                init();
+            });
         });
     }
 
@@ -249,7 +256,7 @@ function choose(name, value, opt_name = null, opt_privilege = null, opt_privileg
 
     // update nama user
     if (opt_name) {
-        let input_name = $('#name');
+        let input_name = $('#name-'+name);
         if (input_name) {
             input_name.innerText = opt_name;
         }
@@ -257,7 +264,7 @@ function choose(name, value, opt_name = null, opt_privilege = null, opt_privileg
 
     // update privilege badge
     if (opt_privilege && opt_privilege_color) {
-        let input_privilege = $('#privilege');
+        let input_privilege = $('#privilege-'+name);
         if (input_privilege) {
             input_privilege.className = "badge bg-"+opt_privilege_color+" text-"+opt_privilege_color+"  bg-opacity-25";
             input_privilege.innerText = opt_privilege;
@@ -316,4 +323,10 @@ function send_http(url, callback, method = 'get', param = null, loading = true) 
 
 function url(query) {
     return base_url+query;
+}
+
+function ucwords (str) {
+    return (str + '').replace(/^([a-z])|\s+([a-z])/g, function ($1) {
+        return $1.toUpperCase();
+    });
 }
