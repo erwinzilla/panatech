@@ -40,7 +40,7 @@ class BranchServiceController extends Controller
         $data = $data->join('users', 'branch_services.user', '=', 'users.id');
 
         $search = $request->search;
-        if (strlen($search) > 2) {
+        if (strlen($search) > 1) {
             $data = $data->where('branch_services.name','LIKE','%'.$search.'%')
                 ->orWhere('branch_services.address', 'LIKE', '%'.$search.'%')
                 ->orWhere('branch_services.phone', 'LIKE', '%'.$search.'%')
@@ -134,12 +134,6 @@ class BranchServiceController extends Controller
 
         $data = (object) $data;
 
-        $config = [
-            'blade'     => self::config['blade'],
-            'url'       => self::config['url'],
-            'privilege' => self::config['privilege']
-        ];
-
         // penguraian data
         $params = [
             'data'                      => $data,
@@ -226,12 +220,6 @@ class BranchServiceController extends Controller
 
         $branchService = BranchService::find($id);
 
-        $config = [
-            'blade'     => self::config['blade'],
-            'url'       => self::config['url'],
-            'privilege' => self::config['privilege']
-        ];
-
         // penguraian data
         $params = [
             'data'                      => $branchService,
@@ -241,7 +229,7 @@ class BranchServiceController extends Controller
             ],
             'type'                      => 'edit',
             'title'                     => 'Edit '.self::config['name'],
-            'config'                    => $config
+            'config'                    => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -321,7 +309,12 @@ class BranchServiceController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = BranchService::onlyTrashed();
+        $data = BranchService::onlyTrashed()->select('branch_services.*');
+
+        // join
+        $data = $data->join('branches', 'branch_services.branch', '=', 'branches.id');
+        $data = $data->join('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
+        $data = $data->join('users', 'branch_services.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {
@@ -377,19 +370,13 @@ class BranchServiceController extends Controller
             'target'    => $target
         ];
 
-        $config = [
-            'blade'     => self::config['blade'],
-            'url'       => self::config['url'],
-            'privilege' => self::config['privilege']
-        ];
-
         // penguraian data
         $params = [
             'data'      => $data->paginate($perPage)->appends($table),
             'type'      => 'trash',
             'title'     => 'Trash',
             'table'     => $table,
-            'config'    => $config
+            'config'    => self::config
         ];
 
         // jika hanya ingin mendapatkan data table saja

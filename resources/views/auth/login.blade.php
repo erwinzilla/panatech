@@ -1,4 +1,4 @@
-@extends('blank', ['class' => 'bg-login'])
+@extends('blank', ['class' => 'bg-login dark-theme'])
 
 @section('title', ucwords($title))
 

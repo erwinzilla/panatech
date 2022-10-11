@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .icon {
+        @apply h-5 w-5 -mt-px;
+    }
+    .icon-sm {
+        @apply h-4 w-4 -mt-px;
+    }
+    .navbar {
+
+    }
+}

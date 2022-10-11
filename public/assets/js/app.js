@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentTheme = localStorage.getItem("theme");
 
     // jika tidak ada data di storage maka
-    if (!currentTheme) {
+    if (!!currentTheme) {
         currentTheme = prefersDarkScheme.matches ? 'dark' : 'light';
         const load_url = url('theme/'+currentTheme);
         send_http(load_url, function (data) {
@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 toggle_theme(currentTheme)
             }
         }, 'get', null, false);
-
     }
 
     // Toggle Dark Mode
@@ -63,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let load_url = url('theme/'+cur_theme);
             send_http(load_url, function (data) {
                 if (data === 'success') {
-                    toggle_theme(cur_theme);
+                    toggle_theme(cur_theme, true);
                 }
             }, 'get', null, false);
 
@@ -395,7 +394,7 @@ function ucwords (str) {
     });
 }
 
-function toggle_theme(mode) {
+function toggle_theme(mode, icon = false) {
     if (mode === 'dark'){
         // ganti tema
         if (document.body.classList.contains('light-theme')){
@@ -412,10 +411,12 @@ function toggle_theme(mode) {
         document.body.classList.add('light-theme');
     }
 
-    // ganti icon
-    const load_url = url('theme/'+mode+'/icon');
-    send_http(load_url, function (data) {
-        let btn_mode = $('#btn-mode');
-        btn_mode.innerHTML = data;
-    });
+    if (icon) {
+        // ganti icon
+        const load_url = url('theme/'+mode+'/icon');
+        send_http(load_url, function (data) {
+            let btn_mode = $('#btn-mode');
+            btn_mode.innerHTML = data;
+        });
+    }
 }

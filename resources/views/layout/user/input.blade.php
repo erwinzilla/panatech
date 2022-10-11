@@ -15,6 +15,7 @@
         <div class="col-md-3">
             <h5 class="text-black mb-0">Account</h5>
             <small class="text-muted">Data ini yang nanti akan digunakan untuk membuat pengguna dapat masuk ke dalam sistem</small>
+            <br><small class="text-danger">*Wajib diisi</small>
         </div>
         <div id="main" class="col-md-9">
             <div class="card mb-3">
@@ -82,6 +83,7 @@
         <div class="col-md-3">
             <h5 class="text-black mb-0">Personal Information</h5>
             <small class="text-muted">Informasi ini yang akan muncul di data pengguna / karyawan</small>
+            <br><small class="text-danger">*Wajib diisi</small>
         </div>
         <div id="profile" class="col-md-9">
             <div class="card mb-3">

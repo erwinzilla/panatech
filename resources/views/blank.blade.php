@@ -7,8 +7,9 @@
     @include('favicon')
     {{-- Bootstrap 5.1 custom css--}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous|Poppins">
-    <link href="{{ url('assets/css/app.css') }}" rel="stylesheet">
+    <link href="{{ url('assets/css/app.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+{{--    @vite('resources/css/app.css')--}}
 </head>
 <body class="{{ isset($class) ? $class : '' }}">
 

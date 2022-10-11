@@ -15,6 +15,7 @@
         <div class="col-md-3">
             <h5 class="text-black mb-0">Main Menu</h5>
             <small class="text-muted">Data ini yang nanti akan digunakan saat memberikan akses kepada pengguna</small>
+            <br><small class="text-danger">*Wajib diisi</small>
         </div>
         <div id="main" class="col-md-9">
             <div class="card mb-3">

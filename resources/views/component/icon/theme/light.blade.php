@@ -1,1 +1,1 @@
-@svg('heroicon-o-sun', 'icon-sm')
+@svg('heroicon-s-sun', 'icon')

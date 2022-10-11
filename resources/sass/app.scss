@@ -29,7 +29,7 @@ $theme-colors: (
 // Init
 $content-bg: #f0f2f5;
 
-$border-color: rgba($dark, 0.15);
+$border-color: #dbdbdb;
 $border-width: 0;
 $border-radius: .7rem;
 $border-radius-sm: .7rem;
@@ -67,6 +67,8 @@ $btn-font-size: .8rem;
 
 // Navbar
 $navbar-padding-y: .25rem;
+$nav-pills-link-active-color: $primary;
+$nav-pills-link-active-bg: rgba($primary, .25);
 
 // Breadcrumb
 $breadcrumb-font-size: 1rem;
@@ -108,15 +110,17 @@ $themes: (
                 color-active: rgba(#000, 0.9),
                 content-bg: #e9ecef,
                 input-bg: #e9ecef,
-                input-color: #262626,
+                input-color: #000,
+                login-bg: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
+                login-img: url('/assets/images/backgrounds/bg-login-min.jpg'),
                 navbar-bg: $body-bg,
-                navbar-color: $body-color,
+                navbar-color: #000,
                 table-striped-bg: $table-striped-bg,
         ),
         dark: (
                 body-bg: #171717,
                 body-color: #838383,
-                border-color: $border-color,
+                border-color: #282828,
                 card-footer-bg: rgba(#fff, 0.1),
                 card-bg: #171717,
                 card-color: #838383,
@@ -126,9 +130,11 @@ $themes: (
                 color-active: rgba(#fff, 0.9),
                 content-bg: #1e1e1e,
                 input-bg: #1e1e1e,
-                input-color: #8f8f8f,
+                input-color: #fff,
+                login-bg: linear-gradient(270deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
+                login-img: url('/assets/images/backgrounds/bg-login-dark-min.jpg'),
                 navbar-bg: #171717,
-                navbar-color: #838383,
+                navbar-color: #fff,
                 table-striped-bg: rgba(0, 0, 0, 0.175),
         ),
 );
@@ -242,8 +248,59 @@ hr {
     object-fit: cover;
     object-position: center;
 }
+.bg-gradient-primary {
+  background-color: $primary;
+  background-image: linear-gradient(
+                  140deg
+          ,$primary 10%,$secondary 100%);
+  background-size: cover;
+}
+.bg-gradient-secondary {
+  background-color: $secondary;
+  background-image: linear-gradient(
+                  140deg
+          ,$secondary 10%,$warning 100%);
+  background-size: cover;
+}
+.bg-gradient-success {
+  background-color: $success;
+  background-image: linear-gradient(
+                  140deg
+          ,$success 10%,$info 100%);
+  background-size: cover;
+}
+.bg-gradient-info {
+  background-color: $info;
+  background-image: linear-gradient(
+                  140deg
+          ,$info 10%,$primary 100%);
+  background-size: cover;
+}
+.bg-gradient-warning {
+  background-color: $warning;
+  background-image: linear-gradient(
+                  140deg
+          ,$warning 10%,$danger 100%);
+  background-size: cover;
+}
+.bg-gradient-danger {
+  background-color: $danger;
+  background-image: linear-gradient(
+                  140deg
+          ,$danger 10%,$secondary 100%);
+  background-size: cover;
+}
+.bg-gradient-dark {
+  background-color: $dark;
+  background-image: linear-gradient(
+                  140deg
+          ,$dark 10%,#111417 100%);
+  background-size: cover;
+}
 .bg-login {
-    background: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 2355, 255, 1)), url('/assets/images/backgrounds/bg-login-min.jpg');
+    @include theme() {
+        background: t('login-bg'), t('login-img');
+    }
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -426,13 +483,6 @@ hr {
     border-bottom: $border-width $border-style rgba($dark, .1);
     color: var(--bs-navbar-color);
     background-color: var(--bs-navbar-bg);
-    .nav-item {
-        .dropdown-menu {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            margin-top: .21rem;
-        }
-    }
 }
 .no-caret {
     &:after {

@@ -5,6 +5,12 @@
 - Run Migrate
 - Run Composer
 
+1.6 **Customer Type and Dark Mode**
+- Add customer type database
+- Add customer type controller and model
+- Redesign navbar
+- Add dark mode (complete)
+
 1.5.1 **On-Process Dark Mode And Simply Function**
 - Add dark mode (On Process)
 - Fix function make simply (On Process)

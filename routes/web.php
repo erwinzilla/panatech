@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchServiceController;
 use App\Http\Controllers\BranchCoordinatorController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\CustomerTypeController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,13 +60,26 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('branch/delete/{id?}', [BranchController::class, 'delete']);
     Route::get('branch/choose', [BranchController::class, 'choose']);
 
+    // Customer
+    Route::get('customer/type/trash', [CustomerTypeController::class, 'trash']);
+    Route::get('customer/type/restore/{id?}', [CustomerTypeController::class, 'restore']);
+    Route::get('customer/type/delete/{id?}', [CustomerTypeController::class, 'delete']);
+    Route::get('customer/type/choose', [CustomerTypeController::class, 'choose']);
+
+    // Customer
+    Route::get('customer/trash', [CustomerController::class, 'trash']);
+    Route::get('customer/restore/{id?}', [CustomerController::class, 'restore']);
+    Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);
+    Route::get('customer/choose', [CustomerController::class, 'choose']);
 
     // resources route
     Route::resources([
-        'user/privilege'     => UserPrivilegeController::class,
-        'user'               => UserController::class,
-        'branch/service'     => BranchServiceController::class,
-        'branch/coordinator' => BranchCoordinatorController::class,
-        'branch'             => BranchController::class
+        'user/privilege'        => UserPrivilegeController::class,
+        'user'                  => UserController::class,
+        'branch/service'        => BranchServiceController::class,
+        'branch/coordinator'    => BranchCoordinatorController::class,
+        'branch'                => BranchController::class,
+        'customer/type'         => CustomerTypeController::class,
+        'customer'              => CustomerController::class,
     ]);
 });

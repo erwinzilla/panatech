@@ -180,10 +180,13 @@ class BranchCoordinatorController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $branchCoordinator,
-            'data2' => User::all(),
-            'type'  => 'edit',
-            'title' => 'Edit Branch'
+            'data'              => $branchCoordinator,
+            'data_additional'   => [
+                'user'          => User::all(),
+            ],
+            'type'              => 'edit',
+            'title'             => 'Create '.self::config['name'],
+            'config'            => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -253,7 +256,10 @@ class BranchCoordinatorController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = BranchCoordinator::onlyTrashed();
+        $data = BranchCoordinator::onlyTrashed()->select('branch_coordinators.*');
+
+        // join
+        $data = $data->join('users', 'branch_coordinators.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {
@@ -280,6 +286,7 @@ class BranchCoordinatorController extends Controller
             $data = $data->orderBy($column, $sort);
         }
 
+        // penguraian table
         $table = [
             'perPage'   => $perPage,
             'search'    => $search,
@@ -290,10 +297,11 @@ class BranchCoordinatorController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'trash',
-            'title' => 'Trash',
-            'table' => $table
+            'data'      => $data->paginate($perPage)->appends($table),
+            'type'      => 'trash',
+            'title'     => 'Trash',
+            'table'     => $table,
+            'config'    => self::config
         ];
 
         // jika hanya ingin mendapatkan data table saja

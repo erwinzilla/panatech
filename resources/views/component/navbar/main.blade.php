@@ -10,5 +10,13 @@
                 </span>
             </div>
         </form>
+        <div class="d-flex">
+            <a href="#" target="_blank" class="text-muted me-3">@svg('heroicon-s-lifebuoy', 'icon')</a>
+            <a href="#" target="_blank" class="text-muted me-3">@svg('heroicon-s-language', 'icon')</a>
+            <a id="btn-mode" href="#" class="text-muted me-3 text-decoration-none">
+                @include('component.icon.theme', ['theme' => Auth::user()->theme])
+            </a>
+            <a href="{{ url('logout') }}" class="text-danger">@svg('heroicon-s-arrow-right-on-rectangle', 'icon')</a>
+        </div>
     </div>
 </nav>

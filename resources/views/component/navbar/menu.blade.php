@@ -1,5 +1,5 @@
 <!-- Menu Navbar -->
-<nav class="navbar navbar-expand-lg shadow-sm pt-0">
+<nav class="navbar navbar-expand-lg shadow-sm pt-0 pb-2">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -9,6 +9,15 @@
                 <li class="nav-item me-2">
                     <a href="{{ url('home') }}" class="nav-link {{ Request::segment(1) == 'home' ? 'active' : '' }}" aria-expanded="false">Home</a>
                 </li>
+                @if(getUserLevel('customers') > 0)
+                    <li class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'customer' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Customers</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('customer') }}" class="dropdown-item">@svg('heroicon-s-user', 'icon-sm me-1') Customer</a></li>
+                            <li><a href="{{ url('customer/type') }}" class="dropdown-item">@svg('heroicon-s-user-group', 'icon-sm me-1') Type</a></li>
+                        </ul>
+                    </li>
+                @endif
                 @if(getUserLevel('branches') > 0)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>
