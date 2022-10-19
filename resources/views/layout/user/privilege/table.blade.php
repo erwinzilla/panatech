@@ -7,7 +7,7 @@
             @include('component.table.title', ['title' => 'Name', 'column' => 'name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Color', 'column' => 'color', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
-            @if(getUserLevel('users') >= CAN_CRUD)
+            @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center'])
             @endif
         </tr>
@@ -17,7 +17,7 @@
             <tr>
                 @php
                     $colspan = 3;
-                    if (getUserLevel('users') >= CAN_CRUD) {
+                    if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
                 @endphp
@@ -36,7 +36,7 @@
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('users') >= CAN_CRUD)
+                    @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex justify-content-center">
                                 @include('form.button.crud', ['url' => 'user/privilege/', 'type' => $type, 'id' => $row->id])

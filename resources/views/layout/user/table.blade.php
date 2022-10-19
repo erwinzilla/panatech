@@ -16,7 +16,7 @@
             @include('component.table.title', ['title' => 'Phone', 'column' => 'users.phone', 'sortable' => true])
             @include('component.table.title', ['title' => 'Privilege', 'column' => 'user_privileges.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
-            @if(getUserLevel('users') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
+            @if(getUserLevel($config['privilege']) >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
             @endif
             @if($type == 'choose')
@@ -29,7 +29,7 @@
             <tr>
                 @php
                     $colspan = 8;
-                    if (getUserLevel('users') >= CAN_CRUD) {
+                    if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
                     if ($type == 'choose') {
@@ -72,7 +72,7 @@
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('users') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
+                    @if(getUserLevel($config['privilege']) >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => 'user/', 'type' => $type, 'id' => $row->id])

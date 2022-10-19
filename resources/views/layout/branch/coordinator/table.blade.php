@@ -8,7 +8,7 @@
             @include('component.table.title', ['title' => 'Coordinator', 'column' => 'users.name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Privilege', 'column' => 'user_privileges.name', 'sortable' => false, 'class' => 'align-middle'])
             {{-- Jika can CRUD maka munculkan tombol--}}
-            @if(getUserLevel('branches') >= CAN_CRUD)
+            @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
             @endif
         </tr>
@@ -18,7 +18,7 @@
             <tr>
                 @php
                     $colspan = 4;
-                    if (getUserLevel('branches') >= CAN_CRUD) {
+                    if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
                 @endphp
@@ -44,7 +44,7 @@
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('branches') >= CAN_CRUD)
+                    @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => 'branch/coordinator/', 'type' => $type, 'id' => $row->id])

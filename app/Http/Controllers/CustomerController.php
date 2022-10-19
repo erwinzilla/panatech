@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class CustomerController extends Controller
 {
@@ -28,50 +31,20 @@ class CustomerController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = Customer::select('*');
-
-        $search = $request->search;
-        if (strlen($search) > 1) {
-            $data = $data->where('name','LIKE','%'.$search.'%')
-                ->orWhere('phone', 'LIKE', '%'.$search.'%')
-                ->orWhere('phone2', 'LIKE', '%'.$search.'%')
-                ->orWhere('phone3', 'LIKE', '%'.$search.'%')
-                ->orWhere('address', 'LIKE', '%'.$search.'%')
-                ->orWhere('email', 'LIKE', '%'.$search.'%');
-
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
+        // olah data
+        $parse  = $this->parseData(Customer::select('customers.*'), $request);
 
         // penguraian data
         $params = [
-            'data'      => $data->paginate($perPage)->appends($table),
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
             'type'      => 'data',
             'title'     => self::config['name'],
-            'table'     => $table,
+            'table'     => $parse['table'],
             'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     /**
@@ -81,7 +54,31 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        $data = [
+            'name'      => null,
+            'phone'     => null,
+            'phone2'    => null,
+            'phone3'    => null,
+            'address'   => null,
+            'email'     => null,
+            'type'      => null,
+        ];
+
+        $data = (object) $data;
+
+        // penguraian data
+        $params = [
+            'data'              => $data,
+            'data_additional'   => CustomerType::all(),
+            'type'              => 'create',
+            'title'             => 'Create '.self::config['name'],
+            'config'            => self::config
+        ];
+
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -92,7 +89,24 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        if($this->validateInput($request)) {
+            $hasil = Customer::create($request->all());
+        }
+
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -114,7 +128,21 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customer = Customer::find($id);
+
+        // penguraian data
+        $params = [
+            'data'              => $customer,
+            'data_additional'   => CustomerType::all(),
+            'type'              => 'edit',
+            'title'             => 'Edit '.self::config['name'],
+            'config'            => self::config
+        ];
+
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -126,7 +154,26 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customerType = CustomerType::find($id);
+
+        if ($this->validateInput($request, $customer->id)){
+            $hasil = $customer->fill($request->all())->save();
+        }
+
+        // add updated by
+        if ($hasil) {
+            $customer->update([
+                'updated_by' => Auth::user()->id,
+            ]);
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -137,6 +184,140 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customerType = CustomerType::find($id);
+
+        // send result
+        $params = getStatus($customer->delete() ? 'success' : 'error', 'delete', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
+    }
+
+    public function trash(Request $request)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
+
+        // olah data
+        $parse  = $this->parseData(Customer::onlyTrashed()->select('customers.*'), $request);
+
+        // penguraian data
+        $params = [
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
+            'type'      => 'trash',
+            'title'     => 'Trash',
+            'table'     => $parse['table'],
+            'config'    => self::config
+        ];
+
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
+    }
+
+    public function restore($id = null)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
+
+        if ($id != null){
+            $hasil = Customer::onlyTrashed()
+                ->where('id', $id)
+                ->restore();
+        } else {
+            $hasil = Customer::onlyTrashed()->restore();
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'restore', self::config['name']);
+
+        return redirect(self::config['url'].'/trash')->with($params);
+    }
+
+    public function delete($id = null)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
+
+        if ($id != null){
+            $hasil = Customer::onlyTrashed()
+                ->where('id', $id)
+                ->forceDelete();
+        } else {
+            $hasil = Customer::onlyTrashed()->forceDelete();
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
+
+        return redirect(self::config['url'].'/trash')->with($params);
+    }
+
+    public function parseData($data, $request)
+    {
+        // join
+        $data = $data->leftJoin('customer_types', 'customers.type', '=', 'customer_types.id');
+
+        $search = $request->search;
+        if (strlen($search) > 1) {
+            $data = $data->where('customers.name','LIKE','%'.$search.'%')
+                ->orWhere('customers.phone', 'LIKE', '%'.$search.'%')
+                ->orWhere('customers.phone2', 'LIKE', '%'.$search.'%')
+                ->orWhere('customers.phone3', 'LIKE', '%'.$search.'%')
+                ->orWhere('customers.address', 'LIKE', '%'.$search.'%')
+                ->orWhere('customers.email', 'LIKE', '%'.$search.'%')
+                ->orWhereHas('types', function ($q) use ($search) {
+                    $q->where('customer_types.name','LIKE','%'.$search.'%');
+                });
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: 'data';
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target
+        ];
+
+        return [
+            'data'  => $data,
+            'table' => $table
+        ];
+    }
+
+    public function validateInput($request, $id = null)
+    {
+        // validasi
+        $rules = [
+            'name'                  => 'required|min:3|max:100',
+            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+        ];
+
+        $messages = [
+            'name.required'         => 'Nama wajib diisi',
+            'name.min'              => 'Nama minimal 3 karakter',
+            'name.max'              => 'Nama maksimal 100 karakter',
+            'phone.required'        => 'Nomor telp wajib diisi',
+            'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
+            'phone.unique'          => 'Nomor telp sudah terpakai',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+        } else {
+            return true;
+        }
     }
 }

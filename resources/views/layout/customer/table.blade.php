@@ -3,16 +3,12 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'branch_services.id', 'sortable' => true, 'class' => 'text-center'])
-            @include('component.table.title', ['title' => 'Branch', 'column' => 'branches.name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Service Center', 'column' => 'branch_services.name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Coordinator', 'column' => 'branch_coordinators.name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Code', 'column' => 'branch_services.code', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Head Service', 'column' => 'users.name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Address', 'column' => 'branch_services.address', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Phone', 'column' => 'branch_services.phone', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Fax', 'column' => 'branch_services.fax', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Email', 'column' => 'branch_services.email', 'sortable' => true])
+            @include('component.table.title', ['title' => '#', 'column' => 'customers.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Name', 'column' => 'customers.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Phone', 'column' => 'customers.phone', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Address', 'column' => 'customers.address', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Email', 'column' => 'customers.email', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Type', 'column' => 'customer_types.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
@@ -23,7 +19,7 @@
         @if($data->total() == 0)
             <tr>
                 @php
-                    $colspan = 10;
+                    $colspan = 6;
                     if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
@@ -34,49 +30,35 @@
             @foreach($data as $key => $row)
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
-                    <td>
-                        @if($row->branch)
-                            {{ ucwords($row->branches->name) }}
-                        @else
-                            -
-                        @endif
-                    </td>
                     <td>{{ $row->name }}</td>
                     <td>
-                        @if($row->branch_coordinator)
-                            {{ ucwords($row->branch_coordinators->name) }}
+                        {{ $row->phone }}
+                        @if($row->phone2)
+                            <br>{{ $row->phone2 }}
+                        @endif
+                        @if($row->phone3)
+                            <br>{{ $row->phone3 }}
+                        @endif
+                    </td>
+                    <td>
+                        <address class="mb-0">{{ $row->address ?: '-' }}</address>
+                    </td>
+                    <td>
+                        @if($row->email)
+                            <a href="mailto:{{ $row->email }}">{{ $row->email }}</a>
                         @else
                             -
                         @endif
                     </td>
-                    <td>{{ $row->code }}</td>
                     <td>
-                        @if($row->user)
-                            <span>{{ ucwords($row->users->name) }}</span>
-                            <br><small>{{ $row->users->phone }}</small>
+                        @if($row->type)
+                            <span>{{ ucwords($row->types->name) }}</span>
                         @else
-                            -
+                            <span>-</span>
                         @endif
-                    </td>
-                    <td>
-                        <address>{{ $row->address ?: '-' }}</address>
-                    </td>
-                    <td>
-                        <span>{{ $row->phone ?: '-' }}</span>
-                    </td>
-                    <td>
-                        <span>{{ $row->fax ?: '-' }}</span>
-                    </td>
-                    <td>
-                        <span>
-                            {{ $row->email ?: '-' }}
-                            @if($row->user)
-                                <br>{{ $row->users->email }}
-                            @endif
-                        </span>
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('branches') >= CAN_CRUD)
+                    @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => $config['url'].'/', 'type' => $type, 'id' => $row->id])

@@ -12,4 +12,9 @@ class Customer extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    public function types()
+    {
+        return $this->belongsTo('App\Models\CustomerType', 'type');
+    }
 }

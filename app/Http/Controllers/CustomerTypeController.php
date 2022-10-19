@@ -41,11 +41,8 @@ class CustomerTypeController extends Controller
             'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($parse['table']['target'] == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     /**
@@ -66,10 +63,10 @@ class CustomerTypeController extends Controller
 
         // penguraian data
         $params = [
-            'data'                      => $data,
-            'type'                      => 'create',
-            'title'                     => 'Create '.self::config['name'],
-            'config'                    => self::config
+            'data'      => $data,
+            'type'      => 'create',
+            'title'     => 'Create '.self::config['name'],
+            'config'    => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -246,7 +243,7 @@ class CustomerTypeController extends Controller
         $perPage = $request->perPage ?: self::perPage;
         $column = $request->column ?: null;
         $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
+        $target = $request->target ?: 'data';
 
         if ($column && $sort) {
             $data = $data->orderBy($column, $sort);

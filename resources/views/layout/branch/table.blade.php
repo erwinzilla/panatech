@@ -19,7 +19,7 @@
             <tr>
                 @php
                     $colspan = 2;
-                    if (getUserLevel('branches') >= CAN_CRUD) {
+                    if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
                 @endphp
@@ -31,7 +31,7 @@
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>{{ $row->name }}</td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
-                    @if(getUserLevel('branches') >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
+                    @if(getUserLevel($config['privilege']) >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
                                 @include('form.button.crud', ['url' => 'branch/', 'type' => $type, 'id' => $row->id])

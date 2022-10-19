@@ -5,6 +5,10 @@
 - Run Migrate
 - Run Composer
 
+1.7 **Customer Function**
+- Add customer database
+- Add customer CMV (Controller, Model & View)
+
 1.6 **Customer Type and Dark Mode**
 - Add customer type database
 - Add customer type controller and model
