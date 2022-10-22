@@ -199,10 +199,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     table_data_modal.closest('.modal').querySelector('.modal-title').innerText = ucwords(target);
 
                     // kirim data untuk menunjukan hasil pencarian
-                    let load_url = url(target+'/choose?target=table');
+                    let load_url = url(target+'/?type=choose&target=table');
                     send_http(load_url, function (data) {
                         table_data_modal.innerHTML = data;
-                        table_data_modal.dataset.url = url(target+'/choose');
+                        table_data_modal.dataset.url = url(target+'/?type=choose');
                     });
                 }
 
@@ -311,26 +311,20 @@ function confirm_delete_link(id) {
     });
 }
 
-function choose(name, value, opt_name = null, opt_privilege = null, opt_privilege_color = null) {
+function choose(name, value) {
     let input = $('input[name="'+name+'"]');
     if (input && value) {
+        // isi hidden value
         input.value = value
-    }
 
-    // update nama user
-    if (opt_name) {
-        let input_name = $('#name-'+name);
-        if (input_name) {
-            input_name.innerText = opt_name;
-        }
-    }
-
-    // update privilege badge
-    if (opt_privilege && opt_privilege_color) {
-        let input_privilege = $('#privilege-'+name);
-        if (input_privilege) {
-            input_privilege.className = "badge bg-"+opt_privilege_color+" text-"+opt_privilege_color+"  bg-opacity-25";
-            input_privilege.innerText = opt_privilege;
+        // callback hasil data
+        let box = $('#'+name+'-data');
+        if (box) {
+            // kirim data untuk menunjukan hasil pencarian
+            let load_url = url(name+'/'+value);
+            send_http(load_url, function (data) {
+                box.innerHTML = data;
+            })
         }
     }
 }

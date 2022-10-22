@@ -13,11 +13,15 @@
         </section>
 
         {{--    Content--}}
-        <section class="content pb-5">
+        <section class="content pb-5 bg-tile">
             <div class="container-fluid">
                 @yield('content')
             </div>
         </section>
     </div>
     @include('layout.footer')
+@endsection
+
+@section('script')
+    @yield('script')
 @endsection

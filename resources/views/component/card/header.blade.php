@@ -13,7 +13,7 @@
         <div class="align-self-center ms-auto">
             @if($type == 'data')
                 <a href="{{ url($config['url'].'/create') }}" class="btn btn-primary">
-                    @svg('heroicon-s-plus', 'icon') Create new
+                    @svg('heroicon-s-plus', 'icon') Create New
                 </a>
             @endif
             @if($type == 'trash')

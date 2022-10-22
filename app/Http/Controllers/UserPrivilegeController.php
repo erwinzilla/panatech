@@ -171,9 +171,10 @@ class UserPrivilegeController extends Controller
 
         // penguraian data
         $params = [
-            'data'  => $userPrivilege->find($id),
-            'type'  => 'edit',
-            'title' => 'Edit Data '.self::config['name']
+            'data'      => $userPrivilege->find($id),
+            'type'      => 'edit',
+            'title'     => 'Edit Data '.self::config['name'],
+            'config'    => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);

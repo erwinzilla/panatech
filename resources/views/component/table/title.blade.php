@@ -4,7 +4,7 @@
     @else
         <div class="d-flex dropdown">
             <span class="align-self-center">{{ isset($title) ? $title : 'NULL' }}</span>
-            <a href="#" class="btn btn-icon ms-auto dropdown-toggle no-caret {{ $table['column'] ==  $column ? 'text-primary' : '' }}" id="dd-menu-{{ isset($column) ? $column : '' }}" data-bs-toggle="dropdown" aria-expanded="false" style="--bs-btn-hover-border-color: var(--bs-primary);--bs-btn-active-border-color: var(--bs-primary)">
+            <a href="#" class="btn btn-icon ms-auto dropdown-toggle no-caret shadow-none {{ $table['column'] ==  $column ? 'text-primary' : '' }}" id="dd-menu-{{ isset($column) ? $column : '' }}" data-bs-toggle="dropdown" aria-expanded="false" style="--bs-btn-hover-border-color: var(--bs-primary);--bs-btn-active-border-color: var(--bs-primary)">
                 @if($table['column'] == $column)
                     @svg('heroicon-s-check-circle', 'icon-sm')
                 @endif

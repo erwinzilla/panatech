@@ -18,6 +18,11 @@
                         </ul>
                     </li>
                 @endif
+                @if(getUserLevel('warranties') > 0)
+                    <li class="nav-item dropdown me-2">
+                        <a href="{{ url('warranty') }}" class="nav-link {{ Request::segment(1) == 'warranty' ? 'active' : '' }}">Warranty</a>
+                    </li>
+                @endif
                 @if(getUserLevel('branches') > 0)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>

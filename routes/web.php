@@ -9,6 +9,7 @@ use App\Http\Controllers\BranchCoordinatorController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerTypeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\WarrantyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,8 +70,12 @@ Route::group(['middleware' => 'auth'], function () {
     // Customer
     Route::get('customer/trash', [CustomerController::class, 'trash']);
     Route::get('customer/restore/{id?}', [CustomerController::class, 'restore']);
-    Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);
-    Route::get('customer/choose', [CustomerController::class, 'choose']);
+    Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);;
+
+    // Warranty
+    Route::get('warranty/trash', [WarrantyController::class, 'trash']);
+    Route::get('warranty/restore/{id?}', [WarrantyController::class, 'restore']);
+    Route::get('warranty/delete/{id?}', [WarrantyController::class, 'delete']);
 
     // resources route
     Route::resources([
@@ -81,5 +86,6 @@ Route::group(['middleware' => 'auth'], function () {
         'branch'                => BranchController::class,
         'customer/type'         => CustomerTypeController::class,
         'customer'              => CustomerController::class,
+        'warranty'              => WarrantyController::class
     ]);
 });

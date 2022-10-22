@@ -5,6 +5,12 @@
 - Run Migrate
 - Run Composer
 
+1.8 **Warranty Function and Choose Table Modal**
+- Add warranty database
+- Add warranty CMV
+- Make global function for choose table modal (**need fix other controller)
+- Redesign css template
+
 1.7 **Customer Function**
 - Add customer database
 - Add customer CMV (Controller, Model & View)

@@ -20,6 +20,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
 
+@yield('script')
+
 @if(session('status'))
     <script>
         document.addEventListener("DOMContentLoaded", function() {

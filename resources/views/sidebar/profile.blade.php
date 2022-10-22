@@ -9,7 +9,7 @@
         <span class="{{ getBadge(Auth::user()->privileges->color) }}">{{ ucwords(Auth::user()->privileges->name) }}</span>
     </div>
     <div class="dropdown ms-auto align-self-center">
-        <button class="btn dropdown-toggle no-caret btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-adjustments-horizontal', 'icon')</button>
+        <button class="btn dropdown-toggle no-caret btn-icon shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-adjustments-horizontal', 'icon')</button>
         <ul class="dropdown-menu">
             <li>
                 <a href="{{ url('user/'.Auth::user()->username) }}" class="dropdown-item">@svg('heroicon-s-cog', 'icon-sm me-1') Edit Profile</a>

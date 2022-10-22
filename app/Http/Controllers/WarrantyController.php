@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\CustomerType;
+use App\Models\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class CustomerController extends Controller
+class WarrantyController extends Controller
 {
     // table
     const perPage = 10;
 
     // config
     const config = [
-        'blade'     => 'layout.customer',
-        'url'       => 'customer',
-        'name'      => 'customer',
-        'privilege' => 'customers'
+        'blade'     => 'layout.warranty',
+        'url'       => 'warranty',
+        'name'      => 'warranty',
+        'privilege' => 'warranties'
     ];
-
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +30,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Customer::select('customers.*'), $request);
+        $parse  = $this->parseData(Warranty::select('warranties.*'), $request);
 
         // penguraian data
         $params = [
@@ -58,13 +56,12 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'name'      => null,
-            'phone'     => null,
-            'phone2'    => null,
-            'phone3'    => null,
-            'address'   => null,
-            'email'     => null,
-            'type'      => null,
+            'model'         => null,
+            'serial'        => null,
+            'warranty_no'   => null,
+            'purchase_date' => null,
+            'type'          => null,
+            'customer'      => null,
         ];
 
         $data = (object) $data;
@@ -72,7 +69,6 @@ class CustomerController extends Controller
         // penguraian data
         $params = [
             'data'              => $data,
-            'data_additional'   => CustomerType::all(),
             'type'              => 'create',
             'title'             => 'Create '.self::config['name'],
             'config'            => self::config
@@ -93,7 +89,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Customer::create($request->all());
+            $hasil = Warranty::create($request->all());
         }
 
         // add created by
@@ -112,36 +108,35 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Warranty  $warranty
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Warranty $warranty)
     {
         // penguraian data
-        $params = [
-            'data'      => $customer,
-        ];
+//        $params = [
+//            'data'      => $warranty,
+//        ];
 
-        return view(self::config['blade'].'.show', $params);
+//        return view(self::config['blade'].'.show', $params);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Warranty  $warranty
      * @return \Illuminate\Http\Response
      */
-    public function edit(Customer $customer)
+    public function edit(Warranty $warranty)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-//        $customer = Customer::find($id);
+//        $warannty = Customer::find($id);
 
         // penguraian data
         $params = [
-            'data'              => $customer,
-            'data_additional'   => CustomerType::all(),
+            'data'              => $warranty,
             'type'              => 'edit',
             'title'             => 'Edit '.self::config['name'],
             'config'            => self::config
@@ -154,23 +149,23 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Warranty  $warranty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Warranty $warranty)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
 //        $customerType = CustomerType::find($id);
 
-        if ($this->validateInput($request, $customer->id)){
-            $hasil = $customer->fill($request->all())->save();
+        if ($this->validateInput($request, $warranty->id)){
+            $hasil = $warranty->fill($request->all())->save();
         }
 
         // add updated by
         if ($hasil) {
-            $customer->update([
+            $warranty->update([
                 'updated_by' => Auth::user()->id,
             ]);
         }
@@ -184,10 +179,10 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Warranty  $warranty
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Warranty $warranty)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
@@ -195,12 +190,12 @@ class CustomerController extends Controller
 //        $customerType = CustomerType::find($id);
 
         // update siapa yang menghapus
-        $customer->update([
+        $warranty->update([
             'deleted_by' => Auth::user()->id,
         ]);
 
         // send result
-        $params = getStatus($customer->delete() ? 'success' : 'error', 'delete', self::config['name']);
+        $params = getStatus($warranty->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -211,7 +206,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Customer::onlyTrashed()->select('customers.*'), $request);
+        $parse  = $this->parseData(Warranty::onlyTrashed()->select('warranties.*'), $request);
 
         // penguraian data
         $params = [
@@ -232,11 +227,11 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Warranty::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = Customer::onlyTrashed()->restore();
+            $hasil = Warranty::onlyTrashed()->restore();
         }
 
         // send result
@@ -251,11 +246,11 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Warranty::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = Customer::onlyTrashed()->forceDelete();
+            $hasil = Warranty::onlyTrashed()->forceDelete();
         }
 
         // send result
@@ -264,73 +259,28 @@ class CustomerController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function choose(Request $request)
-    {
-        // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
-
-        $data = User::select('*');
-
-        $search = $request->search;
-        if (strlen($search) > 0) {
-            $data = $data->where('users.name','LIKE','%'.$search.'%')
-                ->orWhere('users.email','LIKE','%'.$search.'%')
-                ->orWhere('users.username','LIKE','%'.$search.'%')
-                ->orWhere('users.address','LIKE','%'.$search.'%')
-                ->orWhere('users.phone','LIKE','%'.$search.'%')
-                ->orWhereHas('privileges', function ($q) use ($search) {
-                    $q->where('user_privileges.name','LIKE','%'.$search.'%')
-                        ->orWhere('user_privileges.color','LIKE','%'.$search.'%');
-                });
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
-
-        // penguraian data
-        $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'choose',
-            'title' => 'Choose',
-            'table' => $table
-        ];
-
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
-    }
-
     public function parseData($data, $request)
     {
         // join
-        $data = $data->leftJoin('customer_types', 'customers.type', '=', 'customer_types.id');
+        $data = $data->leftJoin('customers', 'warranties.customer', '=', 'customers.id');
 
         $search = $request->search;
         if (strlen($search) > 1) {
-            $data = $data->where('customers.name','LIKE','%'.$search.'%')
-                ->orWhere('customers.phone', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.phone2', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.phone3', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.address', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.email', 'LIKE', '%'.$search.'%')
-                ->orWhereHas('types', function ($q) use ($search) {
-                    $q->where('customer_types.name','LIKE','%'.$search.'%');
+            $data = $data->where('warranties.model','LIKE','%'.$search.'%')
+                ->orWhere('warranties.serial', 'LIKE', '%'.$search.'%')
+                ->orWhere('warranties.warranty_no', 'LIKE', '%'.$search.'%')
+                ->orWhere('warranties.purchase_date', 'LIKE', '%'.$search.'%')
+                ->orWhere('warranties.type', 'LIKE', '%'.$search.'%')
+                ->orWhereHas('customers', function ($q) use ($search) {
+                    $q->where('customers.name','LIKE','%'.$search.'%')
+                        ->orWhere('customers.phone', 'LIKE', '%'.$search.'%')
+                        ->orWhere('customers.phone2', 'LIKE', '%'.$search.'%')
+                        ->orWhere('customers.phone3', 'LIKE', '%'.$search.'%')
+                        ->orWhere('customers.address', 'LIKE', '%'.$search.'%')
+                        ->orWhere('customers.email', 'LIKE', '%'.$search.'%')
+                        ->orWhereHas('types', function ($q) use ($search) {
+                            $q->where('customer_types.name','LIKE','%'.$search.'%');
+                        });
                 });
         }
 
@@ -368,17 +318,18 @@ class CustomerController extends Controller
     {
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100',
-            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+            'model'             => 'required|min:3|max:100',
+            'serial'            => 'required|min:3|max:100|unique:warranties,serial,'.$id,
         ];
 
         $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'phone.required'        => 'Nomor telp wajib diisi',
-            'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
-            'phone.unique'          => 'Nomor telp sudah terpakai',
+            'model.required'    => 'Model wajib diisi',
+            'model.min'         => 'Model minimal 3 karakter',
+            'model.max'         => 'Model maksimal 100 karakter',
+            'serial.required'   => 'Nomor seri wajib diisi',
+            'serial.min'        => 'Nomor seri minimal 3 karakter',
+            'serial.max'        => 'Nomor seri maksimal 100 karakter',
+            'serial.unique'     => 'Nomor seri sudah terpakai',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
