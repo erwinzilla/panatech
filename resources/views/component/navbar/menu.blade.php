@@ -23,6 +23,15 @@
                         <a href="{{ url('warranty') }}" class="nav-link {{ Request::segment(1) == 'warranty' ? 'active' : '' }}">Warranty</a>
                     </li>
                 @endif
+                {{-- Jika only see maka munculkan tombol--}}
+                @if(getUserLevel('jobs') >= ONLY_SEE)
+                    <li class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'job' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Job</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('job/type') }}" class="dropdown-item">@svg('heroicon-s-tag', 'icon-sm me-1') Job Type</a></li>
+                        </ul>
+                    </li>
+                @endif
                 @if(getUserLevel('tickets') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="{{ url('ticket') }}" class="nav-link {{ Request::segment(1) == 'ticket' ? 'active' : '' }}">Ticket</a>

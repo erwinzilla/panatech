@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPrivilege;
+use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\Facades\Auth;
+use App\Models\JobType;
 use Illuminate\Http\Request;
 use Validator;
 
-class UserPrivilegeController extends Controller
+class JobTypeController extends Controller
 {
     // table
     const perPage = 10;
 
     // config
     const config = [
-        'blade'     => 'layout.user.privilege',
-        'url'       => 'user/privilege',
-        'name'      => 'user privilege',
-        'privilege' => 'users'
+        'blade'     => 'layout.job.type',
+        'url'       => 'job/type',
+        'name'      => 'job type',
+        'privilege' => 'jobs'
     ];
-
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +31,7 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(UserPrivilege::select('*'), $request);
+        $parse  = $this->parseData(JobType::select('*'), $request);
 
         // penguraian data
         $params = [
@@ -56,28 +57,18 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'id'            => null,
-            'name'          => null,
-            'tickets'       => 0,
-            'customers'     => 0,
-            'products'      => 0,
-            'reports'       => 0,
-            'users'         => 0,
-            'branches'      => 0,
-            'warranties'    => 0,
-            'states'        => 0,
-            'jobs'          => 0,
-            'color'         => 'primary'
+            'name'  => null,
+            'color' => 'primary',
         ];
 
         $data = (object) $data;
 
         // penguraian data
         $params = [
-            'data'      => $data,
-            'type'      => 'create',
-            'title'     => 'Create '.self::config['name'],
-            'config'    => self::config
+            'data'              => $data,
+            'type'              => 'create',
+            'title'             => 'Create '.self::config['name'],
+            'config'            => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -95,7 +86,14 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = UserPrivilege::create($request->all());
+            $hasil = JobType::create($request->all());
+        }
+
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
         }
 
         // send result
@@ -107,10 +105,10 @@ class UserPrivilegeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\JobType  $jobType
      * @return \Illuminate\Http\Response
      */
-    public function show(UserPrivilege $userPrivilege)
+    public function show(JobType $jobType)
     {
         // penguraian data
 //        $params = [
@@ -123,10 +121,10 @@ class UserPrivilegeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\JobType  $jobType
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserPrivilege $userPrivilege, $id)
+    public function edit(JobType $jobType, $id)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
@@ -135,10 +133,10 @@ class UserPrivilegeController extends Controller
 
         // penguraian data
         $params = [
-            'data'      => $userPrivilege->find($id),
-            'type'      => 'edit',
-            'title'     => 'Edit Data '.self::config['name'],
-            'config'    => self::config
+            'data'              => $jobType->find($id),
+            'type'              => 'edit',
+            'title'             => 'Edit '.self::config['name'],
+            'config'            => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -148,18 +146,25 @@ class UserPrivilegeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\JobType  $jobType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserPrivilege $userPrivilege, $id)
+    public function update(Request $request, JobType $jobType, $id)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $userPrivilege = $userPrivilege->find($id);
+        $jobType = JobType::find($id);
 
-        if ($this->validateInput($request, $id)){
-            $hasil = $userPrivilege->fill($request->all())->save();
+        if ($this->validateInput($request, $jobType->id)){
+            $hasil = $jobType->fill($request->all())->save();
+        }
+
+        // add updated by
+        if ($hasil) {
+            $jobType->update([
+                'updated_by' => Auth::user()->id,
+            ]);
         }
 
         // send result
@@ -171,19 +176,23 @@ class UserPrivilegeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\JobType  $jobType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserPrivilege $userPrivilege, $id)
+    public function destroy(JobType $jobType, $id)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $hasil = UserPrivilege::find($id);
-        $hasil->delete();
+        $jobType = JobType::find($id);
+
+        // update siapa yang menghapus
+        $jobType->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete', self::config['name']);
+        $params = getStatus($jobType->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -191,10 +200,10 @@ class UserPrivilegeController extends Controller
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::config['privilege'], ALL_ACCESS);
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(UserPrivilege::onlyTrashed()->select('*'), $request);
+        $parse  = $this->parseData(JobType::onlyTrashed()->select('*'), $request);
 
         // penguraian data
         $params = [
@@ -215,11 +224,11 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = JobType::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->restore();
+            $hasil = JobType::onlyTrashed()->restore();
         }
 
         // send result
@@ -234,11 +243,11 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = JobType::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->forceDelete();
+            $hasil = JobType::onlyTrashed()->forceDelete();
         }
 
         // send result
@@ -250,9 +259,9 @@ class UserPrivilegeController extends Controller
     public function parseData($data, $request)
     {
         $search = $request->search;
-        if (strlen($search) > 2) {
+        if (strlen($search) > 1) {
             $data = $data->where('name','LIKE','%'.$search.'%')
-                ->orWhere('color','LIKE','%'.$search.'%');
+                ->orWhere('color', 'LIKE', '%'.$search.'%');
         }
 
         $perPage = $request->perPage ?: self::perPage;
@@ -289,14 +298,14 @@ class UserPrivilegeController extends Controller
     {
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:user_privileges,name,'.$id,
+            'name'                      => 'required|min:3|max:100|unique:job_types,name,'.$id,
         ];
 
         $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
+            'name.required'    => 'Nama tipe job wajib diisi',
+            'name.min'         => 'Nama tipe job minimal 3 karakter',
+            'name.max'         => 'Nama tipe job maksimal 100 karakter',
+            'name.unique'      => 'Nama tipe job sudah terpakai',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);

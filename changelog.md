@@ -5,6 +5,11 @@
 - Run Migrate
 - Run Composer
 
+1.11 **Job Type Function**
+- Add jobs privilege
+- Add Job Type Database
+- Add Job Type CMV
+
 1.10.1 **Sync Database From Excel**
 - Sync database form excel
 - Redisgn label customer type

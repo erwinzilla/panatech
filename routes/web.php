@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\JobTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -89,6 +90,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('status/restore/{id?}', [StatusController::class, 'restore']);
     Route::get('status/delete/{id?}', [StatusController::class, 'delete']);
 
+    // Job Type
+    Route::get('job/type/trash', [JobTypeController::class, 'trash']);
+    Route::get('job/type/restore/{id?}', [JobTypeController::class, 'restore']);
+    Route::get('job/type/delete/{id?}', [JobTypeController::class, 'delete']);
+
     // resources route
     Route::resources([
         'user/privilege'        => UserPrivilegeController::class,
@@ -100,6 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
         'customer'              => CustomerController::class,
         'warranty'              => WarrantyController::class,
         'ticket'                => TicketController::class,
-        'status'                => StatusController::class
+        'status'                => StatusController::class,
+        'job/type'              => JobTypeController::class,
     ]);
 });
