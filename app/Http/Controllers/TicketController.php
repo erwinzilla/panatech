@@ -58,7 +58,7 @@ class TicketController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'name'          => 'EZ-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+            'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'service_info'  => null,
             'status'        => null,
             'customer_name' => null,
@@ -73,6 +73,7 @@ class TicketController extends Controller
             'warranty_no'   => null,
             'purchase_date' => null,
             'warranty_type' => null,
+            'branch_service'=> Auth::user()->branch_service,
         ];
 
         $data = (object) $data;

@@ -30,7 +30,12 @@
             @foreach($data as $key => $row)
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
-                    <td>{{ $row->name }}</td>
+                    <td>
+                        {{ $row->name }}
+                        @if($row->branch_service)
+                            <br><span class="{{ getBadge('primary') }}">{{ $row->branch_services->code }}</span>
+                        @endif
+                    </td>
                     <td>
                         <span>{{ $row->customer_name }}</span>
                         <br><span>{{ $row->phone }}</span>

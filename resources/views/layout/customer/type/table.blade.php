@@ -5,6 +5,7 @@
         <tr>
             @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => 'Name', 'column' => 'name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Color', 'column' => 'color', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
@@ -27,6 +28,9 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>{{ $row->name }}</td>
+                    <td>
+                        <span class="{{ getBadge($row->color) }}">{{ ucwords($row->color) }}</span>
+                    </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">

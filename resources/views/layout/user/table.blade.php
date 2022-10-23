@@ -53,7 +53,10 @@
                     @endif
                     <td>
                         @if($type == 'data' || $type == 'trash')
-                            {{ $row->name }}
+                            <span>{{ $row->name }}</span>
+                            @if($row->branch_service)
+                                <br><span class="{{ getBadge('primary') }}">{{ $row->branch_services->code }}</span>
+                            @endif
                         @endif
                         @if($type == 'choose')
                             <b>{{ $row->name }}</b>

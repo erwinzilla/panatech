@@ -5,6 +5,11 @@
 - Run Migrate
 - Run Composer
 
+1.10.1 **Sync Database From Excel**
+- Sync database form excel
+- Redisgn label customer type
+- Add color to customer types
+
 1.10 **Ticket Function and Flash Fill Input System**
 - Add ticket database
 - Add ticket CMV

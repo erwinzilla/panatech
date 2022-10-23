@@ -21,4 +21,9 @@ class Ticket extends Model
     {
         return $this->belongsTo('App\Models\CustomerType', 'customer_type');
     }
+
+    public function branch_services()
+    {
+        return $this->belongsTo('App\Models\BranchService', 'branch_service');
+    }
 }

@@ -78,7 +78,7 @@
                     </td>
                     <td>
                         @if($row->type)
-                            <span>{{ ucwords($row->types->name) }}</span>
+                            <span class="{{ getBadge($row->types->color) }}">{{ ucwords($row->types->name) }}</span>
                         @else
                             <span>-</span>
                         @endif

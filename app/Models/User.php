@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\UserPrivilege', 'privilege')->withTrashed();
     }
 
+    public function branch_services()
+    {
+        return $this->belongsTo('App\Models\BranchService', 'branch_service')->withTrashed();
+    }
+
     public function getThemeAttribute()
     {
         $theme = session('theme');

@@ -56,7 +56,8 @@ class CustomerTypeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'name' => null,
+            'name'  => null,
+            'color' => 'primary',
         ];
 
         $data = (object) $data;

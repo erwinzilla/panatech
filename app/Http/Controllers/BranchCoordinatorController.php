@@ -33,7 +33,7 @@ class BranchCoordinatorController extends Controller
         $data = BranchCoordinator::select('branch_coordinators.*');
 
         // join
-        $data = $data->join('users', 'branch_coordinators.user', '=', 'users.id');
+        $data = $data->leftJoin('users', 'branch_coordinators.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {
@@ -259,7 +259,7 @@ class BranchCoordinatorController extends Controller
         $data = BranchCoordinator::onlyTrashed()->select('branch_coordinators.*');
 
         // join
-        $data = $data->join('users', 'branch_coordinators.user', '=', 'users.id');
+        $data = $data->leftJoin('users', 'branch_coordinators.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {

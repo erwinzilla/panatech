@@ -29,6 +29,9 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        @include('form.color')
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

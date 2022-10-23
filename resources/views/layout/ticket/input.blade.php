@@ -22,6 +22,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <input type="hidden" name="name" value="{{ old('name', $data->name) }}">
+                    <input type="hidden" name="branch_service" value="{{ old('branch_service', $data->branch_service) }}">
                     <div class="mb-3">
                         <label class="form-label">Fast Fill<span class="text-primary">*</span></label>
                         <input type="text" name="flash-fill" class="form-control w-50">

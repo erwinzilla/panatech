@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BranchService;
 use App\Models\User;
 use App\Models\UserPrivilege;
 use Illuminate\Http\Request;
@@ -68,7 +69,8 @@ class UserController extends Controller
             'phone'             => null,
             'privilege'         => null,
             'address'           => null,
-            'image'             => 'default.jpg'
+            'image'             => 'default.jpg',
+            'branch_service'    => null,
         ];
 
         $data = (object) $data;
@@ -77,7 +79,8 @@ class UserController extends Controller
         $params = [
             'data'                  => $data,
             'data_additional'       => [
-                'user_privilege'    => UserPrivilege::all()
+                'user_privilege'    => UserPrivilege::all(),
+                'branch_service'    => BranchService::all(),
             ],
             'type'                  => 'create',
             'title'                 => 'Create '.self::config['name'],
@@ -115,7 +118,8 @@ class UserController extends Controller
                 'address'           => ucwords(strtolower($request->address)),
                 'privilege'         => $request->privilege,
                 'email_verified_at' => \Carbon\Carbon::now(),
-                'image'             => $filename
+                'image'             => $filename,
+                'branch_service'    => $request->branch_service,
             ]);
             $hasil = $user->save();
         }
@@ -157,7 +161,8 @@ class UserController extends Controller
         $params = [
             'data'                  => User::find($id),
             'data_additional'       => [
-                'user_privilege'    => UserPrivilege::all()
+                'user_privilege'    => UserPrivilege::all(),
+                'branch_service'    => BranchService::all(),
             ],
             'type'                  => 'edit',
             'title'                 => 'Edit '.self::config['name'],
@@ -196,13 +201,14 @@ class UserController extends Controller
 
             $hasil = User::where('id', $id)
                 ->update([
-                    'name'      => ucwords(strtolower($request->name)),
-                    'username'  => strtolower($request->username),
-                    'email'     => strtolower($request->email),
-                    'phone'     => strval($request->phone),
-                    'address'   => ucwords(strtolower($request->address)),
-                    'privilege' => $request->privilege,
-                    'image'     => $filename
+                    'name'              => ucwords(strtolower($request->name)),
+                    'username'          => strtolower($request->username),
+                    'email'             => strtolower($request->email),
+                    'phone'             => strval($request->phone),
+                    'address'           => ucwords(strtolower($request->address)),
+                    'privilege'         => $request->privilege,
+                    'image'             => $filename,
+                    'branch_service'    => $request->branch_service,
                 ]);
 
             // cek jika password tidak kosong

@@ -35,9 +35,9 @@ class BranchServiceController extends Controller
         $data = BranchService::select('branch_services.*');
 
         // join
-        $data = $data->join('branches', 'branch_services.branch', '=', 'branches.id');
-        $data = $data->join('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
-        $data = $data->join('users', 'branch_services.user', '=', 'users.id');
+        $data = $data->leftJoin('branches', 'branch_services.branch', '=', 'branches.id');
+        $data = $data->leftJoin('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
+        $data = $data->leftJoin('users', 'branch_services.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 1) {
@@ -312,9 +312,9 @@ class BranchServiceController extends Controller
         $data = BranchService::onlyTrashed()->select('branch_services.*');
 
         // join
-        $data = $data->join('branches', 'branch_services.branch', '=', 'branches.id');
-        $data = $data->join('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
-        $data = $data->join('users', 'branch_services.user', '=', 'users.id');
+        $data = $data->leftJoin('branches', 'branch_services.branch', '=', 'branches.id');
+        $data = $data->leftJoin('branch_coordinators', 'branch_services.branch_coordinator', '=', 'branch_coordinators.id');
+        $data = $data->leftJoin('users', 'branch_services.user', '=', 'users.id');
 
         $search = $request->search;
         if (strlen($search) > 2) {

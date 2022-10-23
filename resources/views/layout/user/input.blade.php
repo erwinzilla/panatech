@@ -149,6 +149,19 @@
                         </div>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Branch Service<span class="text-danger">*</span></label>
+                        <select name="branch_service" class="form-select w-25 @error('branch_service') is-invalid @enderror">
+                            @foreach($data_additional['branch_service'] as $row)
+                                <option value="{{ $row->id }}" {{ $row->id == old('branch_service', $data->branch_service) ? 'selected' : '' }}>{{ $row->code }}</option>
+                            @endforeach
+                        </select>
+                        @error('branch_service')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
         </div>
