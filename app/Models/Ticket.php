@@ -12,4 +12,13 @@ class Ticket extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    public function states() {
+        return $this->belongsTo('App\Models\Status', 'status');
+    }
+
+    public function customer_types()
+    {
+        return $this->belongsTo('App\Models\CustomerType', 'customer_type');
+    }
 }

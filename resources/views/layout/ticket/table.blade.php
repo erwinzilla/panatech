@@ -3,13 +3,12 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'warranties.id', 'sortable' => true, 'class' => 'text-center'])
-            @include('component.table.title', ['title' => 'Type', 'column' => 'warranties.type', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Model', 'column' => 'warranties.model', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Serial', 'column' => 'warranties.serial', 'sortable' => true])
-            @include('component.table.title', ['title' => 'No. Warranty', 'column' => 'warranties.warranty_no', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Purchase Date', 'column' => 'warranties.purchase_date', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Customer', 'column' => 'customers.name', 'sortable' => true])
+            @include('component.table.title', ['title' => '#', 'column' => 'tickets.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Name', 'column' => 'tickets.type', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Customer', 'column' => 'tickets.customer_name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'tickets.model', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Service Info', 'column' => 'tickets.service_info', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Status', 'column' => 'states.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
@@ -20,7 +19,7 @@
         @if($data->total() == 0)
             <tr>
                 @php
-                    $colspan = 7;
+                    $colspan = 6;
                     if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
@@ -31,28 +30,43 @@
             @foreach($data as $key => $row)
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
+                    <td>{{ $row->name }}</td>
                     <td>
-                        {{ $row->type == 0 ? 'Out' : 'In' }}
+                        <span>{{ $row->customer_name }}</span>
+                        <br><span>{{ $row->phone }}</span>
+                        @if($row->phone2)
+                            <br><span class="text-muted">{{ $row->phone2 }}</span>
+                        @endif
+                        @if($row->phone3)
+                            <br><span class="text-muted">{{ $row->phone3 }}</span>
+                        @endif
+                        <br><small class="text-muted mb-0">{{ $row->address }}</small>
+                        @if($row->email)
+                            <br><small><a href="mailto:{{ $row->email }}">{{ $row->email }}</a></small>
+                        @endif
+                        @if($row->customer_type)
+                            <br><small class="text-primary">{{ $row->customer_types->name }}</small>
+                        @endif
                     </td>
-                    <td>{{ $row->model }}</td>
-                    <td>{{ $row->serial }}</td>
-                    <td>{{ $row->warranty_no ?: '-' }}</td>
-                    <td>{{ date('d/m/Y', strtotime($row->purchase_date)) }}</td>
                     <td>
-                        @if($row->customer)
-                            <span>{{ ucwords($row->customers->name) }}</span>
-                            <br><span class="text-muted">{{ $row->customers->phone }}</span>
-                            @if($row->customers->phone2)
-                                <br><span class="text-muted">{{ $row->customers->phone2 }}</span>
-                            @endif
-                            @if($row->customers->phone3)
-                                <br><span class="text-muted">{{ $row->customers->phone3 }}</span>
-                            @endif
-                            @if($row->customers->address)
-                                <br><small class="text-muted">{{ $row->customers->address }}</small>
-                            @endif
-                        @else
-                            <span>-</span>
+                        <span>{{ $row->model }}</span>
+                        @if($row->serial)
+                            <br><small class="text-muted">{{ $row->serial }}</small>
+                        @endif
+                        @if($row->warranty_no)
+                            <br><small class="text-primary">{{ $row->warranty_no }}</small>
+                        @endif
+                        @if($row->warranty_type == OUT_WARRANTY)
+                            <br><small class="text-muted">Out-Warranty</small>
+                        @endif
+                        @if($row->warranty_type == IN_WARRANTY)
+                            <br><small class="text-primary">In-Warranty</small>
+                        @endif
+                    </td>
+                    <td>{{ $row->service_info }}</td>
+                    <td>
+                        @if($row->status)
+                            <span class="{{ getBadge($row->states->color) }}">{{ $row->states->name }}</span>
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}

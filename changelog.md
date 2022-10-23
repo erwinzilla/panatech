@@ -5,6 +5,11 @@
 - Run Migrate
 - Run Composer
 
+1.10 **Ticket Function and Flash Fill Input System**
+- Add ticket database
+- Add ticket CMV
+- Add flash fill input to ticket function
+
 1.9 **Job Status Function**
 - Fix user choose function
 - Add tax id to customer database

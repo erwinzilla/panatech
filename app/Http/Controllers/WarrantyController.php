@@ -32,6 +32,30 @@ class WarrantyController extends Controller
         // olah data
         $parse  = $this->parseData(Warranty::select('warranties.*'), $request);
 
+        if ($parse['table']['type'] == 'form') {
+            if ($parse['data']->get()->count() > 0) {
+                if ($parse['data']->get()->count() > 1) {
+                    return response()->json([
+                        'status'    => 'error',
+                        'message'   => 'Data tidak spesifik masukan nomor seri yang sesuai',
+                        'data'      => null,
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'    => 'success',
+                        'message'   => 'Sukses mengambil data',
+                        'data'      => $parse['data']->with('customers')->first(),
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => null,
+                ]);
+            }
+        }
+
         // penguraian data
         $params = [
             'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
