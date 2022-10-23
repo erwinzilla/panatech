@@ -5,6 +5,14 @@
 - Run Migrate
 - Run Composer
 
+1.9 **Job Status Function**
+- Fix user choose function
+- Add tax id to customer database
+- Add constant for warranty
+- Add job status database
+- Add job status CMV
+- Add job status privilege
+
 1.8 **Warranty Function and Choose Table Modal**
 - Add warranty database
 - Add warranty CMV

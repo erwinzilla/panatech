@@ -49,7 +49,10 @@
                                 <br><address class="text-muted mb-0">{{ $row->address }}</address>
                             @endif
                         @else
-                            {{ $row->name }}
+                            <span>{{ $row->name }}</span>
+                            @if($row->tax_id)
+                                <span class="text-muted">{{ $row->tax_id }}</span>
+                            @endif
                         @endif
                     </td>
                     @if($type == 'data' || $type == 'trash')

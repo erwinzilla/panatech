@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\CustomerType;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class CustomerController extends Controller
+class StatusController extends Controller
 {
     // table
     const perPage = 10;
 
     // config
     const config = [
-        'blade'     => 'layout.customer',
-        'url'       => 'customer',
-        'name'      => 'customer',
-        'privilege' => 'customers'
+        'blade'     => 'layout.status',
+        'url'       => 'status',
+        'name'      => 'job status',
+        'privilege' => 'states'
     ];
-
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +30,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Customer::select('customers.*'), $request);
+        $parse  = $this->parseData(Status::select('*'), $request);
 
         // penguraian data
         $params = [
@@ -58,14 +56,8 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'name'      => null,
-            'phone'     => null,
-            'phone2'    => null,
-            'phone3'    => null,
-            'address'   => null,
-            'email'     => null,
-            'type'      => null,
-            'tax_id'    => null,
+            'name'  => null,
+            'color' => 'primary',
         ];
 
         $data = (object) $data;
@@ -73,7 +65,6 @@ class CustomerController extends Controller
         // penguraian data
         $params = [
             'data'              => $data,
-            'data_additional'   => CustomerType::all(),
             'type'              => 'create',
             'title'             => 'Create '.self::config['name'],
             'config'            => self::config
@@ -94,7 +85,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Customer::create($request->all());
+            $hasil = Status::create($request->all());
         }
 
         // add created by
@@ -113,36 +104,35 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Status $status)
     {
         // penguraian data
-        $params = [
-            'data'      => $customer,
-        ];
+//        $params = [
+//            'data'      => $warranty,
+//        ];
 
-        return view(self::config['blade'].'.show', $params);
+//        return view(self::config['blade'].'.show', $params);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function edit(Customer $customer)
+    public function edit(Status $status)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-//        $customer = Customer::find($id);
+//        $warannty = Customer::find($id);
 
         // penguraian data
         $params = [
-            'data'              => $customer,
-            'data_additional'   => CustomerType::all(),
+            'data'              => $status,
             'type'              => 'edit',
             'title'             => 'Edit '.self::config['name'],
             'config'            => self::config
@@ -155,23 +145,23 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Status $status)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
 //        $customerType = CustomerType::find($id);
 
-        if ($this->validateInput($request, $customer->id)){
-            $hasil = $customer->fill($request->all())->save();
+        if ($this->validateInput($request, $status->id)){
+            $hasil = $status->fill($request->all())->save();
         }
 
         // add updated by
         if ($hasil) {
-            $customer->update([
+            $status->update([
                 'updated_by' => Auth::user()->id,
             ]);
         }
@@ -185,10 +175,10 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Status $status)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
@@ -196,12 +186,12 @@ class CustomerController extends Controller
 //        $customerType = CustomerType::find($id);
 
         // update siapa yang menghapus
-        $customer->update([
+        $status->update([
             'deleted_by' => Auth::user()->id,
         ]);
 
         // send result
-        $params = getStatus($customer->delete() ? 'success' : 'error', 'delete', self::config['name']);
+        $params = getStatus($status->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -212,7 +202,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Customer::onlyTrashed()->select('customers.*'), $request);
+        $parse  = $this->parseData(Status::onlyTrashed()->select('*'), $request);
 
         // penguraian data
         $params = [
@@ -233,11 +223,11 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Status::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = Customer::onlyTrashed()->restore();
+            $hasil = Status::onlyTrashed()->restore();
         }
 
         // send result
@@ -252,11 +242,11 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Status::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = Customer::onlyTrashed()->forceDelete();
+            $hasil = Status::onlyTrashed()->forceDelete();
         }
 
         // send result
@@ -265,74 +255,12 @@ class CustomerController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function choose(Request $request)
-    {
-        // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
-
-        $data = User::select('*');
-
-        $search = $request->search;
-        if (strlen($search) > 0) {
-            $data = $data->where('users.name','LIKE','%'.$search.'%')
-                ->orWhere('users.email','LIKE','%'.$search.'%')
-                ->orWhere('users.username','LIKE','%'.$search.'%')
-                ->orWhere('users.address','LIKE','%'.$search.'%')
-                ->orWhere('users.phone','LIKE','%'.$search.'%')
-                ->orWhereHas('privileges', function ($q) use ($search) {
-                    $q->where('user_privileges.name','LIKE','%'.$search.'%')
-                        ->orWhere('user_privileges.color','LIKE','%'.$search.'%');
-                });
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
-
-        // penguraian data
-        $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'choose',
-            'title' => 'Choose',
-            'table' => $table
-        ];
-
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
-    }
-
     public function parseData($data, $request)
     {
-        // join
-        $data = $data->leftJoin('customer_types', 'customers.type', '=', 'customer_types.id');
-
         $search = $request->search;
         if (strlen($search) > 1) {
-            $data = $data->where('customers.name','LIKE','%'.$search.'%')
-                ->orWhere('customers.phone', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.phone2', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.phone3', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.address', 'LIKE', '%'.$search.'%')
-                ->orWhere('customers.email', 'LIKE', '%'.$search.'%')
-                ->orWhereHas('types', function ($q) use ($search) {
-                    $q->where('customer_types.name','LIKE','%'.$search.'%');
-                });
+            $data = $data->where('name','LIKE','%'.$search.'%')
+                ->orWhere('color', 'LIKE', '%'.$search.'%');
         }
 
         $perPage = $request->perPage ?: self::perPage;
@@ -369,17 +297,13 @@ class CustomerController extends Controller
     {
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100',
-            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+            'name'              => 'required|min:3|max:100',
         ];
 
         $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'phone.required'        => 'Nomor telp wajib diisi',
-            'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
-            'phone.unique'          => 'Nomor telp sudah terpakai',
+            'name.required'     => 'Nama wajib diisi',
+            'name.min'          => 'Nama minimal 3 karakter',
+            'name.max'          => 'Nama maksimal 100 karakter',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);

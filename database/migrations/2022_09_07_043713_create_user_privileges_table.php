@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_privileges', function (Blueprint $table) {
-            $value = 0; // 0: Forbidden, 1:Can See, 2:Can Edit & Delete, 3:All Access
+            $value = FORBIDDEN; // 0: Forbidden, 1:Can See, 2:Can Edit & Delete, 3:All Access
 
             $table->id();
             $table->string('name', 100)->unique();

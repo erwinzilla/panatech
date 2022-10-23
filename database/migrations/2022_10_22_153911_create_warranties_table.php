@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('serial', 100)->unique();
             $table->string('warranty_no', 100)->unique();
             $table->date('purchase_date');
-            $table->boolean('type')->default(0); //0:out, 1:in
+            $table->boolean('type')->default(OUT_WARRANTY);
             $table->foreignId('customer')->nullable()->constrained('customers')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();

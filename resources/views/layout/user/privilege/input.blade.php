@@ -51,6 +51,9 @@
                     <div class="mb-3">
                         @include('form.privilege', ['name' => 'warranties'])
                     </div>
+                    <div class="mb-3">
+                        @include('form.privilege', ['name' => 'states'])
+                    </div>
                     <hr class="border-dashed">
                     <div class="mb-3">
                         @include('form.color')

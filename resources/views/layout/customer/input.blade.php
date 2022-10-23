@@ -97,6 +97,15 @@
                         </div>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tax Id</label>
+                        <input type="text" name="tax_id" class="form-control w-50 @error('tax_id') is-invalid @enderror" value="{{ old('tax_id', $data->tax_id) }}" placeholder="Masukan No. NPWP / NIK">
+                        @error('tax_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

@@ -9,7 +9,7 @@
                 <li class="nav-item me-2">
                     <a href="{{ url('home') }}" class="nav-link {{ Request::segment(1) == 'home' ? 'active' : '' }}" aria-expanded="false">Home</a>
                 </li>
-                @if(getUserLevel('customers') > 0)
+                @if(getUserLevel('customers') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'customer' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Customers</a>
                         <ul class="dropdown-menu">
@@ -18,12 +18,17 @@
                         </ul>
                     </li>
                 @endif
-                @if(getUserLevel('warranties') > 0)
+                @if(getUserLevel('warranties') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="{{ url('warranty') }}" class="nav-link {{ Request::segment(1) == 'warranty' ? 'active' : '' }}">Warranty</a>
                     </li>
                 @endif
-                @if(getUserLevel('branches') > 0)
+                @if(getUserLevel('tickets') >= ONLY_SEE)
+                    <li class="nav-item dropdown me-2">
+                        <a href="{{ url('ticket') }}" class="nav-link {{ Request::segment(1) == 'ticket' ? 'active' : '' }}">Ticket</a>
+                    </li>
+                @endif
+                @if(getUserLevel('branches') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>
                         <ul class="dropdown-menu">
@@ -34,12 +39,21 @@
                     </li>
                 @endif
                 {{--                    Jika only see maka munculkan tombol--}}
-                @if(getUserLevel('users') > 0)
+                @if(getUserLevel('users') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'user' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">User / Employee</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('user') }}" class="dropdown-item">@svg('heroicon-s-users', 'icon-sm me-1') User</a></li>
                             <li><a href="{{ url('user/privilege') }}" class="dropdown-item">@svg('heroicon-s-credit-card', 'icon-sm me-1') Privilege</a></li>
+                        </ul>
+                    </li>
+                @endif
+                {{-- Jika only see maka munculkan tombol--}}
+                @if(getUserLevel('states') >= ONLY_SEE)
+                    <li class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'status' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Misc</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('status') }}" class="dropdown-item">@svg('heroicon-s-tag', 'icon-sm me-1') Job Status</a></li>
                         </ul>
                     </li>
                 @endif

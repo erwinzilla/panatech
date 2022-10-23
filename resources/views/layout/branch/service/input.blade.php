@@ -91,10 +91,13 @@
                         <label class="form-label">Head Service</label>
                         <input type="hidden" name="user" value="{{ old('user', $data->user) }}">
                         <div class="d-flex justify-content-start">
-                            <button type="button" class="btn btn-primary me-3 btn-table-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="user">@svg('heroicon-s-user', 'icon') Select User</button>
-                            <div>
-                                <span id="name-user">{{ $data->user ? $data->users->name : 'Select user first'}}</span>
-                                <br><span id="privilege-user" class="{{ $data->user ? getBadge($data->users->privileges->color) : '' }}">{{ $data->user ? $data->users->privileges->name : '-' }}</span>
+                            <button type="button" class="btn {{ $data->user ? 'btn-warning' : 'btn-primary' }} me-3 btn-table-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="user">@svg('heroicon-s-user', 'icon') {{ $data->user ? 'Edit' : 'Select' }} User</button>
+                            <div id="user-data">
+                                @if($data->user)
+                                    @include('layout.user.show', ['data' => $data->users])
+                                @else
+                                    <span>Select user first</span>
+                                @endif
                             </div>
                         </div>
                         @error('user')

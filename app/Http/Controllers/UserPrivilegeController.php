@@ -86,15 +86,17 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'id'        => null,
-            'name'      => null,
-            'tickets'   => 0,
-            'customers' => 0,
-            'products'  => 0,
-            'reports'   => 0,
-            'users'     => 0,
-            'branches'  => 0,
-            'color'     => 'primary'
+            'id'            => null,
+            'name'          => null,
+            'tickets'       => 0,
+            'customers'     => 0,
+            'products'      => 0,
+            'reports'       => 0,
+            'users'         => 0,
+            'branches'      => 0,
+            'warranties'    => 0,
+            'states'        => 0,
+            'color'         => 'primary'
         ];
 
         $data = (object) $data;

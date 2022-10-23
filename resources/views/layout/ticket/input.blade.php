@@ -23,8 +23,8 @@
                     <div class="mb-3">
                         <label class="form-label">Type<span class="text-danger">*</span></label>
                         <select name="type" class="form-select w-25 @error('type') is-invalid @enderror">
-                            <option value="{{ OUT_WARRANTY }}" {{ old('type', $data->type) == OUT_WARRANTY ? 'selected' : '' }}>Out</option>
-                            <option value="{{ IN_WARRANTY }}" {{ old('type', $data->type) == IN_WARRANTY ? 'selected' : '' }}>In</option>
+                            <option value="0" {{ old('type', $data->type) == 0 ? 'selected' : '' }}>Out</option>
+                            <option value="1" {{ old('type', $data->type) == 1 ? 'selected' : '' }}>In</option>
                         </select>
                         @error('type')
                         <div class="invalid-feedback">
@@ -111,7 +111,7 @@
 
         let selectType = $('select[name="type"]');
         selectType.addEventListener('change', function () {
-            if (selectType.value === '{{ IN_WARRANTY }}') {
+            if (selectType.value === '1') {
                 bsCollapse.show();
             } else {
                 bsCollapse.hide();

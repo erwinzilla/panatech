@@ -10,6 +10,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CustomerTypeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WarrantyController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,7 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/trash', [UserController::class, 'trash']);
     Route::get('user/restore/{id?}', [UserController::class, 'restore']);
     Route::get('user/delete/{id?}', [UserController::class, 'delete']);
-    Route::get('user/choose', [UserController::class, 'chooseUser']);
+    Route::get('user/profile/{id}', [UserController::class, 'profile']);
 
     // Branch Coordinator
     Route::get('branch/service/trash', [BranchServiceController::class, 'trash']);
@@ -77,6 +79,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('warranty/restore/{id?}', [WarrantyController::class, 'restore']);
     Route::get('warranty/delete/{id?}', [WarrantyController::class, 'delete']);
 
+    // Ticket
+    Route::get('ticket/trash', [TicketController::class, 'trash']);
+    Route::get('ticket/restore/{id?}', [TicketController::class, 'restore']);
+    Route::get('ticket/delete/{id?}', [TicketController::class, 'delete']);
+
+    // Ticket
+    Route::get('status/trash', [StatusController::class, 'trash']);
+    Route::get('status/restore/{id?}', [StatusController::class, 'restore']);
+    Route::get('status/delete/{id?}', [StatusController::class, 'delete']);
+
     // resources route
     Route::resources([
         'user/privilege'        => UserPrivilegeController::class,
@@ -86,6 +98,8 @@ Route::group(['middleware' => 'auth'], function () {
         'branch'                => BranchController::class,
         'customer/type'         => CustomerTypeController::class,
         'customer'              => CustomerController::class,
-        'warranty'              => WarrantyController::class
+        'warranty'              => WarrantyController::class,
+        'ticket'                => TicketController::class,
+        'status'                => StatusController::class
     ]);
 });
