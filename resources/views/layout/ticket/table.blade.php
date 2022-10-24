@@ -1,4 +1,14 @@
 @include('component.table.header', ['perPage' => $table['perPage'], 'search' => $table['search']])
+<div class="table-filter ms-3">
+    <div class="dropdown">
+        <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-funnel', 'icon-sm me-1') Filter Data</button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&filter[]=9&filter[]=10&target=table') }}">Only On-Handled Job</a></li>
+            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&target=table') }}">Hide Book-in and Pending</a></li>
+            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=9&filter[]=10&target=table') }}">Hide Invoice and Cancelled</a></li>
+        </ul>
+    </div>
+</div>
 <div class="table-container table-responsive">
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
@@ -8,6 +18,7 @@
             @include('component.table.title', ['title' => 'Customer', 'column' => 'tickets.customer_name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'tickets.model', 'sortable' => true])
             @include('component.table.title', ['title' => 'Service Info', 'column' => 'tickets.service_info', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Created', 'column' => 'tickets.created_at', 'sortable' => true])
             @include('component.table.title', ['title' => 'Status', 'column' => 'states.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
@@ -69,6 +80,9 @@
                         @endif
                     </td>
                     <td>{{ $row->service_info }}</td>
+                    <td>
+                        <span class="d-inline-flex">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</span>
+                    </td>
                     <td>
                         @if($row->status)
                             <span class="{{ getBadge($row->states->color) }}">{{ $row->states->name }}</span>

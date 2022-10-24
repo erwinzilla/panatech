@@ -84,6 +84,9 @@ $dropdown-font-size: .8rem;
 // Pagination
 $pagination-border-width: 1px;
 
+// Table
+$table-cell-padding-y: 1rem;
+
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../node_modules/bootstrap/scss/variables";
 
@@ -114,6 +117,8 @@ $themes: (
                 content-bg: $body-bg,
                 input-bg: #e9ecef,
                 input-color: #000,
+                input-disabled-bg: #E9ECF7,
+                input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
                 login-img: url('/assets/images/backgrounds/bg-login-min.jpg'),
                 navbar-bg: $body-bg,
@@ -134,6 +139,8 @@ $themes: (
                 content-bg: #171717,
                 input-bg: #1e1e1e,
                 input-color: #fff,
+                input-disabled-bg: #444444,
+                input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
                 login-img: url('/assets/images/backgrounds/bg-login-dark-min.jpg'),
                 navbar-bg: #171717,
@@ -385,15 +392,25 @@ hr {
         --bs-input-border-color: #{t('border-color')};
         --bs-input-focus-bg: #{t('input-bg')};
         --bs-input-focus-color: #{t('input-color')};
+        --bs-input-disabled-bg: #{t('input-disabled-bg')};
+        --bs-input-disabled-color: #{t('input-disabled-color')};
     }
     background-color: var(--bs-input-bg);
     color: var(--bs-input-color);
     border-color: var(--bs-input-border-color);
+    transition: $btn-transition;
+    &:disabled {
+        background-color: var(--bs-input-disabled-bg);
+        color: var(--bs-input-disabled-color);
+    }
+    &:read-only {
+        background-color: var(--bs-input-disabled-bg);
+        color: var(--bs-input-disabled-color);
+    }
     &:focus {
         background-color: var(--bs-input-focus-bg);
         color: var(--bs-input-focus-color);
     }
-    transition: $btn-transition;
 }
 .form-select {
     @include theme() {

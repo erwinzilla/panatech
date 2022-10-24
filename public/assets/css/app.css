@@ -312,8 +312,8 @@ table {
 }
 
 caption {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   color: #6c757d;
   text-align: left;
 }
@@ -5093,7 +5093,7 @@ textarea.form-control-lg {
   border-color: var(--bs-table-border-color);
 }
 .table > :not(caption) > * > * {
-  padding: 0.5rem 0.5rem;
+  padding: 1rem 0.5rem;
   background-color: var(--bs-table-bg);
   border-bottom-width: 1px;
   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
@@ -10066,6 +10066,8 @@ body.light-theme .form-control {
   --bs-input-border-color: #dbdbdb;
   --bs-input-focus-bg: #e9ecef;
   --bs-input-focus-color: #000;
+  --bs-input-disabled-bg: #E9ECF7;
+  --bs-input-disabled-color: #73837b;
 }
 body.dark-theme .form-control {
   --bs-input-bg: #1e1e1e;
@@ -10073,6 +10075,20 @@ body.dark-theme .form-control {
   --bs-input-border-color: #282828;
   --bs-input-focus-bg: #1e1e1e;
   --bs-input-focus-color: #fff;
+  --bs-input-disabled-bg: #444444;
+  --bs-input-disabled-color: #73837b;
+}
+.form-control:disabled {
+  background-color: var(--bs-input-disabled-bg);
+  color: var(--bs-input-disabled-color);
+}
+.form-control:-moz-read-only {
+  background-color: var(--bs-input-disabled-bg);
+  color: var(--bs-input-disabled-color);
+}
+.form-control:read-only {
+  background-color: var(--bs-input-disabled-bg);
+  color: var(--bs-input-disabled-color);
 }
 .form-control:focus {
   background-color: var(--bs-input-focus-bg);

@@ -5,18 +5,17 @@
         <tr>
             @include('component.table.title', ['title' => '#', 'column' => 'customers.id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => $type == 'choose' ? 'Name / Detail' : 'Name', 'column' => 'customers.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Phone', 'column' => 'customers.phone', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Address / Email', 'column' => 'customers.address', 'sortable' => true])
             @if($type == 'data' || $type == 'trash')
-                @include('component.table.title', ['title' => 'Phone', 'column' => 'customers.phone', 'sortable' => true])
-                @include('component.table.title', ['title' => 'Address', 'column' => 'customers.address', 'sortable' => true])
+                @include('component.table.title', ['title' => 'Type', 'column' => 'customer_types.name', 'sortable' => true])
             @endif
-            @include('component.table.title', ['title' => 'Email', 'column' => 'customers.email', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Type', 'column' => 'customer_types.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
             @endif
             @if($type == 'choose')
-                @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
+                @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle px-4'])
             @endif
         </tr>
         </thead>
@@ -34,59 +33,51 @@
         @else
             @foreach($data as $key => $row)
                 <tr>
-                    <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
+                    <td class="text-center text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
                         @if($type == 'choose')
                             <span>{{ $row->name }}</span>
-                            <br><span class="text-muted">{{ $row->phone }}</span>
-                            @if($row->phone2)
-                                <br><span class="text-muted">{{ $row->phone2 }}</span>
-                            @endif
-                            @if($row->phone3)
-                                <br><span class="text-muted">{{ $row->phone3 }}</span>
-                            @endif
-                            @if($row->address)
-                                <br><address class="text-muted mb-0">{{ $row->address }}</address>
+                            @if($row->type)
+                                <br><span class="{{ getBadge($row->types->color) }}">{{ ucwords($row->types->name) }}</span>
                             @endif
                         @else
                             <span>{{ $row->name }}</span>
                             @if($row->tax_id)
-                                <span class="text-muted">{{ $row->tax_id }}</span>
+                                <br><small class="text-muted">{{ $row->tax_id }}</small>
                             @endif
+                        @endif
+                    </td>
+                    <td>
+                        {{ $row->phone }}
+                        @if($row->phone2)
+                            <br>{{ $row->phone2 }}
+                        @endif
+                        @if($row->phone3)
+                            <br>{{ $row->phone3 }}
+                        @endif
+                    </td>
+                    <td>
+                        <address class="mb-0">{{ $row->address ?: '-' }}</address>
+                        @if($row->email)
+                            <br><a href="mailto:{{ $row->email }}">{{ $row->email }}</a>
                         @endif
                     </td>
                     @if($type == 'data' || $type == 'trash')
                         <td>
-                            {{ $row->phone }}
-                            @if($row->phone2)
-                                <br>{{ $row->phone2 }}
+                            @if($row->type)
+                                <span class="{{ getBadge($row->types->color) }}">{{ ucwords($row->types->name) }}</span>
+                            @else
+                                <span class="text-muted">-</span>
                             @endif
-                            @if($row->phone3)
-                                <br>{{ $row->phone3 }}
-                            @endif
-                        </td>
-                        <td>
-                            <address class="mb-0">{{ $row->address ?: '-' }}</address>
                         </td>
                     @endif
-                    <td>
-                        @if($row->email)
-                            <a href="mailto:{{ $row->email }}">{{ $row->email }}</a>
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>
-                        @if($row->type)
-                            <span class="{{ getBadge($row->types->color) }}">{{ ucwords($row->types->name) }}</span>
-                        @else
-                            <span>-</span>
-                        @endif
-                    </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD && ($type == 'data' || $type == 'trash'))
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
+                                @if($type == 'data')
+                                    <a href="{{ url('warranty/create/'.$row->id) }}" class="btn btn-secondary btn-icon me-2" data-bs-toggle="tooltip" data-bs-title="Generate Warranty">@svg('heroicon-s-credit-card', 'icon-sm')</a>
+                                @endif
                                 @include('form.button.crud', ['url' => $config['url'].'/', 'type' => $type, 'id' => $row->id])
                             </div>
                         </td>

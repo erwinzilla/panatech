@@ -30,13 +30,19 @@
         @else
             @foreach($data as $key => $row)
                 <tr>
-                    <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
+                    <td class="text-center text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
                         {{ $row->type == 0 ? 'Out' : 'In' }}
                     </td>
                     <td>{{ $row->model }}</td>
                     <td>{{ $row->serial }}</td>
-                    <td>{{ $row->warranty_no ?: '-' }}</td>
+                    <td>
+                        @if($row->warranty_no)
+                            <span>{{ $row->warranty_no }}</span>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
                     <td>{{ date('d/m/Y', strtotime($row->purchase_date)) }}</td>
                     <td>
                         @if($row->customer)
@@ -48,17 +54,17 @@
                             @if($row->customers->phone3)
                                 <br><span class="text-muted">{{ $row->customers->phone3 }}</span>
                             @endif
-                            @if($row->customers->address)
-                                <br><small class="text-muted">{{ $row->customers->address }}</small>
-                            @endif
                         @else
-                            <span>-</span>
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
+                                @if($type == 'data')
+                                    <a href="{{ url('ticket/create/'.$row->id) }}" class="btn btn-secondary btn-icon me-2" data-bs-toggle="tooltip" data-bs-title="Generate Ticket">@svg('heroicon-s-ticket', 'icon-sm')</a>
+                                @endif
                                 @include('form.button.crud', ['url' => $config['url'].'/', 'type' => $type, 'id' => $row->id])
                             </div>
                         </td>

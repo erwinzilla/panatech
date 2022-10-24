@@ -5,6 +5,12 @@
 - Run Migrate
 - Run Composer
 
+1.11.1 **On-Process Job***
+- Relocated Menu Navbar
+- Fix Choose JS
+- Add Job Database
+- On Process Job CMV
+
 1.11 **Job Type Function**
 - Add jobs privilege
 - Add Job Type Database

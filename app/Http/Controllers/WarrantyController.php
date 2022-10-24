@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,7 @@ class WarrantyController extends Controller
         // olah data
         $parse  = $this->parseData(Warranty::select('warranties.*'), $request);
 
+        // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
             if ($parse['data']->get()->count() > 0) {
                 if ($parse['data']->get()->count() > 1) {
@@ -74,7 +76,7 @@ class WarrantyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id = null)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
@@ -85,7 +87,7 @@ class WarrantyController extends Controller
             'warranty_no'   => null,
             'purchase_date' => null,
             'type'          => null,
-            'customer'      => null,
+            'customer'      => $id,
         ];
 
         $data = (object) $data;
@@ -309,8 +311,8 @@ class WarrantyController extends Controller
         }
 
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
+        $column = $request->column ?: 'warranties.id';
+        $sort = $request->sort ?: 'desc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 

@@ -240,6 +240,7 @@
             }
         });
 
+        // isi otomatis berdasarkan data warranty konsumen
         let inputFlashFill = $('input[name="flash-fill"]');
         inputFlashFill.addEventListener('change', function () {
             let search = inputFlashFill.value;
@@ -262,11 +263,12 @@
                     // lanjut jika sukses mengirim data
                     if (obj.status === 'success') {
                         //kita ubah jadi disable untuk flash fill nya
-                        inputFlashFill.disabled = true;
+                        inputFlashFill.setAttribute('readonly','');
 
                         // isi data konsumen
                         $('input[name="customer_name"]').value = obj.data.customers.name;
                         $('input[name="phone"]').value = obj.data.customers.phone;
+                        $('input[name="phone"]').setAttribute('readonly','');
                         $('input[name="phone2"]').value = obj.data.customers.phone2;
                         $('input[name="phone3"]').value = obj.data.customers.phone3;
                         $('textarea[name="address"]').value = obj.data.customers.address;
@@ -289,5 +291,47 @@
                 });
             }
         })
+
+        // isi otomatis berdasarkan phone number konsumen
+
+        let inputPhone = $('input[name="phone"]');
+        // jika sudah dikunci tidak usah diproses
+        if (!inputPhone.getAttribute('readonly')) {
+            inputPhone.addEventListener('change', function () {
+                let search = inputPhone.value;
+                if (search) {
+                    // kirim data untuk menunjukan hasil pencarian
+                    let load_url = url('customer/?type=form&search='+search);
+                    send_http(load_url, function (data) {
+                        let obj = JSON.parse(data)
+
+                        //show notification
+                        alert.fire({
+                            title: ucwords(obj.status),
+                            text: obj.message,
+                            icon: obj.status,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        })
+
+                        // lanjut jika sukses mengirim data
+                        if (obj.status === 'success') {
+                            //kita ubah jadi disable untuk flash fill nya
+                            inputPhone.setAttribute('readonly','');
+
+                            // isi data konsumen
+                            $('input[name="customer_name"]').value = obj.data.name;
+                            $('input[name="phone"]').value = obj.data.phone;
+                            $('input[name="phone2"]').value = obj.data.phone2;
+                            $('input[name="phone3"]').value = obj.data.phone3;
+                            $('textarea[name="address"]').value = obj.data.address;
+                            $('input[name="email"]').value = obj.data.email;
+                            $('#option-customer-type-'+obj.data.type).checked = true;
+                        }
+                    });
+                }
+            })
+        }
     </script>
 @endsection

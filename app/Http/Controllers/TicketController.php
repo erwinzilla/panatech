@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CustomerType;
 use App\Models\Status;
 use App\Models\Ticket;
+use App\Models\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -34,6 +35,31 @@ class TicketController extends Controller
         // olah data
         $parse  = $this->parseData(Ticket::select('tickets.*'), $request);
 
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            if ($parse['data']->get()->count() > 0) {
+                if ($parse['data']->get()->count() > 1) {
+                    return response()->json([
+                        'status'    => 'error',
+                        'message'   => 'Data tidak spesifik masukan nomor telp yang sesuai',
+                        'data'      => null,
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'    => 'success',
+                        'message'   => 'Sukses mengambil data',
+                        'data'      => $parse['data']->with('states')->first(),
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => null,
+                ]);
+            }
+        }
+
         // penguraian data
         $params = [
             'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
@@ -52,27 +78,33 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id = null)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        // cari data berdasarkan warranty
+        $warranty = null;
+        if ($id) {
+            $warranty = Warranty::find($id);
+        }
 
         $data = [
             'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'service_info'  => null,
             'status'        => null,
-            'customer_name' => null,
-            'phone'         => null,
-            'phone2'        => null,
-            'phone3'        => null,
-            'address'       => null,
-            'email'         => null,
-            'customer_type' => null,
-            'model'         => null,
-            'serial'        => null,
-            'warranty_no'   => null,
-            'purchase_date' => null,
-            'warranty_type' => null,
+            'customer_name' => $warranty ? $warranty->customers->name : null,
+            'phone'         => $warranty ? $warranty->customers->phone : null,
+            'phone2'        => $warranty ? $warranty->customers->phone2 : null,
+            'phone3'        => $warranty ? $warranty->customers->phone3 : null,
+            'address'       => $warranty ? $warranty->customers->address : null,
+            'email'         => $warranty ? $warranty->customers->email : null,
+            'customer_type' => $warranty ? $warranty->customers->type : null,
+            'model'         => $warranty ? $warranty->model : null,
+            'serial'        => $warranty ? $warranty->serial : null,
+            'warranty_no'   => $warranty ? $warranty->warranty_no : null,
+            'purchase_date' => $warranty ? $warranty->purchase_date : null,
+            'warranty_type' => $warranty ? $warranty->type : null,
             'branch_service'=> Auth::user()->branch_service,
         ];
 
@@ -306,9 +338,14 @@ class TicketController extends Controller
                 });
         }
 
+        $filter = $request->filter ?: null;
+        if ($filter) {
+            $data = $data->whereNotIn('status', $filter);
+        }
+
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
+        $column = $request->column ?: 'tickets.id';
+        $sort = $request->sort ?: 'desc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 

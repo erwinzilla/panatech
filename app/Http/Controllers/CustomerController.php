@@ -34,6 +34,31 @@ class CustomerController extends Controller
         // olah data
         $parse  = $this->parseData(Customer::select('customers.*'), $request);
 
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            if ($parse['data']->get()->count() > 0) {
+                if ($parse['data']->get()->count() > 1) {
+                    return response()->json([
+                        'status'    => 'error',
+                        'message'   => 'Data tidak spesifik masukan nomor telp yang sesuai',
+                        'data'      => null,
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'    => 'success',
+                        'message'   => 'Sukses mengambil data',
+                        'data'      => $parse['data']->with('types')->first(),
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak ditemukan',
+                    'data'      => null,
+                ]);
+            }
+        }
+
         // penguraian data
         $params = [
             'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
@@ -336,8 +361,8 @@ class CustomerController extends Controller
         }
 
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
+        $column = $request->column ?: 'customers.id';
+        $sort = $request->sort ?: 'desc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 
@@ -346,6 +371,7 @@ class CustomerController extends Controller
             $target = 'table';
         }
 
+        // sort by id
         if ($column && $sort) {
             $data = $data->orderBy($column, $sort);
         }

@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let load_url = url(target+'/?type=choose&target=table');
                     send_http(load_url, function (data) {
                         table_data_modal.innerHTML = data;
-                        table_data_modal.dataset.url = url(target+'/?type=choose');
+                        table_data_modal.dataset.url = url(target+'/?type=choose&target=table');
                     });
                 }
 
@@ -219,12 +219,11 @@ document.addEventListener("DOMContentLoaded", function() {
             let perPage = $('select[name="perPage"]').value;
             let search = $('input[name="search"]').value;
 
-            let params = 'perPage=' + perPage +
-                '&search=' + search +
-                '&target=table';
+            let params = '&perPage=' + perPage +
+                '&search=' + search;
 
             // kirim data untuk menunjukan hasil pencarian
-            let load_url = table_data_modal.dataset.url + '?' + params;
+            let load_url = table_data_modal.dataset.url + params;
             send_http(load_url, function (data) {
                 table_data_modal.innerHTML = data;
             });

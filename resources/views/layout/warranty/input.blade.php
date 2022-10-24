@@ -77,7 +77,11 @@
                             <button type="button" class="btn {{ $data->customer ? 'btn-warning' : 'btn-primary' }} me-3 btn-table-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="customer">@svg('heroicon-s-user', 'icon') {{ $data->customer ? 'Edit' : 'Select' }} Customer</button>
                             <div id="customer-data">
                                 @if($data->customer)
-                                    @include('layout.customer.show', ['data' => $data->customers])
+                                    @if($type == 'create')
+                                        @include('layout.customer.show', ['data' => \App\Models\Customer::find($data->customer)])
+                                    @else
+                                        @include('layout.customer.show', ['data' => $data->customers])
+                                    @endif
                                 @else
                                     <span>Select customer first</span>
                                 @endif
