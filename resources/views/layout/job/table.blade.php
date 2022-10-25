@@ -13,12 +13,12 @@
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
         <tr>
-            @include('component.table.title', ['title' => '#', 'column' => 'tickets.id', 'sortable' => true, 'class' => 'text-center'])
-            @include('component.table.title', ['title' => 'Name', 'column' => 'tickets.type', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Customer', 'column' => 'tickets.customer_name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'tickets.model', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Service Info', 'column' => 'tickets.service_info', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Created', 'column' => 'tickets.created_at', 'sortable' => true])
+            @include('component.table.title', ['title' => '#', 'column' => 'jobs.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'No. Job', 'column' => 'jobs.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'No. Inv', 'column' => 'jobs.invoice_name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Customer', 'column' => 'jobs.customer_name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'jobs.model', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Service Info', 'column' => 'jobs.service_info', 'sortable' => true])
             @include('component.table.title', ['title' => 'Status', 'column' => 'states.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
@@ -30,7 +30,7 @@
         @if($data->total() == 0)
             <tr>
                 @php
-                    $colspan = 6;
+                    $colspan = 9;
                     if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada baguian untuk action button
                     }
@@ -43,8 +43,19 @@
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
                         {{ $row->name }}
+                        @if($row->ticket)
+                            <br><small class="text-muted">{{ $row->tickets->name }}</small>
+                        @endif
                         @if($row->branch_service)
                             <br><span class="{{ getBadge('primary') }}">{{ $row->branch_services->code }}</span>
+                        @endif
+                        <small class="d-inline-flex text-info mt-1">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                    </td>
+                    <td>
+                        @if($row->invoice_name)
+                            <span>{{ $row->invoice_name }}</span>
+                        @else
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>
@@ -79,9 +90,11 @@
                             <br><small class="text-primary">In-Warranty</small>
                         @endif
                     </td>
-                    <td>{{ $row->service_info }}</td>
                     <td>
-                        <span class="d-inline-flex">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</span>
+                        {{ $row->service_info }}
+                        @if($row->repair_info)
+                            <br><span class="text-success">{{ $row->repair_info }}</span>
+                        @endif
                     </td>
                     <td>
                         @if($row->status)
@@ -92,9 +105,6 @@
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                         <td class="pe-3 w-2-slot">
                             <div class="d-flex">
-                                @if($type == 'data')
-                                    <a href="{{ url('job/create/'.$row->id) }}" class="btn btn-secondary btn-icon me-2" data-bs-toggle="tooltip" data-bs-title="Generate Job">@svg('heroicon-s-briefcase', 'icon-sm')</a>
-                                @endif
                                 @include('form.button.crud', ['url' => $config['url'].'/', 'type' => $type, 'id' => $row->id])
                             </div>
                         </td>

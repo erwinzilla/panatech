@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerType;
 use App\Models\Job;
+use App\Models\JobType;
+use App\Models\Status;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -16,7 +20,7 @@ class JobController extends Controller
     const config = [
         'blade'     => 'layout.job',
         'url'       => 'job',
-        'name'      => 'job dek',
+        'name'      => 'job desk',
         'privilege' => 'jobs'
     ];
     /**
@@ -50,9 +54,70 @@ class JobController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id = null)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        // cari data berdasarkan warranty
+        $ticket = null;
+        if ($id) {
+            $ticket = Ticket::find($id);
+        }
+
+        $data = [
+            'name'              => null,
+            'invoice_name'      => null,
+            'note'              => null,
+            'accessories'       => null,
+            'condition'         => null,
+            'labour'            => null,
+            'transport'         => null,
+            'quality_report'    => null,
+            'dealer_report'     => null,
+            'repair_at'         => null,
+            'collection_at'     => null,
+            'actual_start_at'   => null,
+            'actual_end_at'     => null,
+            'service_info'      => $ticket ? $ticket->service_info : null,
+            'repair_info'       => null,
+            'status'            => $ticket ? $ticket->status : null,
+            'customer_name'     => $ticket ? $ticket->customer_name : null,
+            'phone'             => $ticket ? $ticket->phone : null,
+            'phone2'            => $ticket ? $ticket->phone2 : null,
+            'phone3'            => $ticket ? $ticket->phone3 : null,
+            'address'           => $ticket ? $ticket->address : null,
+            'email'             => $ticket ? $ticket->email : null,
+            'customer_type'     => $ticket ? $ticket->customer_type : null,
+            'tax_id'            => null,
+            'model'             => $ticket ? $ticket->model : null,
+            'serial'            => $ticket ? $ticket->serial : null,
+            'warranty_no'       => $ticket ? $ticket->warranty_no : null,
+            'purchase_date'     => $ticket ? $ticket->purchase_date : null,
+            'warranty_type'     => $ticket ? $ticket->waraanty_type : null,
+            'branch_service'    => Auth::user()->branch_service,
+            'job_type'          => null,
+            'handle_by'         => Auth::user()->id,
+            'ticket'            => $ticket ? $ticket->id : null,
+            'ticket_name'       => $ticket ? $ticket->name : null,
+        ];
+
+        $data = (object) $data;
+
+        // penguraian data
+        $params = [
+            'data'              => $data,
+            'data_additional'   => [
+                'status'        => Status::all(),
+                'job_type'      => JobType::all(),
+                'customer_type' => CustomerType::all(),
+            ],
+            'type'              => 'create',
+            'title'             => 'Create '.self::config['name'],
+            'config'            => self::config
+        ];
+
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -63,7 +128,24 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        if($this->validateInput($request)) {
+            $hasil = Job::create($request->except(['flash-fill']));
+        }
+
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -74,7 +156,12 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        //
+        // penguraian data
+//        $params = [
+//            'data'      => $warranty,
+//        ];
+
+//        return view(self::config['blade'].'.show', $params);
     }
 
     /**
@@ -85,7 +172,25 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $warannty = Customer::find($id);
+
+        // penguraian data
+        $params = [
+            'data'              => $job,
+            'data_additional'   => [
+                'status'        => Status::all(),
+                'job_type'      => JobType::all(),
+                'customer_type' => CustomerType::all(),
+            ],
+            'type'              => 'edit',
+            'title'             => 'Edit '.self::config['name'],
+            'config'            => self::config
+        ];
+
+        return view(self::config['blade'].'.input', $params);
     }
 
     /**
@@ -97,7 +202,26 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customerType = CustomerType::find($id);
+
+        if ($this->validateInput($request, $job->id)){
+            $hasil = $job->fill($request->except(['flash-fill']))->save();
+        }
+
+        // add updated by
+        if ($hasil) {
+            $job->update([
+                'updated_by' => Auth::user()->id,
+            ]);
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -108,7 +232,20 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customerType = CustomerType::find($id);
+
+        // update siapa yang menghapus
+        $job->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
+
+        // send result
+        $params = getStatus($job->delete() ? 'success' : 'error', 'delete', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     public function trash(Request $request)
@@ -117,7 +254,7 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Ticket::onlyTrashed()->select('tickets.*'), $request);
+        $parse  = $this->parseData(Job::onlyTrashed()->select('jobs.*'), $request);
 
         // penguraian data
         $params = [
@@ -138,11 +275,11 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Ticket::onlyTrashed()
+            $hasil = Job::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = Ticket::onlyTrashed()->restore();
+            $hasil = Job::onlyTrashed()->restore();
         }
 
         // send result
@@ -157,11 +294,11 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Ticket::onlyTrashed()
+            $hasil = Job::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = Ticket::onlyTrashed()->forceDelete();
+            $hasil = Job::onlyTrashed()->forceDelete();
         }
 
         // send result
@@ -173,10 +310,10 @@ class JobController extends Controller
     public function parseData($data, $request)
     {
         // join
-        $data = $data->leftJoin('branch_services', 'job.branch_service', '=', 'branch_services.id');
-        $data = $data->leftJoin('job_types', 'job.job_type', '=', 'job_types.id');
-        $data = $data->leftJoin('users', 'job.handle_by', '=', 'users.id');
-        $data = $data->leftJoin('tickets', 'job.ticket', '=', 'tickets.id');
+        $data = $data->leftJoin('branch_services', 'jobs.branch_service', '=', 'branch_services.id');
+        $data = $data->leftJoin('job_types', 'jobs.job_type', '=', 'job_types.id');
+        $data = $data->leftJoin('users', 'jobs.handle_by', '=', 'users.id');
+        $data = $data->leftJoin('tickets', 'jobs.ticket', '=', 'tickets.id');
 
         $search = $request->search;
         if (strlen($search) > 1) {
@@ -216,7 +353,7 @@ class JobController extends Controller
                     $q->where('states.name','LIKE','%'.$search.'%')
                         ->orWhere('states.color', 'LIKE', '%'.$search.'%');
                 })
-                ->orWhereHas('handles', function ($q) use ($search) {
+                ->orWhereHas('handled', function ($q) use ($search) {
                     $q->where('users.name','LIKE','%'.$search.'%')
                         ->orWhere('users.email','LIKE','%'.$search.'%')
                         ->orWhere('users.username','LIKE','%'.$search.'%')
@@ -323,6 +460,7 @@ class JobController extends Controller
     {
         // validasi
         $rules = [
+            'name'                      => 'required|min:3|max:100|unique:jobs,name,'.$id,
             'service_info'              => 'required|min:3',
             'customer_name'             => 'required|min:3|max:100',
             'phone'                     => 'required|min:3|max:100',
@@ -331,6 +469,10 @@ class JobController extends Controller
         ];
 
         $messages = [
+            'name.required'             => 'No. job wajib diisi',
+            'name.min'                  => 'No. job minimal 3 karakter',
+            'name.max'                  => 'No. job maksimal 100 karakter',
+            'name.unique'               => 'No. job sudah terpakai',
             'service_info.required'     => 'Keterangan servis wajib diisi',
             'service_info.min'          => 'Keterangan servis minimal 3 karakter',
             'customer_name.required'    => 'Nama konsumen wajib diisi',

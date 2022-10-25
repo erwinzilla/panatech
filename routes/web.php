@@ -99,6 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('job/type/delete/{id?}', [JobTypeController::class, 'delete']);
 
     // Job Type
+    Route::get('job/create/{id?}', [JobController::class, 'create']);
     Route::get('job/trash', [JobController::class, 'trash']);
     Route::get('job/restore/{id?}', [JobController::class, 'restore']);
     Route::get('job/delete/{id?}', [JobController::class, 'delete']);

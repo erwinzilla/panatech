@@ -5,6 +5,9 @@
 - Run Migrate
 - Run Composer
 
+1.12 **Job Desk Function**
+- Add Job Desk CMV
+
 1.11.1 **On-Process Job***
 - Relocated Menu Navbar
 - Fix Choose JS

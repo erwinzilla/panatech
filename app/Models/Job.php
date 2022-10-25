@@ -25,11 +25,15 @@ class Job extends Model
         return $this->belongsTo('App\Models\Status', 'status');
     }
 
-    public function handles() {
+    public function handled() {
         return $this->belongsTo('App\Models\User', 'handle_by');
     }
 
     public function tickets() {
         return $this->belongsTo('App\Models\Ticket', 'ticket');
+    }
+
+    public function customer_types() {
+        return $this->belongsTo('App\Models\CustomerType', 'customer_type');
     }
 }
