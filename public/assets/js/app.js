@@ -329,7 +329,7 @@ function choose(name, value) {
 }
 
 function send_http(url, callback, method = 'get', param = null, loading = true) {
-    console.log(url);
+    // console.log(url);
     let http = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
 
     http.onreadystatechange = function () {

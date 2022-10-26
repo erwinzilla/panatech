@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customer/trash', [CustomerController::class, 'trash']);
     Route::get('customer/restore/{id?}', [CustomerController::class, 'restore']);
     Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);;
+    Route::post('customer/validate', [CustomerController::class, 'validateForm']);;
 
     // Warranty
     Route::get('warranty/create/{id?}', [WarrantyController::class, 'create']);

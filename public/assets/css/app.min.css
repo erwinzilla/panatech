@@ -10094,6 +10094,9 @@ body.dark-theme .form-control {
   background-color: var(--bs-input-focus-bg);
   color: var(--bs-input-focus-color);
 }
+.form-control.is-invalid {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
 
 .form-select {
   background-color: var(--bs-input-bg);
@@ -10134,6 +10137,9 @@ body.dark-theme .form-select {
 
 .input-group {
   border-radius: 0.7rem !important;
+}
+.input-group.is-invalid {
+  animation: shake 0.2s ease-in-out 0s 2;
 }
 .input-group.is-invalid:focus-within {
   border-color: #ED5565;
@@ -10435,4 +10441,19 @@ body.dark-theme .table {
 
 .w-2-slot {
   width: 7rem;
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: 0.5rem;
+  }
+  75% {
+    margin-left: -0.5rem;
+  }
+  100% {
+    margin-left: 0;
+  }
 }

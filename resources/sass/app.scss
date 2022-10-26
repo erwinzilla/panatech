@@ -120,7 +120,7 @@ $themes: (
                 input-disabled-bg: #E9ECF7,
                 input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                login-img: url('/assets/images/backgrounds/bg-login-min.jpg'),
+                //login-img: url('/assets/images/backgrounds/bg-login-min.jpg'),
                 navbar-bg: $body-bg,
                 navbar-color: #000,
                 table-striped-bg: $table-striped-bg,
@@ -142,7 +142,7 @@ $themes: (
                 input-disabled-bg: #444444,
                 input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-                login-img: url('/assets/images/backgrounds/bg-login-dark-min.jpg'),
+                //login-img: url('/assets/images/backgrounds/bg-login-dark-min.jpg'),
                 navbar-bg: #171717,
                 navbar-color: #fff,
                 table-striped-bg: rgba(0, 0, 0, 0.175),
@@ -317,9 +317,9 @@ hr {
   background-size: cover;
 }
 .bg-login {
-    @include theme() {
-        background: t('login-bg'), t('login-img');
-    }
+    //@include theme() {
+    //    background: t('login-bg'), t('login-img');
+    //}
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -411,6 +411,9 @@ hr {
         background-color: var(--bs-input-focus-bg);
         color: var(--bs-input-focus-color);
     }
+    &.is-invalid {
+        animation: shake 0.2s ease-in-out 0s 2;
+    }
 }
 .form-select {
     @include theme() {
@@ -442,6 +445,7 @@ hr {
 .input-group {
     border-radius: $input-border-radius!important;
     &.is-invalid {
+        animation: shake 0.2s ease-in-out 0s 2;
         &:focus-within {
             border-color: $form-feedback-invalid-color;
             box-shadow: 0 0 $input-btn-focus-blur $input-focus-width rgba($form-feedback-invalid-color, $input-btn-focus-color-opacity);
@@ -719,4 +723,11 @@ hr {
 }
 .w-2-slot {
     width: 7rem;
+}
+
+@keyframes shake {
+    0% { margin-left: 0; }
+    25% { margin-left: 0.5rem; }
+    75% { margin-left: -0.5rem; }
+    100% { margin-left: 0; }
 }

@@ -416,4 +416,32 @@ class CustomerController extends Controller
             return true;
         }
     }
+
+    public function validateForm(Request $request) {
+        // dapatkan id
+        $id = $request->id ?: null;
+
+        // validasi
+        $rules = [
+            'name'                  => 'required|min:3|max:100',
+            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+        ];
+
+        $messages = [
+            'name.required'         => 'Nama wajib diisi',
+            'name.min'              => 'Nama minimal 3 karakter',
+            'name.max'              => 'Nama maksimal 100 karakter',
+            'phone.required'        => 'Nomor telp wajib diisi',
+            'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
+            'phone.unique'          => 'Nomor telp sudah terpakai',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+//        $validated = $request->validate([
+//            'name'                  => 'required|min:3|max:100',
+//            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+//        ]);
+
+        return $validator->errors();
+    }
 }
