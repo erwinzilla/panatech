@@ -2,8 +2,15 @@
 
 ###### **IMPORTANT**
 - Run NPM Install
+- Run Composer Install
 - Run Migrate
-- Run Composer
+
+1.12.2 **Complete Add Input Validate JS**
+- Add initInput() in app.js for use global
+- Add validating input in Controller
+
+1.12.1 **On Process Instant Validating Input**
+- On process validating input customer
 
 1.12 **Job Desk Function**
 - Add Job Desk CMV

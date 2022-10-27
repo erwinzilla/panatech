@@ -413,3 +413,37 @@ function toggle_theme(mode, icon = false) {
         });
     }
 }
+
+function initInput(target) {
+    let inputs = $s('input[validate]');
+    inputs.forEach(function (el) {
+        el.addEventListener('change', function (e) {
+            e.preventDefault();
+            if (el.value) {
+                // kirim data untuk menunjukan hasil pencarian
+                let load_url = url(target+'/validate');
+                send_http(load_url, function (data) {
+                    console.log(data);
+                    let obj = JSON.parse(data)
+                    if (obj[el.getAttribute('name')]) {
+                        if (el.classList.contains('is-valid')) {
+                            el.classList.remove('is-valid')
+                        }
+                        el.classList.add('is-invalid');
+                        if (!el.closest('div').querySelector('.invalid-feedback')) {
+                            el.outerHTML += '<div class="invalid-feedback">'+obj[el.getAttribute('name')][0]+'</div>';
+                        } else {
+                            el.closest('div').querySelector('.invalid-feedback').innerHTML = obj[el.getAttribute('name')][0];
+                        }
+                        initInput(target);
+                    } else {
+                        if (el.classList.contains('is-invalid')) {
+                            el.classList.remove('is-invalid')
+                        }
+                        el.classList.add('is-valid');
+                    }
+                }, 'post', el.getAttribute('name')+'='+el.value, false)
+            }
+        })
+    });
+}

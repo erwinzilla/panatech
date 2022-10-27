@@ -437,10 +437,6 @@ class CustomerController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
-//        $validated = $request->validate([
-//            'name'                  => 'required|min:3|max:100',
-//            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
-//        ]);
 
         return $validator->errors();
     }

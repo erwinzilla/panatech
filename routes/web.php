@@ -70,6 +70,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customer/type/restore/{id?}', [CustomerTypeController::class, 'restore']);
     Route::get('customer/type/delete/{id?}', [CustomerTypeController::class, 'delete']);
     Route::get('customer/type/choose', [CustomerTypeController::class, 'choose']);
+    Route::post('customer/type/validate', [CustomerTypeController::class, 'validateForm']);;
+
 
     // Customer
     Route::get('customer/trash', [CustomerController::class, 'trash']);

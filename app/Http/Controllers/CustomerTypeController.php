@@ -286,4 +286,25 @@ class CustomerTypeController extends Controller
             return true;
         }
     }
+
+    public function validateForm(Request $request) {
+        // dapatkan id
+        $id = $request->id ?: null;
+
+        // validasi
+        $rules = [
+            'name'                  => 'required|min:3|max:100|unique:customer_types,name,'.$id,
+        ];
+
+        $messages = [
+            'name.required'         => 'Nama wajib diisi',
+            'name.min'              => 'Nama minimal 3 karakter',
+            'name.max'              => 'Nama maksimal 100 karakter',
+            'name.unique'           => 'Nama sudah terdaftar',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        return $validator->errors();
+    }
 }

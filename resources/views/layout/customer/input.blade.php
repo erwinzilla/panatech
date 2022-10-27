@@ -22,7 +22,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Konsumen">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Konsumen" validate>
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -33,7 +33,7 @@
                         <label class="form-label">Phone<span class="text-danger">*</span></label>
                         <div class="d-flex">
                             <div class="w-50">
-                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon">
+                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon" validate>
                                 @error('phone')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -120,37 +120,6 @@
 
 @section('script')
     <script>
-        initInput();
-
-        function initInput() {
-            let inputs = $s('input');
-            inputs.forEach(function (el) {
-                el.addEventListener('change', function (e) {
-                    e.preventDefault();
-                    if (el.value) {
-                        // kirim data untuk menunjukan hasil pencarian
-                        let load_url = url('customer/validate');
-                        send_http(load_url, function (data) {
-                            let obj = JSON.parse(data)
-                            if (obj[el.getAttribute('name')]) {
-                                if (el.classList.contains('is-valid')) {
-                                    el.classList.remove('is-valid')
-                                }
-                                el.classList.add('is-invalid');
-                                if (!el.closest('div').querySelector('.invalid-feedback')) {
-                                    el.outerHTML += '<div class="invalid-feedback">'+obj[el.getAttribute('name')][0]+'</div>';
-                                    initInput();
-                                }
-                            } else {
-                                if (el.classList.contains('is-invalid')) {
-                                    el.classList.remove('is-invalid')
-                                }
-                                el.classList.add('is-valid');
-                            }
-                        }, 'post', el.getAttribute('name')+'='+el.value, false)
-                    }
-                })
-            });
-        }
+        initInput('{{ $config['url'] }}');
     </script>
 @endsection
