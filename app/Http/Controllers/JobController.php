@@ -7,6 +7,7 @@ use App\Models\Job;
 use App\Models\JobType;
 use App\Models\Status;
 use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -66,6 +67,7 @@ class JobController extends Controller
         }
 
         $data = [
+            'id'                => null,
             'name'              => null,
             'invoice_name'      => null,
             'note'              => null,
@@ -100,6 +102,7 @@ class JobController extends Controller
             'handle_by'         => Auth::user()->id,
             'ticket'            => $ticket ? $ticket->id : null,
             'ticket_name'       => $ticket ? $ticket->name : null,
+            'created_at'        => Carbon::now(),
         ];
 
         $data = (object) $data;
@@ -423,7 +426,7 @@ class JobController extends Controller
 
         $filter = $request->filter ?: null;
         if ($filter) {
-            $data = $data->whereNotIn('status', $filter);
+            $data = $data->whereNotIn('jobs.status', $filter);
         }
 
         $perPage = $request->perPage ?: self::perPage;
@@ -456,7 +459,7 @@ class JobController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
@@ -490,10 +493,15 @@ class JobController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

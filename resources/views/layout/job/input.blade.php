@@ -21,6 +21,7 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <input type="hidden" name="branch_service" value="{{ old('branch_service', $data->branch_service) }}">
                     <input type="hidden" name="ticket" value="{{ old('ticket', $data->ticket) }}">
                     <input type="hidden" name="handle_by" value="{{ old('handle_by', $data->handle_by) }}">
@@ -635,5 +636,7 @@
                 })
             });
         }
+
+        initInput('{{ $config['url'] }}');
     </script>
 @endsection

@@ -1,12 +1,18 @@
 @include('component.table.header', ['perPage' => $table['perPage'], 'search' => $table['search']])
-<div class="table-filter ms-3">
-    <div class="dropdown">
-        <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-funnel', 'icon-sm me-1') Filter Data</button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&filter[]=9&filter[]=10&target=table') }}">Only On-Handled Job</a></li>
-            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&target=table') }}">Hide Book-in and Pending</a></li>
-            <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=9&filter[]=10&target=table') }}">Hide Invoice and Cancelled</a></li>
-        </ul>
+<div class="d-flex w-100 justify-content-between px-3">
+    <div class="table-filter h-100">
+        <div class="dropdown">
+            <button type="button" class="btn btn-info dropdown-toggle h-100" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-funnel', 'icon-sm me-1') Filter Data</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&filter[]=9&filter[]=10&target=table') }}">Only On-Handled Job</a></li>
+                <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&target=table') }}">Hide Book-in and Pending</a></li>
+                <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=9&filter[]=10&target=table') }}">Hide Invoice and Cancelled</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="table-update-date d-inline-flex">
+        <label class="align-self-center w-100 me-2">Last Update</label>
+        <input type="date" name="job_update_at" class="form-control @error('job_update_at') is-invalid @enderror" value="{{ date('Y-m-d') }}" placeholder="Masukan tanggal pembuatan" validate>
     </div>
 </div>
 <div class="table-container table-responsive">

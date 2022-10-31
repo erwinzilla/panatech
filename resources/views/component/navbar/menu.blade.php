@@ -59,11 +59,12 @@
                     </li>
                 @endif
                 {{-- Jika only see maka munculkan tombol--}}
-                @if(getUserLevel('states') >= ONLY_SEE)
+                @if(getUserLevel('misc') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'status' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Misc</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('status') }}" class="dropdown-item">@svg('heroicon-s-tag', 'icon-sm me-1') Job Status</a></li>
+                            <li><a href="{{ url('config') }}" class="dropdown-item">@svg('heroicon-s-cog-8-tooth', 'icon-sm me-1') Config</a></li>
                         </ul>
                     </li>
                 @endif

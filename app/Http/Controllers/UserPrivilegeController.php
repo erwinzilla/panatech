@@ -67,7 +67,8 @@ class UserPrivilegeController extends Controller
             'warranties'    => 0,
             'states'        => 0,
             'jobs'          => 0,
-            'color'         => 'primary'
+            'misc'          => 0,
+            'color'         => 'primary',
         ];
 
         $data = (object) $data;
@@ -285,7 +286,7 @@ class UserPrivilegeController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
@@ -301,10 +302,15 @@ class UserPrivilegeController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

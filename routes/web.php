@@ -14,6 +14,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\JobTypeController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\ConfigController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +43,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/privilege/trash', [UserPrivilegeController::class, 'trash']);
     Route::get('user/privilege/restore/{id?}', [UserPrivilegeController::class, 'restore']);
     Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
+    Route::post('user/privilege/validate/{id?}', [UserPrivilegeController::class, 'validateInput']);
+
 
     // User
     Route::get('user/trash', [UserController::class, 'trash']);
@@ -70,26 +73,27 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customer/type/restore/{id?}', [CustomerTypeController::class, 'restore']);
     Route::get('customer/type/delete/{id?}', [CustomerTypeController::class, 'delete']);
     Route::get('customer/type/choose', [CustomerTypeController::class, 'choose']);
-    Route::post('customer/type/validate', [CustomerTypeController::class, 'validateForm']);;
-
+    Route::post('customer/type/validate/{id?}', [CustomerTypeController::class, 'validateInput']);
 
     // Customer
     Route::get('customer/trash', [CustomerController::class, 'trash']);
     Route::get('customer/restore/{id?}', [CustomerController::class, 'restore']);
-    Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);;
-    Route::post('customer/validate', [CustomerController::class, 'validateForm']);;
+    Route::get('customer/delete/{id?}', [CustomerController::class, 'delete']);
+    Route::post('customer/validate/{id?}', [CustomerController::class, 'validateInput']);
 
     // Warranty
     Route::get('warranty/create/{id?}', [WarrantyController::class, 'create']);
     Route::get('warranty/trash', [WarrantyController::class, 'trash']);
     Route::get('warranty/restore/{id?}', [WarrantyController::class, 'restore']);
     Route::get('warranty/delete/{id?}', [WarrantyController::class, 'delete']);
+    Route::post('warranty/validate/{id?}', [WarrantyController::class, 'validateInput']);
 
     // Ticket
     Route::get('ticket/create/{id?}', [TicketController::class, 'create']);
     Route::get('ticket/trash', [TicketController::class, 'trash']);
     Route::get('ticket/restore/{id?}', [TicketController::class, 'restore']);
     Route::get('ticket/delete/{id?}', [TicketController::class, 'delete']);
+    Route::post('ticket/validate/{id?}', [TicketController::class, 'validateInput']);
 
     // Ticket
     Route::get('status/trash', [StatusController::class, 'trash']);
@@ -101,11 +105,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('job/type/restore/{id?}', [JobTypeController::class, 'restore']);
     Route::get('job/type/delete/{id?}', [JobTypeController::class, 'delete']);
 
-    // Job Type
+    // Job
     Route::get('job/create/{id?}', [JobController::class, 'create']);
     Route::get('job/trash', [JobController::class, 'trash']);
     Route::get('job/restore/{id?}', [JobController::class, 'restore']);
     Route::get('job/delete/{id?}', [JobController::class, 'delete']);
+    Route::post('job/validate/{id?}', [JobController::class, 'validateInput']);
 
     // resources route
     Route::resources([
@@ -121,5 +126,6 @@ Route::group(['middleware' => 'auth'], function () {
         'status'                => StatusController::class,
         'job/type'              => JobTypeController::class,
         'job'                   => JobController::class,
+        'config'                => ConfigController::class,
     ]);
 });

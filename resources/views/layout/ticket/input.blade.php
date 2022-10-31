@@ -21,6 +21,7 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <input type="hidden" name="name" value="{{ old('name', $data->name) }}">
                     <input type="hidden" name="branch_service" value="{{ old('branch_service', $data->branch_service) }}">
                     <div class="mb-3">
@@ -31,7 +32,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Service Info<span class="text-danger">*</span></label>
-                        <textarea name="service_info" class="form-control w-50 @error('service_info') is-invalid @enderror" placeholder="Masukan kendala unit">{{ old('service_info', $data->service_info) }}</textarea>
+                        <textarea name="service_info" class="form-control w-50 @error('service_info') is-invalid @enderror" placeholder="Masukan kendala unit" validate>{{ old('service_info', $data->service_info) }}</textarea>
                         @error('service_info')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -46,6 +47,24 @@
                             @endforeach
                         </select>
                         @error('status')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Note</label>
+                        <textarea name="note" class="form-control w-50 @error('note') is-invalid @enderror" placeholder="Masukan catatan">{{ old('note', $data->note) }}</textarea>
+                        @error('note')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Created Date<span class="text-danger">*</span></label>
+                        <input type="date" name="created_at" class="form-control w-50 @error('created_at') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('created_at', $data->created_at))) }}" placeholder="Masukan tanggal pembuatan" validate>
+                        @error('created_at')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -66,7 +85,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Customer Name<span class="text-danger">*</span></label>
-                        <input type="text" name="customer_name" class="form-control w-50 @error('customer_name') is-invalid @enderror" value="{{ old('customer_name', $data->customer_name) }}" placeholder="Masukan nama konsumen">
+                        <input type="text" name="customer_name" class="form-control w-50 @error('customer_name') is-invalid @enderror" value="{{ old('customer_name', $data->customer_name) }}" placeholder="Masukan nama konsumen" validate>
                         @error('customer_name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -77,7 +96,7 @@
                         <label class="form-label">Phone<span class="text-danger">*</span></label>
                         <div class="d-flex">
                             <div class="w-50">
-                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon">
+                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon" validate>
                                 @error('phone')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -168,7 +187,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Model<span class="text-danger">*</span></label>
-                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model">
+                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model" validate>
                         @error('model')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -177,7 +196,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No. Serial<span class="text-danger">*</span></label>
-                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri">
+                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri" validate>
                         @error('serial')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -187,7 +206,7 @@
                     <div class="collapse {{ $data->warranty_type == 1 ? 'show' : '' }}" id="collapseIn">
                         <div class="mb-3">
                             <label class="form-label">No. Warranty<span class="text-danger">*</span></label>
-                            <input type="text" name="warranty_no" class="form-control w-50 @error('warranty_no') is-invalid @enderror" value="{{ old('warranty_no', $data->warranty_no) }}" placeholder="Masukan nomor garansi">
+                            <input type="text" name="warranty_no" class="form-control w-50 @error('warranty_no') is-invalid @enderror" value="{{ old('warranty_no', $data->warranty_no) }}" placeholder="Masukan nomor garansi" validate>
                             @error('warranty_no')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -196,7 +215,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Purchase Date<span class="text-danger">*</span></label>
-                            <input type="date" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan nomor garansi">
+                            <input type="date" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan tanggal pembelian" validate>
                             @error('purchase_date')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -333,5 +352,7 @@
                 }
             })
         }
+
+        initInput('{{ $config['url'] }}');
     </script>
 @endsection

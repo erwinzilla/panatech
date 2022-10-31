@@ -35,27 +35,7 @@ class WarrantyController extends Controller
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
-            if ($parse['data']->get()->count() > 0) {
-                if ($parse['data']->get()->count() > 1) {
-                    return response()->json([
-                        'status'    => 'error',
-                        'message'   => 'Data tidak spesifik masukan nomor seri yang sesuai',
-                        'data'      => null,
-                    ]);
-                }else {
-                    return response()->json([
-                        'status'    => 'success',
-                        'message'   => 'Sukses mengambil data',
-                        'data'      => $parse['data']->with('customers')->first(),
-                    ]);
-                }
-            } else {
-                return response()->json([
-                    'status'    => 'error',
-                    'message'   => 'Data tidak ditemukan',
-                    'data'      => null,
-                ]);
-            }
+            return responseJson($parse['data'], $parse['data']->with('customers'));
         }
 
         // penguraian data
@@ -82,6 +62,7 @@ class WarrantyController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
+            'id'            => null,
             'model'         => null,
             'serial'        => null,
             'warranty_no'   => null,
@@ -340,7 +321,7 @@ class WarrantyController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
@@ -360,10 +341,15 @@ class WarrantyController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

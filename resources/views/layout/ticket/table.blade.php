@@ -79,7 +79,12 @@
                             <br><small class="text-primary">In-Warranty</small>
                         @endif
                     </td>
-                    <td>{{ $row->service_info }}</td>
+                    <td>
+                        {{ $row->service_info }}
+                        @if($row->note)
+                            <br><span class="text-muted">{{ $row->note }}</span>
+                        @endif
+                    </td>
                     <td>
                         <span class="d-inline-flex">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</span>
                     </td>

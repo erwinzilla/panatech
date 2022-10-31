@@ -420,8 +420,9 @@ function initInput(target) {
         el.addEventListener('change', function (e) {
             e.preventDefault();
             if (el.value) {
+                const id = $('input[name="id"]').value;
                 // kirim data untuk menunjukan hasil pencarian
-                let load_url = url(target+'/validate');
+                let load_url = url(target+'/validate/'+id);
                 send_http(load_url, function (data) {
                     console.log(data);
                     let obj = JSON.parse(data)
@@ -442,7 +443,40 @@ function initInput(target) {
                         }
                         el.classList.add('is-valid');
                     }
-                }, 'post', el.getAttribute('name')+'='+el.value, false)
+                }, 'post', el.getAttribute('name')+'='+el.value+'&validate=true', false)
+            }
+        })
+    });
+
+    let textareas = $s('textarea[validate]');
+    textareas.forEach(function (el) {
+        el.addEventListener('change', function (e) {
+            e.preventDefault();
+            if (el.value) {
+                const id = $('input[name="id"]').value;
+                // kirim data untuk menunjukan hasil pencarian
+                let load_url = url(target+'/validate/'+id);
+                send_http(load_url, function (data) {
+                    console.log(data);
+                    let obj = JSON.parse(data)
+                    if (obj[el.getAttribute('name')]) {
+                        if (el.classList.contains('is-valid')) {
+                            el.classList.remove('is-valid')
+                        }
+                        el.classList.add('is-invalid');
+                        if (!el.closest('div').querySelector('.invalid-feedback')) {
+                            el.outerHTML += '<div class="invalid-feedback">'+obj[el.getAttribute('name')][0]+'</div>';
+                        } else {
+                            el.closest('div').querySelector('.invalid-feedback').innerHTML = obj[el.getAttribute('name')][0];
+                        }
+                        initInput(target);
+                    } else {
+                        if (el.classList.contains('is-invalid')) {
+                            el.classList.remove('is-invalid')
+                        }
+                        el.classList.add('is-valid');
+                    }
+                }, 'post', el.getAttribute('name')+'='+el.value+'&validate=true', false)
             }
         })
     });

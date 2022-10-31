@@ -14,24 +14,21 @@
     <div class="row mt-3">
         <div class="col-md-3">
             <h5 class="text-black mb-0">Information</h5>
-            <small class="text-muted">Data ini yang nanti akan digunakan saat memberikan informasi tipe konsumen</small>
+            <small class="text-muted">Data ini yang nanti akan digunakan saat mengatur sistem</small>
             <br><small class="text-danger">*Wajib diisi</small>
         </div>
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
-                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
+                    <h5 class="text-default fw-bold">Jobs</h5>
                     <div class="mb-3">
-                        <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Tipe Konsumen" validate>
-                        @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                        <label class="form-label">Job Update At</label>
+                        <input type="date" name="job_update_at" class="form-control w-50 @error('job_update_at') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('job_update_at', $data->job_update_at))) }}" placeholder="Masukan tanggal update job">
+                        @error('job_update_at')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                         @enderror
-                    </div>
-                    <div class="mb-3">
-                        @include('form.color')
                     </div>
                 </div>
                 <div class="card-footer">
@@ -43,10 +40,6 @@
         </div>
     </div>
     @include('form.header.end')
-@endsection
 
-@section('script')
-    <script>
-        initInput('{{ $config['url'] }}');
-    </script>
+    @include('component.modal.table')
 @endsection

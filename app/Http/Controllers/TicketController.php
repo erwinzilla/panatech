@@ -6,6 +6,7 @@ use App\Models\CustomerType;
 use App\Models\Status;
 use App\Models\Ticket;
 use App\Models\Warranty;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -37,27 +38,7 @@ class TicketController extends Controller
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
-            if ($parse['data']->get()->count() > 0) {
-                if ($parse['data']->get()->count() > 1) {
-                    return response()->json([
-                        'status'    => 'error',
-                        'message'   => 'Data tidak spesifik masukan nomor telp yang sesuai',
-                        'data'      => null,
-                    ]);
-                }else {
-                    return response()->json([
-                        'status'    => 'success',
-                        'message'   => 'Sukses mengambil data',
-                        'data'      => $parse['data']->with('states')->first(),
-                    ]);
-                }
-            } else {
-                return response()->json([
-                    'status'    => 'error',
-                    'message'   => 'Data tidak ditemukan',
-                    'data'      => null,
-                ]);
-            }
+            return responseJson($parse['data'], $parse['data']->with('states'));
         }
 
         // penguraian data
@@ -90,8 +71,10 @@ class TicketController extends Controller
         }
 
         $data = [
+            'id'            => null,
             'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'service_info'  => null,
+            'note'          => null,
             'status'        => null,
             'customer_name' => $warranty ? $warranty->customers->name : null,
             'phone'         => $warranty ? $warranty->customers->phone : null,
@@ -106,6 +89,7 @@ class TicketController extends Controller
             'purchase_date' => $warranty ? $warranty->purchase_date : null,
             'warranty_type' => $warranty ? $warranty->type : null,
             'branch_service'=> Auth::user()->branch_service,
+            'created_at'    => Carbon::now(),
         ];
 
         $data = (object) $data;
@@ -373,7 +357,7 @@ class TicketController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
@@ -402,10 +386,15 @@ class TicketController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

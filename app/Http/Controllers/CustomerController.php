@@ -36,27 +36,7 @@ class CustomerController extends Controller
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
-            if ($parse['data']->get()->count() > 0) {
-                if ($parse['data']->get()->count() > 1) {
-                    return response()->json([
-                        'status'    => 'error',
-                        'message'   => 'Data tidak spesifik masukan nomor telp yang sesuai',
-                        'data'      => null,
-                    ]);
-                }else {
-                    return response()->json([
-                        'status'    => 'success',
-                        'message'   => 'Sukses mengambil data',
-                        'data'      => $parse['data']->with('types')->first(),
-                    ]);
-                }
-            } else {
-                return response()->json([
-                    'status'    => 'error',
-                    'message'   => 'Data tidak ditemukan',
-                    'data'      => null,
-                ]);
-            }
+            return responseJson($parse['data'], $parse['data']->with('types'));
         }
 
         // penguraian data
@@ -83,6 +63,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
+            'id'        => null,
             'name'      => null,
             'phone'     => null,
             'phone2'    => null,
@@ -391,12 +372,14 @@ class CustomerController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
             'name'                  => 'required|min:3|max:100',
             'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
+            'email'                 => 'nullable|unique:customers,email,'.$id,
+            'tax_id'                => 'nullable|unique:customers,tax_id,'.$id,
         ];
 
         $messages = [
@@ -406,38 +389,21 @@ class CustomerController extends Controller
             'phone.required'        => 'Nomor telp wajib diisi',
             'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
             'phone.unique'          => 'Nomor telp sudah terpakai',
+            'email.unique'          => 'Email telah terpakai',
+            'tax_id.unique'         => 'NPWP / NIK telah terpakai',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
-    }
-
-    public function validateForm(Request $request) {
-        // dapatkan id
-        $id = $request->id ?: null;
-
-        // validasi
-        $rules = [
-            'name'                  => 'required|min:3|max:100',
-            'phone'                 => 'required|numeric|unique:customers,phone,'.$id,
-        ];
-
-        $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'phone.required'        => 'Nomor telp wajib diisi',
-            'phone.numeric'         => 'Nomor telp harus terdiri dari angka',
-            'phone.unique'          => 'Nomor telp sudah terpakai',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        return $validator->errors();
     }
 }

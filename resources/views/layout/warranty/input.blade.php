@@ -20,6 +20,7 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">Type<span class="text-danger">*</span></label>
                         <select name="type" class="form-select w-25 @error('type') is-invalid @enderror">
@@ -34,7 +35,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Model<span class="text-danger">*</span></label>
-                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model">
+                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model" validate>
                         @error('model')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -43,7 +44,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No. Serial<span class="text-danger">*</span></label>
-                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri">
+                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri" validate>
                         @error('serial')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -121,5 +122,7 @@
                 bsCollapse.hide();
             }
         });
+
+        initInput('{{ $config['url'] }}');
     </script>
 @endsection

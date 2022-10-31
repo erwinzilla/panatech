@@ -120,3 +120,35 @@ if (! function_exists('getButtonCRUD')) {
         return $form;
     }
 }
+
+/**
+ * Mari membuat helper function untuk memberikan button crud
+ *
+ * @return response()
+ */
+if (! function_exists('responseJSON')) {
+    function responseJSON($data, $with = null)
+    {
+        if ($data->get()->count() > 0) {
+            if ($data->get()->count() > 1) {
+                return response()->json([
+                    'status'    => 'error',
+                    'message'   => 'Data tidak spesifik masukan input yang sesuai',
+                    'data'      => null,
+                ]);
+            }else {
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Sukses mengambil data',
+                    'data'      => $with ? $with->first() : $data->first(),
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data tidak ditemukan',
+                'data'      => null,
+            ]);
+        }
+    }
+}

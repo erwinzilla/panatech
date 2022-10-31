@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.13 **Add Config Function**
+- Add config database
+- Add config cmv
+- On process validating to all controller
+- Add more quick button sidebar
+
 1.12.2 **Complete Add Input Validate JS**
 - Add initInput() in app.js for use global
 - Add validating input in Controller
