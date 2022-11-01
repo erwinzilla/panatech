@@ -20,11 +20,12 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3 g-3">
                         <label class="form-label">Username<span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text text-default">{{ env('APP_DOMAIN').'/user/' }}</span>
-                            <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $data->username) }}" placeholder="Masukan username">
+                            <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $data->username) }}" placeholder="Masukan username" validate>
                         </div>
                         <small class="text-info form-text">
                             @svg('heroicon-o-information-circle', 'icon-sm')
@@ -40,7 +41,7 @@
                         <label class="form-label">Email<span class="text-danger">*</span></label>
                         <div class="row g-3">
                             <div class="col">
-                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $data->email) }}" placeholder="mis. erwin.ganteng@erwinzilla.com">
+                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $data->email) }}" placeholder="mis. erwin.ganteng@erwinzilla.com" validate>
                             </div>
                             <div class="col {{ $data->email_verified_at ? 'text-primary' : 'text-muted' }} d-flex align-self-center">
                                 @svg('heroicon-s-check-badge', 'icon me-1') {{ $data->email_verified_at ? 'Verified' : 'Not Verified' }}
@@ -90,7 +91,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama pengguna / karyawan">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama pengguna / karyawan" validate>
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -128,7 +129,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Phone</label>
-                        <input type="number" name="phone" class="form-control w-50 @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon pengguna / karyawan">
+                        <input type="number" name="phone" class="form-control w-50 @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon pengguna / karyawan" validate>
                         @error('phone')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -181,4 +182,10 @@
         </div>
     </div>
     @include('form.header.end')
+@endsection
+
+@section('script')
+    <script>
+        initInput('{{ $config['url'] }}');
+    </script>
 @endsection

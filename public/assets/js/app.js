@@ -146,23 +146,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // table function
     let table_data = $('#table-data');
     if (table_data) {
-        // tambahkan fungsi jika ada perubahan pada search dan perpage selector
-        table_data.addEventListener('change', function (){
-            let perPage = $('select[name="perPage"]').value;
-            let search = $('input[name="search"]').value;
-
-            let params = 'perPage=' + perPage +
-                '&search=' + search +
-                '&target=table';
-
-            // kirim data untuk menunjukan hasil pencarian
-            let load_url = window.location.href + '?' + params;
-            send_http(load_url, function (data) {
-                table_data.innerHTML = data;
-            });
-
-            init();
-        });
+        initTable(table_data);
 
         // tambahkan funngsi saat kita mengklik link fungsi tabel
         table_data.addEventListener('click', function (e){
@@ -252,6 +236,19 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
     }
+
+    // initialisasi date picker
+    const datePickerInput = $s('input[date-picker]');
+    datePickerInput.forEach((el) => {
+        const datepicker = new Datepicker(el, {
+            autohide: true,
+            format: 'dd/mm/yyyy',
+            todayBtn: true,
+            todayBtnMode: 1,
+            todayHighlight: true,
+            defaultViewDate: 'today',
+        });
+    })
 });
 
 // inisialisasi kembali untuk elemen dinamis
@@ -480,4 +477,61 @@ function initInput(target) {
             }
         })
     });
+}
+
+function initTable(el) {
+    // tambahkan fungsi jika ada perubahan pada search dan perpage selector
+    let perPage = $('select[name="perPage"]');
+    let search = $('input[name="search"]');
+
+    perPage.addEventListener('change', () => {
+        let params = 'perPage=' + perPage.value +
+            '&search=' + search.value +
+            '&target=table';
+
+        // kirim data untuk menunjukan hasil pencarian
+        let load_url = window.location.href + '?' + params;
+        send_http(load_url, function (data) {
+            el.innerHTML = data;
+            initTable(el);
+        });
+    })
+
+    search.addEventListener('change', () => {
+        let params = 'perPage=' + perPage.value +
+            '&search=' + search.value +
+            '&target=table';
+
+        // kirim data untuk menunjukan hasil pencarian
+        let load_url = window.location.href + '?' + params;
+        send_http(load_url, function (data) {
+            el.innerHTML = data;
+            initTable(el);
+        });
+    })
+
+    let inputDate = $('input[name="job_update_at"]')
+    if (inputDate) {
+        inputDate.addEventListener('change', () => {
+            let id = inputDate.dataset.id;
+            // kirim data untuk menunjukan hasil pencarian
+            let load_url = url('config/'+id);
+            send_http(load_url, function (data) {
+                let obj = JSON.parse(data);
+                if (obj.status === 'success') {
+                    if (inputDate.classList.contains('is-invalid')) {
+                        inputDate.classList.remove('is-invalid')
+                    }
+                    inputDate.classList.add('is-valid');
+                } else {
+                    if (inputDate.classList.contains('is-valid')) {
+                        inputDate.classList.remove('is-valid')
+                    }
+                    inputDate.classList.add('is-invalid');
+                }
+            },'post', '_method=put&validate=true&job_update_at='+inputDate.value, false)
+        })
+    }
+
+    init()
 }

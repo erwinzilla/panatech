@@ -20,9 +20,10 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nama">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nama" validate>
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -48,17 +49,6 @@
 
 @section('script')
     <script>
-        const bsCollapse = new bootstrap.Collapse('#collapseIn', {
-            toggle: false
-        });
-
-        let selectType = $('select[name="type"]');
-        selectType.addEventListener('change', function () {
-            if (selectType.value === '{{ IN_WARRANTY }}') {
-                bsCollapse.show();
-            } else {
-                bsCollapse.hide();
-            }
-        });
+        initInput('{{ $config['url'] }}');
     </script>
 @endsection

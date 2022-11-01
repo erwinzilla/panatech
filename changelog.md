@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.13.1 **Date Picker & Validating Input**
+- Fix job function
+- Add date picker
+- Fully validating to all controller
+- Add CRUD-by column to branch database
+
 1.13 **Add Config Function**
 - Add config database
 - Add config cmv

@@ -14,7 +14,7 @@ class StatusController extends Controller
 
     // config
     const config = [
-        'blade'     => 'layout.status',
+        'blade'     => 'layout.misc.status',
         'url'       => 'status',
         'name'      => 'job status',
         'privilege' => 'states'
@@ -56,6 +56,7 @@ class StatusController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
+            'id'    => null,
             'name'  => null,
             'color' => 'primary',
         ];
@@ -293,11 +294,11 @@ class StatusController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
-            'name'              => 'required|min:3|max:100',
+            'name'              => 'required|min:3|max:100|unique:states,name,'.$id,
         ];
 
         $messages = [
@@ -308,10 +309,15 @@ class StatusController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

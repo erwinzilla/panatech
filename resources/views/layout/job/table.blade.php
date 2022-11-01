@@ -10,9 +10,22 @@
             </ul>
         </div>
     </div>
-    <div class="table-update-date d-inline-flex">
-        <label class="align-self-center w-100 me-2">Last Update</label>
-        <input type="date" name="job_update_at" class="form-control @error('job_update_at') is-invalid @enderror" value="{{ date('Y-m-d') }}" placeholder="Masukan tanggal pembuatan" validate>
+    <div class="table-update-date d-inline-flex w-50">
+        <label class="align-self-center w-100 me-2 text-end">Last Update</label>
+        @php
+        if ($data_additional->count() > 0) {
+            $job_update_at = date('Y-m-d', strtotime($data_additional->first()->job_update_at));
+            $id = $data_additional->first()->id;
+        } else {
+            $job_update_at = date('Y-m-d');
+            $id = null;
+        }
+        @endphp
+        @if($id)
+            <input type="date" name="job_update_at" class="form-control w-50" value="{{ $job_update_at }}" placeholder="Masukan tanggal pembuatan" data-id="{{ $id }}">
+        @else
+            <a href="{{ url('config') }}" class="btn btn-warning w-50">@svg('heroicon-s-exclamation-triangle', 'icon me-2') Set Config First</a>
+        @endif
     </div>
 </div>
 <div class="table-container table-responsive">
@@ -55,13 +68,25 @@
                         @if($row->branch_service)
                             <br><span class="{{ getBadge('primary') }}">{{ $row->branch_services->code }}</span>
                         @endif
-                        <small class="d-inline-flex text-info mt-1">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                        <br><small class="d-inline-flex text-info mt-1">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</small>
                     </td>
                     <td>
                         @if($row->invoice_name)
                             <span>{{ $row->invoice_name }}</span>
+                            @if($row->quality_report)
+                                <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
+                            @endif
+                            @if($row->dealer_report)
+                                <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
+                            @endif
                         @else
                             <span class="text-muted">-</span>
+                            @if($row->quality_report)
+                                <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
+                            @endif
+                            @if($row->dealer_report)
+                                <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
+                            @endif
                         @endif
                     </td>
                     <td>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class BranchController extends Controller
@@ -29,44 +31,25 @@ class BranchController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = Branch::select('*');
+        // olah data
+        $parse  = $this->parseData(Branch::select('*'), $request);
 
-        $search = $request->search;
-        if (strlen($search) > 1) {
-            $data = $data->where('name','LIKE','%'.$search.'%');
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            return responseJson($parse['data'], $parse['data']->with('types'));
         }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
 
         // penguraian data
         $params = [
-            'data'      => $data->paginate($perPage)->appends($table),
-            'type'      => 'data',
-            'title'     => self::config['name'],
-            'table'     => $table,
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
+            'type'      => $parse['table']['type'],
+            'title'     => $parse['table']['type'] != 'choose' ? self::config['name'] : $parse['table']['type'],
+            'table'     => $parse['table'],
             'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     /**
@@ -108,25 +91,16 @@ class BranchController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        // validasi
-        $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branches,name',
-        ];
-
-        $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        if($this->validateInput($request)) {
+            $hasil = Branch::create($request->all());
         }
 
-        $hasil = Branch::create($request->all());
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
+        }
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
@@ -142,7 +116,12 @@ class BranchController extends Controller
      */
     public function show(Branch $branch)
     {
-        //
+        // penguraian data
+        $params = [
+            'data'      => $branch,
+        ];
+
+        return view(self::config['blade'].'.show', $params);
     }
 
     /**
@@ -179,25 +158,18 @@ class BranchController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        // validasi
-        $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$branch->id,
-        ];
+        //        $customerType = CustomerType::find($id);
 
-        $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        if ($this->validateInput($request, $branch->id)){
+            $hasil = $branch->fill($request->all())->save();
         }
 
-        $hasil = $branch->fill($request->all())->save();
+        // add updated by
+        if ($hasil) {
+            $branch->update([
+                'updated_by' => Auth::user()->id,
+            ]);
+        }
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
@@ -216,6 +188,13 @@ class BranchController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
+        //        $customerType = CustomerType::find($id);
+
+        // update siapa yang menghapus
+        $branch->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
+
         // send result
         $params = getStatus($branch->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
@@ -225,45 +204,22 @@ class BranchController extends Controller
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
-        $data = Branch::onlyTrashed();
-
-        $search = $request->search;
-        if (strlen($search) > 2) {
-            $data = $data->where('name','LIKE','%'.$search.'%');
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
+        // olah data
+        $parse  = $this->parseData(Branch::onlyTrashed()->select('*'), $request);
 
         // penguraian data
         $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'trash',
-            'title' => 'Trash',
-            'table' => $table
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
+            'type'      => 'trash',
+            'title'     => 'Trash',
+            'table'     => $parse['table'],
+            'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     public function restore($id = null)
@@ -346,5 +302,70 @@ class BranchController extends Controller
             return view(self::config['blade'].'.table', $params);
         }
         return view(self::config['blade'].'.data', $params);
+    }
+
+    public function parseData($data, $request)
+    {
+        $search = $request->search;
+        if (strlen($search) > 1) {
+            $data = $data->where('name','LIKE','%'.$search.'%');
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: 'data';
+        $type = $request->type ?: 'data';
+
+        // jika pilihannya ada choose
+        if ($type == 'choose') {
+            $target = 'table';
+        }
+
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target,
+            'type'      => $type,
+        ];
+
+        return [
+            'data'  => $data,
+            'table' => $table
+        ];
+    }
+
+    public function validateInput(Request $request, $id = null)
+    {
+        // validasi
+        $rules = [
+            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$id,
+        ];
+
+        $messages = [
+            'name.required'         => 'Nama wajib diisi',
+            'name.min'              => 'Nama minimal 3 karakter',
+            'name.max'              => 'Nama maksimal 100 karakter',
+            'name.unique'           => 'Nama sudah terdaftar',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
+        }
     }
 }

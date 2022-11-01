@@ -138,7 +138,7 @@ class ConfigController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $hasil = $config->fill($request->all())->save();
+        $hasil = $config->fill($request->except(['validate']))->save();
 
         // add updated by
         if ($hasil) {
@@ -150,7 +150,11 @@ class ConfigController extends Controller
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
 
-        return redirect(self::config['url'])->with($params);
+        if ($request->validate) {
+            return response()->json($params);
+        }else {
+            return redirect(self::config['url'])->with($params);
+        }
     }
 
     /**

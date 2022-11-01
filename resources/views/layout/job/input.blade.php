@@ -46,7 +46,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No. Job<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nomor job">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nomor job" validate>
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -55,7 +55,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No. Invoice</label>
-                        <input type="text" name="invoice_name" class="form-control w-50 @error('invoice_name') is-invalid @enderror" value="{{ old('invoice_name', $data->invoice_name) }}" placeholder="Masukan nomor invoice">
+                        <input type="text" name="invoice_name" class="form-control w-50 @error('invoice_name') is-invalid @enderror" value="{{ old('invoice_name', $data->invoice_name) }}" placeholder="Masukan nomor invoice" validate>
                         @error('invoice_name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -99,7 +99,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Customer Name<span class="text-danger">*</span></label>
-                        <input type="text" name="customer_name" class="form-control w-50 @error('customer_name') is-invalid @enderror" value="{{ old('customer_name', $data->customer_name) }}" placeholder="Masukan nama konsumen">
+                        <input type="text" name="customer_name" class="form-control w-50 @error('customer_name') is-invalid @enderror" value="{{ old('customer_name', $data->customer_name) }}" placeholder="Masukan nama konsumen" validate>
                         @error('customer_name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -110,7 +110,7 @@
                         <label class="form-label">Phone<span class="text-danger">*</span></label>
                         <div class="d-flex">
                             <div class="w-50">
-                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon">
+                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $data->phone) }}" placeholder="Nomor telepon" validate>
                                 @error('phone')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -144,7 +144,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Address</label>
-                        <textarea name="address" class="form-control w-50 @error('address') is-invalid @enderror" placeholder="Alamat Konsumen">{{ old('address', $data->address) }}</textarea>
+                        <textarea name="address" class="form-control w-50 @error('address') is-invalid @enderror" placeholder="Alamat Konsumen" validate>{{ old('address', $data->address) }}</textarea>
                         @error('address')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -213,7 +213,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Model<span class="text-danger">*</span></label>
-                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model">
+                        <input type="text" name="model" class="form-control w-50 @error('model') is-invalid @enderror" value="{{ old('model', $data->model) }}" placeholder="Masukan model" validate>
                         @error('model')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -222,7 +222,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">No. Serial<span class="text-danger">*</span></label>
-                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri">
+                        <input type="text" name="serial" class="form-control w-50 @error('serial') is-invalid @enderror" value="{{ old('serial', $data->serial) }}" placeholder="Masukan nomor seri" validate>
                         @error('serial')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -282,7 +282,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Service Info<span class="text-danger">*</span></label>
-                        <textarea name="service_info" class="form-control w-50 @error('service_info') is-invalid @enderror" placeholder="Masukan kendala unit">{{ old('service_info', $data->service_info) }}</textarea>
+                        <textarea name="service_info" class="form-control w-50 @error('service_info') is-invalid @enderror" placeholder="Masukan kendala unit" validate>{{ old('service_info', $data->service_info) }}</textarea>
                         @error('service_info')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -314,42 +314,86 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <label class="form-label">Repair Date</label>
-                                <input type="datetime-local" name="repair_at" class="form-control @error('repair_at') is-invalid @enderror" value="{{ date('Y-m-d H:i:s', strtotime(old('repair_at', $data->repair_at))) }}" placeholder="Masukan tanggal">
-                                @error('repair_at')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <label class="form-label">Created Date</label>
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="text" name="created_at" class="form-control @error('created_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('created_at', $data->created_at))) }}" placeholder="Masukan tanggal" date-picker>
+                                        @error('created_at')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" name="created_at_time" class="form-control" value="{{ date('h:i', strtotime(old('created_at', $data->created_at))) }}" placeholder="hh:mm">
+                                    </div>
                                 </div>
-                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Repair Date</label>
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="text" name="repair_at" class="form-control @error('repair_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('repair_at', $data->repair_at))) }}" placeholder="Masukan tanggal" date-picker>
+                                        @error('repair_at')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" name="repair_at_time" class="form-control" value="{{ date('h:i', strtotime(old('repair_at', $data->repair_at))) }}" placeholder="hh:mm">
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Collection Date</label>
-                                <input type="datetime-local" name="collection_at" class="form-control @error('collection_at') is-invalid @enderror" value="{{ date('Y-m-d H:i:s', strtotime(old('collection_at', $data->collection_at))) }}" placeholder="Masukan tanggal">
-                                @error('collection_at')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="text" name="collection_at" class="form-control @error('collection_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('collection_at', $data->collection_at))) }}" placeholder="Masukan tanggal" date-picker>
+                                        @error('collection_at')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" name="collection_at_time" class="form-control" value="{{ date('h:i', strtotime(old('collection_at', $data->collection_at))) }}" placeholder="hh:mm">
+                                    </div>
                                 </div>
-                                @enderror
                             </div>
                         </div>
                         <div class="col">
                             <div class="mb-3">
                                 <label class="form-label">Actual Start Date</label>
-                                <input type="datetime-local" name="actual_start_at" class="form-control @error('actual_start_at') is-invalid @enderror" value="{{ date('Y-m-d H:i:s', strtotime(old('actual_start_at', $data->actual_start_at))) }}" placeholder="Masukan tanggal">
-                                @error('actual_start_at')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="text" name="actual_start_at" class="form-control @error('actual_start_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('actual_start_at', $data->actual_start_at))) }}" placeholder="Masukan tanggal" date-picker>
+                                        @error('actual_start_at')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" name="actual_start_at_time" class="form-control" value="{{ date('h:i', strtotime(old('actual_start_at', $data->actual_start_at))) }}" placeholder="hh:mm">
+                                    </div>
                                 </div>
-                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Actual End Date</label>
-                                <input type="datetime-local" name="actual_end_at" class="form-control @error('actual_end_at') is-invalid @enderror" value="{{ date('Y-m-d H:i:s', strtotime(old('actual_end_at', $data->actual_end_at))) }}" placeholder="Masukan tanggal">
-                                @error('actual_end_at')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="text" name="actual_end_at" class="form-control @error('actual_end_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('actual_end_at', $data->actual_end_at))) }}" placeholder="Masukan tanggal" date-picker>
+                                        @error('actual_end_at')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" name="actual_end_at_time" class="form-control" value="{{ date('h:i', strtotime(old('actual_end_at', $data->actual_end_at))) }}" placeholder="hh:mm">
+                                    </div>
                                 </div>
-                                @enderror
                             </div>
                         </div>
                     </div>
@@ -396,7 +440,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <div class="form-check">
-                            <input name="quality_report" class="form-check-input" type="checkbox" value="1" id="checkboxQuality">
+                            <input name="quality_report" class="form-check-input" type="checkbox" value="1" id="checkboxQuality" {{ $data->quality_report ? 'checked' : ''}}>
                             <label class="form-check-label" for="checkboxQuality">
                                 Quality Report
                             </label>
@@ -404,7 +448,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input name="dealer_report" class="form-check-input" type="checkbox" value="1" id="checkboxDealer">
+                            <input name="dealer_report" class="form-check-input" type="checkbox" value="1" id="checkboxDealer" {{ $data->dealer_report ? 'checked' : ''}}>
                             <label class="form-check-label" for="checkboxDealer">
                                 Dealer Report
                             </label>
@@ -427,7 +471,7 @@
             toggle: false
         });
 
-        let selectType = $('select[name="warranty_type"]');
+        let selectType = document.querySelector('select[name="warranty_type"]');
         selectType.addEventListener('change', function () {
             if (selectType.value === '{{ IN_WARRANTY }}') {
                 bsCollapse.show();
@@ -447,7 +491,7 @@
                     let obj = JSON.parse(data)
 
                     //show notification
-                    alert.fire({
+                    Toast.fire({
                         title: ucwords(obj.status),
                         text: obj.message,
                         icon: obj.status,
@@ -492,7 +536,7 @@
                             bsCollapse.hide();
                         }
                     }
-                });
+                }, 'get', null, false);
             }
         })
 
@@ -509,7 +553,7 @@
                         let obj = JSON.parse(data)
 
                         //show notification
-                        alert.fire({
+                        Toast.fire({
                             title: ucwords(obj.status),
                             text: obj.message,
                             icon: obj.status,
@@ -533,7 +577,7 @@
                             $('#option-customer-type-'+obj.data.type).checked = true;
                             $('input[name="tax_id"]').value = obj.data.tax_id;
                         }
-                    });
+                    }, 'get', null, false);
                 }
             })
         }
@@ -551,7 +595,7 @@
                         let obj = JSON.parse(data)
 
                         //show notification
-                        alert.fire({
+                        Toast.fire({
                             title: ucwords(obj.status),
                             text: obj.message,
                             icon: obj.status,
@@ -589,7 +633,7 @@
                                 bsCollapse.hide();
                             }
                         }
-                    });
+                    }, 'get', null, false);
                 }
             })
         }
@@ -611,7 +655,7 @@
                     if (obj.status === 'success') {
                         if (obj.data.tax_id) {
                             //show notification
-                            alert.fire({
+                            Toast.fire({
                                 title: 'Success',
                                 text: 'Sukses memasukan NPWP atau NIK',
                                 icon: 'success',
@@ -633,7 +677,7 @@
                             })
                         }
                     }
-                })
+                }, 'get', null, false)
             });
         }
 

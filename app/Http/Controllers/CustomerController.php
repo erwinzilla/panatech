@@ -215,7 +215,7 @@ class CustomerController extends Controller
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         // olah data
         $parse  = $this->parseData(Customer::onlyTrashed()->select('customers.*'), $request);
@@ -269,58 +269,6 @@ class CustomerController extends Controller
         $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
 
         return redirect(self::config['url'].'/trash')->with($params);
-    }
-
-    public function choose(Request $request)
-    {
-        // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
-
-        $data = User::select('*');
-
-        $search = $request->search;
-        if (strlen($search) > 0) {
-            $data = $data->where('users.name','LIKE','%'.$search.'%')
-                ->orWhere('users.email','LIKE','%'.$search.'%')
-                ->orWhere('users.username','LIKE','%'.$search.'%')
-                ->orWhere('users.address','LIKE','%'.$search.'%')
-                ->orWhere('users.phone','LIKE','%'.$search.'%')
-                ->orWhereHas('privileges', function ($q) use ($search) {
-                    $q->where('user_privileges.name','LIKE','%'.$search.'%')
-                        ->orWhere('user_privileges.color','LIKE','%'.$search.'%');
-                });
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
-
-        // penguraian data
-        $params = [
-            'data'  => $data->paginate($perPage)->appends($table),
-            'type'  => 'choose',
-            'title' => 'Choose',
-            'table' => $table
-        ];
-
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
     }
 
     public function parseData($data, $request)

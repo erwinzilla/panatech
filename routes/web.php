@@ -45,34 +45,35 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/privilege/delete/{id?}', [UserPrivilegeController::class, 'delete']);
     Route::post('user/privilege/validate/{id?}', [UserPrivilegeController::class, 'validateInput']);
 
-
     // User
     Route::get('user/trash', [UserController::class, 'trash']);
     Route::get('user/restore/{id?}', [UserController::class, 'restore']);
     Route::get('user/delete/{id?}', [UserController::class, 'delete']);
     Route::get('user/profile/{id}', [UserController::class, 'profile']);
+    Route::post('user/validate/{id?}', [UserController::class, 'validateInput']);
 
     // Branch Coordinator
     Route::get('branch/service/trash', [BranchServiceController::class, 'trash']);
     Route::get('branch/service/restore/{id?}', [BranchServiceController::class, 'restore']);
     Route::get('branch/service/delete/{id?}', [BranchServiceController::class, 'delete']);
+    Route::post('branch/service/validate/{id?}', [BranchServiceController::class, 'validateInput']);
 
     // Branch Coordinator
     Route::get('branch/coordinator/trash', [BranchCoordinatorController::class, 'trash']);
     Route::get('branch/coordinator/restore/{id?}', [BranchCoordinatorController::class, 'restore']);
     Route::get('branch/coordinator/delete/{id?}', [BranchCoordinatorController::class, 'delete']);
+    Route::post('branch/coordinator/validate/{id?}', [BranchCoordinatorController::class, 'validateInput']);
 
     // Branch
     Route::get('branch/trash', [BranchController::class, 'trash']);
     Route::get('branch/restore/{id?}', [BranchController::class, 'restore']);
     Route::get('branch/delete/{id?}', [BranchController::class, 'delete']);
-    Route::get('branch/choose', [BranchController::class, 'choose']);
+    Route::post('branch/validate/{id?}', [BranchController::class, 'validateInput']);
 
     // Customer
     Route::get('customer/type/trash', [CustomerTypeController::class, 'trash']);
     Route::get('customer/type/restore/{id?}', [CustomerTypeController::class, 'restore']);
     Route::get('customer/type/delete/{id?}', [CustomerTypeController::class, 'delete']);
-    Route::get('customer/type/choose', [CustomerTypeController::class, 'choose']);
     Route::post('customer/type/validate/{id?}', [CustomerTypeController::class, 'validateInput']);
 
     // Customer
@@ -99,11 +100,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('status/trash', [StatusController::class, 'trash']);
     Route::get('status/restore/{id?}', [StatusController::class, 'restore']);
     Route::get('status/delete/{id?}', [StatusController::class, 'delete']);
+    Route::post('status/validate/{id?}', [StatusController::class, 'validateInput']);
 
     // Job Type
     Route::get('job/type/trash', [JobTypeController::class, 'trash']);
     Route::get('job/type/restore/{id?}', [JobTypeController::class, 'restore']);
     Route::get('job/type/delete/{id?}', [JobTypeController::class, 'delete']);
+    Route::post('job/type/validate/{id?}', [JobTypeController::class, 'validateInput']);
 
     // Job
     Route::get('job/create/{id?}', [JobController::class, 'create']);

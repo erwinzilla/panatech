@@ -20,9 +20,10 @@
             @include('form.header.start')
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Cabang">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan Nama Cabang Kordinator" validate>
                         @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -60,4 +61,10 @@
     </div>
 
     @include('component.modal.table')
+@endsection
+
+@section('script')
+    <script>
+        initInput('{{ $config['url'] }}');
+    </script>
 @endsection

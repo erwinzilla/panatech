@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\CustomerType;
 use App\Models\Job;
 use App\Models\JobType;
@@ -39,11 +40,12 @@ class JobController extends Controller
 
         // penguraian data
         $params = [
-            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
-            'type'      => $parse['table']['type'],
-            'title'     => $parse['table']['type'] != 'choose' ? self::config['name'] : $parse['table']['type'],
-            'table'     => $parse['table'],
-            'config'    => self::config
+            'data'              => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
+            'data_additional'   => Config::all(),
+            'type'              => $parse['table']['type'],
+            'title'             => $parse['table']['type'] != 'choose' ? self::config['name'] : $parse['table']['type'],
+            'table'             => $parse['table'],
+            'config'            => self::config
         ];
 
         // sesuaikan berdasarkan target
@@ -77,10 +79,10 @@ class JobController extends Controller
             'transport'         => null,
             'quality_report'    => null,
             'dealer_report'     => null,
-            'repair_at'         => null,
-            'collection_at'     => null,
-            'actual_start_at'   => null,
-            'actual_end_at'     => null,
+            'repair_at'         => Carbon::now(),
+            'collection_at'     => Carbon::now(),
+            'actual_start_at'   => Carbon::now(),
+            'actual_end_at'     => Carbon::now(),
             'service_info'      => $ticket ? $ticket->service_info : null,
             'repair_info'       => null,
             'status'            => $ticket ? $ticket->status : null,
@@ -135,13 +137,35 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Job::create($request->except(['flash-fill']));
+            $hasil = Job::create($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time']));
         }
 
-        // add created by
+        // convert date time
+        $created_at = str_replace('/', '-', $request->created_at);
+        $repair_at = str_replace('/', '-', $request->repair_at);
+        $collection_at = str_replace('/', '-', $request->collection_at);
+        $actual_start_at = str_replace('/', '-', $request->actual_start_at);
+        $actual_end_at = str_replace('/', '-', $request->actual_end_at);
+
+        // add created and date
         if ($hasil) {
             $hasil->update([
-                'created_by' => Auth::user()->id,
+                'created_by'        => Auth::user()->id,
+                'created_at'        => date('Y-m-d', strtotime($created_at)).' '.$request->created_at_time.':00',
+                'repair_at'         => date('Y-m-d', strtotime($repair_at)).' '.$request->repair_at_time.':00',
+                'collection_at'     => date('Y-m-d', strtotime($collection_at)).' '.$request->collection_at_time.':00',
+                'actual_start_at'   => date('Y-m-d', strtotime($actual_start_at)).' '.$request->actual_start_at_time.':00',
+                'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
+                'quality_report'    => $request->quality_report ? 1 : 0,
+                'dealer_report'     => $request->dealer_report ? 1 : 0,
+            ]);
+        }
+
+        // update status on ticket
+        if ($hasil->ticket) {
+            $ticket = Ticket::find($hasil->ticket);
+            $ticket->update([
+                'status' => $hasil->status,
             ]);
         }
 
@@ -211,13 +235,35 @@ class JobController extends Controller
 //        $customerType = CustomerType::find($id);
 
         if ($this->validateInput($request, $job->id)){
-            $hasil = $job->fill($request->except(['flash-fill']))->save();
+            $hasil = $job->fill($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time']))->save();
         }
 
-        // add updated by
+        // convert date time
+        $created_at = str_replace('/', '-', $request->created_at);
+        $repair_at = str_replace('/', '-', $request->repair_at);
+        $collection_at = str_replace('/', '-', $request->collection_at);
+        $actual_start_at = str_replace('/', '-', $request->actual_start_at);
+        $actual_end_at = str_replace('/', '-', $request->actual_end_at);
+
+        // add created and date
         if ($hasil) {
             $job->update([
-                'updated_by' => Auth::user()->id,
+                'updated_by'        => Auth::user()->id,
+                'created_at'        => date('Y-m-d', strtotime($created_at)).' '.$request->created_at_time.':00',
+                'repair_at'         => date('Y-m-d', strtotime($repair_at)).' '.$request->repair_at_time.':00',
+                'collection_at'     => date('Y-m-d', strtotime($collection_at)).' '.$request->collection_at_time.':00',
+                'actual_start_at'   => date('Y-m-d', strtotime($actual_start_at)).' '.$request->actual_start_at_time.':00',
+                'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
+                'quality_report'    => $request->quality_report ? 1 : 0,
+                'dealer_report'     => $request->dealer_report ? 1 : 0,
+            ]);
+        }
+
+        // update status on ticket
+        if ($job->ticket) {
+            $ticket = Ticket::find($job->ticket);
+            $ticket->update([
+                'status' => $job->status,
             ]);
         }
 
@@ -464,6 +510,7 @@ class JobController extends Controller
         // validasi
         $rules = [
             'name'                      => 'required|min:3|max:100|unique:jobs,name,'.$id,
+            'invoice_name'              => 'nullable|min:3|max:100|unique:jobs,invoice_name,'.$id,
             'service_info'              => 'required|min:3',
             'customer_name'             => 'required|min:3|max:100',
             'phone'                     => 'required|min:3|max:100',
@@ -476,6 +523,9 @@ class JobController extends Controller
             'name.min'                  => 'No. job minimal 3 karakter',
             'name.max'                  => 'No. job maksimal 100 karakter',
             'name.unique'               => 'No. job sudah terpakai',
+            'invoice_name.min'          => 'No. invoice minimal 3 karakter',
+            'invoice_name.max'          => 'No. invoice maksimal 100 karakter',
+            'invoice_name.unique'       => 'No. invoice sudah terpakai',
             'service_info.required'     => 'Keterangan servis wajib diisi',
             'service_info.min'          => 'Keterangan servis minimal 3 karakter',
             'customer_name.required'    => 'Nama konsumen wajib diisi',

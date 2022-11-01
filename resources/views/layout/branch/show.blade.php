@@ -1,0 +1,1 @@
+<span class="text-default">{{ $data->name}}</span>

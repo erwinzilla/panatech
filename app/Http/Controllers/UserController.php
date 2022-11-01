@@ -61,6 +61,7 @@ class UserController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
+            'id'                => null,
             'name'              => null,
             'email'             => null,
             'email_verified_at' => null,
@@ -405,7 +406,7 @@ class UserController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
@@ -442,10 +443,15 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 

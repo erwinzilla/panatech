@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\BranchCoordinator;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class BranchCoordinatorController extends Controller
@@ -30,59 +32,20 @@ class BranchCoordinatorController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
-        $data = BranchCoordinator::select('branch_coordinators.*');
-
-        // join
-        $data = $data->leftJoin('users', 'branch_coordinators.user', '=', 'users.id');
-
-        $search = $request->search;
-        if (strlen($search) > 2) {
-            $data = $data->where('branch_coordinators.name','LIKE','%'.$search.'%')
-                ->orWhereHas('users', function ($q) use ($search) {
-                    $q->where('users.name','LIKE','%'.$search.'%')
-                        ->orWhere('users.email','LIKE','%'.$search.'%')
-                        ->orWhere('users.username','LIKE','%'.$search.'%')
-                        ->orWhere('users.address','LIKE','%'.$search.'%')
-                        ->orWhere('users.phone','LIKE','%'.$search.'%')
-                        ->orWhereHas('privileges', function ($q) use ($search) {
-                            $q->where('user_privileges.name','LIKE','%'.$search.'%')
-                                ->orWhere('user_privileges.color', 'LIKE','%'.$search.'%');
-                        });
-                });
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-        
-        // penguraian table
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
+        // olah data
+        $parse  = $this->parseData(BranchCoordinator::select('branch_coordinators.*'), $request);
 
         // penguraian data
         $params = [
-            'data'      => $data->paginate($perPage)->appends($table),
-            'type'      => 'data',
-            'title'     => self::config['name'],
-            'table'     => $table,
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
+            'type'      => $parse['table']['type'],
+            'title'     => $parse['table']['type'] != 'choose' ? self::config['name'] : $parse['table']['type'],
+            'table'     => $parse['table'],
             'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     /**
@@ -106,9 +69,6 @@ class BranchCoordinatorController extends Controller
         // penguraian data
         $params = [
             'data'              => $data,
-            'data_additional'   => [
-                'user'          => User::all(),
-            ],
             'type'              => 'create',
             'title'             => 'Create '.self::config['name'],
             'config'            => self::config
@@ -128,25 +88,16 @@ class BranchCoordinatorController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        // validasi
-        $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branch_coordinators,name',
-        ];
-
-        $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        if($this->validateInput($request)) {
+            $hasil = BranchCoordinator::create($request->all());
         }
 
-        $hasil = BranchCoordinator::create($request->all());
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
+        }
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
@@ -181,11 +132,8 @@ class BranchCoordinatorController extends Controller
         // penguraian data
         $params = [
             'data'              => $branchCoordinator,
-            'data_additional'   => [
-                'user'          => User::all(),
-            ],
             'type'              => 'edit',
-            'title'             => 'Create '.self::config['name'],
+            'title'             => 'Edit '.self::config['name'],
             'config'            => self::config
         ];
 
@@ -206,25 +154,16 @@ class BranchCoordinatorController extends Controller
 
         $branchCoordinator = BranchCoordinator::find($id);
 
-        // validasi
-        $rules = [
-            'name'                  => 'required|min:3|max:100|unique:branches,name,'.$branchCoordinator->id,
-        ];
-
-        $messages = [
-            'name.required'         => 'Nama wajib diisi',
-            'name.min'              => 'Nama minimal 3 karakter',
-            'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        if ($this->validateInput($request, $branchCoordinator->id)){
+            $hasil = $branchCoordinator->fill($request->all())->save();
         }
 
-        $hasil = $branchCoordinator->fill($request->all())->save();
+        // add updated by
+        if ($hasil) {
+            $branchCoordinator->update([
+                'updated_by' => Auth::user()->id,
+            ]);
+        }
 
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
@@ -245,6 +184,11 @@ class BranchCoordinatorController extends Controller
 
         $branchCoordinator = BranchCoordinator::find($id);
 
+        // update siapa yang menghapus
+        $branchCoordinator->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
+
         // send result
         $params = getStatus($branchCoordinator->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
@@ -254,61 +198,22 @@ class BranchCoordinatorController extends Controller
     public function trash(Request $request)
     {
         // cek privilege
-        privilegeLevel(self::config['privilege'], ONLY_SEE);
+        privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
-        $data = BranchCoordinator::onlyTrashed()->select('branch_coordinators.*');
-
-        // join
-        $data = $data->leftJoin('users', 'branch_coordinators.user', '=', 'users.id');
-
-        $search = $request->search;
-        if (strlen($search) > 2) {
-            $data = $data->where('branch_coordinators.name','LIKE','%'.$search.'%')
-                ->orWhereHas('users', function ($q) use ($search) {
-                    $q->where('users.name','LIKE','%'.$search.'%')
-                        ->orWhere('users.email','LIKE','%'.$search.'%')
-                        ->orWhere('users.username','LIKE','%'.$search.'%')
-                        ->orWhere('users.address','LIKE','%'.$search.'%')
-                        ->orWhere('users.phone','LIKE','%'.$search.'%')
-                        ->orWhereHas('privileges', function ($q) use ($search) {
-                            $q->where('user_privileges.name','LIKE','%'.$search.'%')
-                                ->orWhere('user_privileges.color', 'LIKE','%'.$search.'%');
-                        });
-                });
-        }
-
-        $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
-        $target = $request->target ?: null;
-
-        if ($column && $sort) {
-            $data = $data->orderBy($column, $sort);
-        }
-
-        // penguraian table
-        $table = [
-            'perPage'   => $perPage,
-            'search'    => $search,
-            'column'    => $column,
-            'sort'      => $sort,
-            'target'    => $target
-        ];
+        // olah data
+        $parse  = $this->parseData(BranchCoordinator::onlyTrashed()->select('branch_coordinators.*'), $request);
 
         // penguraian data
         $params = [
-            'data'      => $data->paginate($perPage)->appends($table),
+            'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
             'type'      => 'trash',
             'title'     => 'Trash',
-            'table'     => $table,
+            'table'     => $parse['table'],
             'config'    => self::config
         ];
 
-        // jika hanya ingin mendapatkan data table saja
-        if ($target == 'table') {
-            return view(self::config['blade'].'.table', $params);
-        }
-        return view(self::config['blade'].'.data', $params);
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.'.$parse['table']['target'], $params);
     }
 
     public function restore($id = null)
@@ -347,5 +252,85 @@ class BranchCoordinatorController extends Controller
         $params = getStatus($hasil ? 'success' : 'error', 'delete permanent', self::config['name']);
 
         return redirect(self::config['url'].'/trash')->with($params);
+    }
+
+    public function parseData($data, $request)
+    {
+        // join
+        $data = $data->leftJoin('users', 'branch_coordinators.user', '=', 'users.id');
+
+        $search = $request->search;
+        if (strlen($search) > 2) {
+            $data = $data->where('branch_coordinators.name','LIKE','%'.$search.'%')
+                ->orWhereHas('users', function ($q) use ($search) {
+                    $q->where('users.name','LIKE','%'.$search.'%')
+                        ->orWhere('users.email','LIKE','%'.$search.'%')
+                        ->orWhere('users.username','LIKE','%'.$search.'%')
+                        ->orWhere('users.address','LIKE','%'.$search.'%')
+                        ->orWhere('users.phone','LIKE','%'.$search.'%')
+                        ->orWhereHas('privileges', function ($q) use ($search) {
+                            $q->where('user_privileges.name','LIKE','%'.$search.'%')
+                                ->orWhere('user_privileges.color', 'LIKE','%'.$search.'%');
+                        });
+                });
+        }
+
+        $perPage = $request->perPage ?: self::perPage;
+        $column = $request->column ?: null;
+        $sort = $request->sort ?: null;
+        $target = $request->target ?: 'data';
+        $type = $request->type ?: 'data';
+
+        // jika pilihannya ada choose
+        if ($type == 'choose') {
+            $target = 'table';
+        }
+
+        // sort by id
+        if ($column && $sort) {
+            $data = $data->orderBy($column, $sort);
+        }
+
+        $table = [
+            'perPage'   => $perPage,
+            'search'    => $search,
+            'column'    => $column,
+            'sort'      => $sort,
+            'target'    => $target,
+            'type'      => $type,
+        ];
+
+        return [
+            'data'  => $data,
+            'table' => $table
+        ];
+    }
+
+    public function validateInput(Request $request, $id = null)
+    {
+        // validasi
+        $rules = [
+            'name'                  => 'required|min:3|max:100|unique:branch_coordinators,name,'.$id,
+        ];
+
+        $messages = [
+            'name.required'         => 'Nama wajib diisi',
+            'name.min'              => 'Nama minimal 3 karakter',
+            'name.max'              => 'Nama maksimal 100 karakter',
+            'name.unique'           => 'Nama sudah terdaftar',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
+        }
     }
 }

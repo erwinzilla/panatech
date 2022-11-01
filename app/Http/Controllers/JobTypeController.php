@@ -57,6 +57,7 @@ class JobTypeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
+            'id'    => null,
             'name'  => null,
             'color' => 'primary',
         ];
@@ -294,26 +295,31 @@ class JobTypeController extends Controller
         ];
     }
 
-    public function validateInput($request, $id = null)
+    public function validateInput(Request $request, $id = null)
     {
         // validasi
         $rules = [
-            'name'                      => 'required|min:3|max:100|unique:job_types,name,'.$id,
+            'name'              => 'required|min:3|max:100|unique:job_types,name,'.$id,
         ];
 
         $messages = [
-            'name.required'    => 'Nama tipe job wajib diisi',
-            'name.min'         => 'Nama tipe job minimal 3 karakter',
-            'name.max'         => 'Nama tipe job maksimal 100 karakter',
-            'name.unique'      => 'Nama tipe job sudah terpakai',
+            'name.required'     => 'Nama tipe job wajib diisi',
+            'name.min'          => 'Nama tipe job minimal 3 karakter',
+            'name.max'          => 'Nama tipe job maksimal 100 karakter',
+            'name.unique'       => 'Nama tipe job sudah terpakai',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
-        } else {
-            return true;
+        // jika hanya validate input
+        if ($request->validate) {
+            return $validator->errors();
+        }else{
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($request->all)->send();
+            } else {
+                return true;
+            }
         }
     }
 }

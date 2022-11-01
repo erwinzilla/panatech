@@ -20,9 +20,10 @@
         <div id="main" class="col-md-9">
             <div class="card mb-3">
                 <div class="card-body">
+                    <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Cabang">
+                        <input type="text" name="name" class="form-control w-50 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Nama Cabang" validate>
                         @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -31,7 +32,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Code<span class="text-danger">*</span></label>
-                        <input type="text" name="code" class="form-control w-25 @error('code') is-invalid @enderror" value="{{ old('code', $data->code) }}" placeholder="mis. 3501">
+                        <input type="text" name="code" class="form-control w-25 @error('code') is-invalid @enderror" value="{{ old('code', $data->code) }}" placeholder="mis. 3501" validate>
                         @error('code')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -40,7 +41,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Address<span class="text-danger">*</span></label>
-                        <textarea name="address" class="form-control @error('address') is-invalid @enderror" placeholder="mis. Jl. Kopo Gg. Pabrik Kulit Utara, Bandung">{{ old('address', $data->address) }}</textarea>
+                        <textarea name="address" class="form-control @error('address') is-invalid @enderror" placeholder="mis. Jl. Kopo Gg. Pabrik Kulit Utara, Bandung" validate>{{ old('address', $data->address) }}</textarea>
                         @error('address')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -157,4 +158,10 @@
 
     @include('form.header.end')
     @include('component.modal.table')
+@endsection
+
+@section('script')
+    <script>
+        initInput('{{ $config['url'] }}');
+    </script>
 @endsection
