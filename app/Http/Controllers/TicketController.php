@@ -34,7 +34,7 @@ class TicketController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Ticket::select('tickets.*'), $request);
+        $parse  = $this->parseData(Ticket::select('tickets.*'), $request, session('search'));
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
@@ -132,7 +132,7 @@ class TicketController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->name);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -207,7 +207,7 @@ class TicketController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $ticket->name);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -295,12 +295,14 @@ class TicketController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function parseData($data, $request)
+    public function parseData($data, $request, $search = null)
     {
         // join
         $data = $data->leftJoin('states', 'tickets.status', '=', 'states.id');
 
-        $search = $request->search;
+        if (!$search) {
+            $search = $request->search;
+        }
         if (strlen($search) > 1) {
             $data = $data->where('tickets.name','LIKE','%'.$search.'%')
                 ->orWhere('tickets.service_info', 'LIKE', '%'.$search.'%')

@@ -36,7 +36,7 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Job::select('jobs.*'), $request);
+        $parse  = $this->parseData(Job::select('jobs.*'), $request, session('search'));
 
         // penguraian data
         $params = [
@@ -170,7 +170,7 @@ class JobController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->name);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -268,7 +268,7 @@ class JobController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $job->name);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -356,7 +356,7 @@ class JobController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function parseData($data, $request)
+    public function parseData($data, $request, $search = null)
     {
         // join
         $data = $data->leftJoin('branch_services', 'jobs.branch_service', '=', 'branch_services.id');
@@ -364,7 +364,9 @@ class JobController extends Controller
         $data = $data->leftJoin('users', 'jobs.handle_by', '=', 'users.id');
         $data = $data->leftJoin('tickets', 'jobs.ticket', '=', 'tickets.id');
 
-        $search = $request->search;
+        if (!$search) {
+            $search = $request->search;
+        }
         if (strlen($search) > 1) {
             $data = $data->where('jobs.name','LIKE','%'.$search.'%')
                 ->orWhere('jobs.invoice_name', 'LIKE', '%'.$search.'%')

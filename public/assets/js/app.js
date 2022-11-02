@@ -1,4 +1,4 @@
-const base_url = 'http://127.0.0.1:8000/';
+const base_url = document.currentScript.getAttribute('url')+'/';
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 

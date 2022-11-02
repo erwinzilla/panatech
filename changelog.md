@@ -5,6 +5,11 @@
 - Run Composer Install
 - Run Migrate
 
+1.13.2 **Passing Script, Send WA, Search after CU**
+- Add base url passing to script tag
+- Add send to WhatsApp on customer and job table
+- Search after edit or create
+
 1.13.1 **Date Picker & Validating Input**
 - Fix job function
 - Add date picker

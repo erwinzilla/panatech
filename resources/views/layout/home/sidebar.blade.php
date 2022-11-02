@@ -12,5 +12,5 @@
         </li>
     </ul>
     <hr class="border-dashed">
-    <a href="#" class="btn btn-primary w-100 text-white">@svg('heroicon-s-clipboard-document-list', 'icon') New Ticket</a>
+    @include('sidebar.quick')
 </div>

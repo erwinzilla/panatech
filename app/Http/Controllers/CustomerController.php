@@ -32,7 +32,7 @@ class CustomerController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Customer::select('customers.*'), $request);
+        $parse  = $this->parseData(Customer::select('customers.*'), $request, session('search'));
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
@@ -111,7 +111,7 @@ class CustomerController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->phone);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -183,7 +183,7 @@ class CustomerController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $customer->phone);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -271,12 +271,14 @@ class CustomerController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function parseData($data, $request)
+    public function parseData($data, $request, $search = null)
     {
         // join
         $data = $data->leftJoin('customer_types', 'customers.type', '=', 'customer_types.id');
 
-        $search = $request->search;
+        if (!$search) {
+            $search = $request->search;
+        }
         if (strlen($search) > 1) {
             $data = $data->where('customers.name','LIKE','%'.$search.'%')
                 ->orWhere('customers.phone', 'LIKE', '%'.$search.'%')

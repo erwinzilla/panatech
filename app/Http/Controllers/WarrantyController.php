@@ -31,7 +31,7 @@ class WarrantyController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(Warranty::select('warranties.*'), $request);
+        $parse  = $this->parseData(Warranty::select('warranties.*'), $request, session('search'));
 
         // ambil data untuk form
         if ($parse['table']['type'] == 'form') {
@@ -107,7 +107,7 @@ class WarrantyController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->serial);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -178,7 +178,7 @@ class WarrantyController extends Controller
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $warranty->serial);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -266,12 +266,14 @@ class WarrantyController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function parseData($data, $request)
+    public function parseData($data, $request, $search = null)
     {
         // join
         $data = $data->leftJoin('customers', 'warranties.customer', '=', 'customers.id');
 
-        $search = $request->search;
+        if (!$search) {
+            $search = $request->search;
+        }
         if (strlen($search) > 1) {
             $data = $data->where('warranties.model','LIKE','%'.$search.'%')
                 ->orWhere('warranties.serial', 'LIKE', '%'.$search.'%')

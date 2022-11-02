@@ -70,11 +70,12 @@ if (! function_exists('getBadge')) {
  * @return response()
  */
 if (! function_exists('getStatus')) {
-    function getStatus($status, $type, $name)
+    function getStatus($status, $type, $name, $search = null)
     {
         return [
             'status'    => $status,
-            'message'   => ucwords($status).' '.$type.' '.$name
+            'message'   => ucwords($status).' '.$type.' '.$name,
+            'search'    => $search,
         ];
     }
 }

@@ -77,6 +77,7 @@
                             <div class="d-flex">
                                 @if($type == 'data')
                                     <a href="{{ url('warranty/create/'.$row->id) }}" class="btn btn-secondary btn-icon me-2" data-bs-toggle="tooltip" data-bs-title="Generate Warranty">@svg('heroicon-s-credit-card', 'icon-sm')</a>
+                                    <a href="http://wa.me/62{{ substr($row->phone, 1) }}" target="_blank" class="btn btn-teal btn-icon me-2" data-bs-toggle="tooltip" data-bs-title="Send WhatsApp">@svg('heroicon-o-chat-bubble-oval-left', 'icon-sm')</a>
                                 @endif
                                 @include('form.button.crud', ['url' => $config['url'].'/', 'type' => $type, 'id' => $row->id])
                             </div>
