@@ -241,7 +241,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Purchase Date<span class="text-danger">*</span></label>
-                            <input type="date" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan nomor garansi">
+                            <input type="text" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan tanggal" date-picker>
                             @error('purchase_date')
                             <div class="invalid-feedback">
                                 {{ $message }}

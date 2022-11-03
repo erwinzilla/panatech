@@ -14,15 +14,15 @@
         <label class="align-self-center w-100 me-2 text-end">Last Update</label>
         @php
         if ($data_additional->count() > 0) {
-            $job_update_at = date('Y-m-d', strtotime($data_additional->first()->job_update_at));
+            $job_update_at = date('d/m/Y', strtotime($data_additional->first()->job_update_at));
             $id = $data_additional->first()->id;
         } else {
-            $job_update_at = date('Y-m-d');
+            $job_update_at = date('d/m/Y');
             $id = null;
         }
         @endphp
         @if($id)
-            <input type="date" name="job_update_at" class="form-control w-50" value="{{ $job_update_at }}" placeholder="Masukan tanggal pembuatan" data-id="{{ $id }}">
+            <input type="text" name="job_update_at" class="form-control w-50" value="{{ $job_update_at }}" placeholder="Masukan tanggal" data-id="{{ $id }}" date-picker>
         @else
             <a href="{{ url('config') }}" class="btn btn-warning w-50">@svg('heroicon-s-exclamation-triangle', 'icon me-2') Set Config First</a>
         @endif
@@ -61,7 +61,7 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
-                        {{ $row->name }}
+                        <span class="text-nowrap">{{ $row->name }}</span>
                         @if($row->ticket)
                             <br><small class="text-muted">{{ $row->tickets->name }}</small>
                         @endif
@@ -72,7 +72,7 @@
                     </td>
                     <td>
                         @if($row->invoice_name)
-                            <span>{{ $row->invoice_name }}</span>
+                            <span class="text-nowrap">{{ $row->invoice_name }}</span>
                             @if($row->quality_report)
                                 <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
                             @endif
@@ -91,14 +91,18 @@
                     </td>
                     <td>
                         <span>{{ $row->customer_name }}</span>
-                        <br><span>{{ $row->phone }}</span>
+                        <br><small>{{ $row->phone }}</small>
                         @if($row->phone2)
-                            <br><span class="text-muted">{{ $row->phone2 }}</span>
+                            <br><small class="text-muted">{{ $row->phone2 }}</small>
                         @endif
                         @if($row->phone3)
-                            <br><span class="text-muted">{{ $row->phone3 }}</span>
+                            <br><small class="text-muted">{{ $row->phone3 }}</small>
                         @endif
-                        <br><small class="text-muted mb-0">{{ $row->address }}</small>
+                        @if(strlen($row->address) > 30)
+                            <br><small class="text-muted mb-0 text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->address }}">{{ substr_replace($row->address, '...', 30) }}</small>
+                        @else
+                            <br><small class="text-muted mb-0 text-nowrap">{{ $row->address }}</small>
+                        @endif
                         @if($row->email)
                             <br><small><a href="mailto:{{ $row->email }}">{{ $row->email }}</a></small>
                         @endif

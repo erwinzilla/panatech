@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Warranty;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -66,7 +67,7 @@ class WarrantyController extends Controller
             'model'         => null,
             'serial'        => null,
             'warranty_no'   => null,
-            'purchase_date' => null,
+            'purchase_date' => Carbon::now(),
             'type'          => null,
             'customer'      => $id,
         ];
@@ -96,13 +97,17 @@ class WarrantyController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Warranty::create($request->all());
+            $hasil = Warranty::create($request->except(['purchase_date']));
         }
+
+        // convert date time
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add created by
         if ($hasil) {
             $hasil->update([
-                'created_by' => Auth::user()->id,
+                'created_by'    => Auth::user()->id,
+                'purchase_date' => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
         }
 
@@ -167,13 +172,17 @@ class WarrantyController extends Controller
 //        $customerType = CustomerType::find($id);
 
         if ($this->validateInput($request, $warranty->id)){
-            $hasil = $warranty->fill($request->all())->save();
+            $hasil = $warranty->fill($request->except(['purchase_date']))->save();
         }
+
+        // convert date time
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add updated by
         if ($hasil) {
             $warranty->update([
                 'updated_by' => Auth::user()->id,
+                'purchase_date' => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
         }
 

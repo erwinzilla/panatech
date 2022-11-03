@@ -121,13 +121,19 @@ class TicketController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Ticket::create($request->except(['flash-fill']));
+            $hasil = Ticket::create($request->except(['flash-fill', 'created_at', 'purchase_date']));
         }
+
+        // convert date time
+        $created_at = $request->created_at ? str_replace('/', '-', $request->created_at) : Carbon::now();
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add created by
         if ($hasil) {
             $hasil->update([
                 'created_by' => Auth::user()->id,
+                'created_at' => date('Y-m-d', strtotime($created_at)),
+                'purchase_date' => date('Y-m-d', strtotime($purchase_date)),
             ]);
         }
 
@@ -196,13 +202,19 @@ class TicketController extends Controller
 //        $customerType = CustomerType::find($id);
 
         if ($this->validateInput($request, $ticket->id)){
-            $hasil = $ticket->fill($request->except(['flash-fill']))->save();
+            $hasil = $ticket->fill($request->except(['flash-fill', 'created_at', 'purchase_date']))->save();
         }
+
+        // convert date time
+        $created_at = $request->created_at ? str_replace('/', '-', $request->created_at) : Carbon::now();
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add updated by
         if ($hasil) {
             $ticket->update([
-                'updated_by' => Auth::user()->id,
+                'updated_by'    => Auth::user()->id,
+                'created_at'    => $created_at ? date('Y-m-d', strtotime($created_at)) : null,
+                'purchase_date' => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
         }
 

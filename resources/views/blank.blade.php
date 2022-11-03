@@ -8,10 +8,9 @@
     @include('favicon')
     {{-- Bootstrap 5.1 custom css--}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous|Poppins">
-    <link href="{{ url('assets/css/app.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker-bs5.min.css">
+    <link rel="stylesheet" href="{{ url('assets/css/app.min.css') }}">
     {{--    @vite('resources/css/app.css')--}}
 </head>
 <body class="{{ isset($class) ? $class : '' }}">

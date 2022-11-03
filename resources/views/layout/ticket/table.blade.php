@@ -49,15 +49,18 @@
                     </td>
                     <td>
                         <span>{{ $row->customer_name }}</span>
-                        <br><span>{{ $row->phone }}</span>
+                        <br><small>{{ $row->phone }}</small>
                         @if($row->phone2)
-                            <br><span class="text-muted">{{ $row->phone2 }}</span>
+                            <br><small class="text-muted">{{ $row->phone2 }}</small>
                         @endif
                         @if($row->phone3)
-                            <br><span class="text-muted">{{ $row->phone3 }}</span>
+                            <br><small class="text-muted">{{ $row->phone3 }}</small>
                         @endif
-                        <br><small class="text-muted mb-0">{{ $row->address }}</small>
-                        @if($row->email)
+                        @if(strlen($row->address) > 30)
+                            <br><small class="text-muted mb-0 text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->address }}">{{ substr_replace($row->address, '...', 30) }}</small>
+                        @else
+                            <br><small class="text-muted mb-0 text-nowrap">{{ $row->address }}</small>
+                        @endif                        @if($row->email)
                             <br><small><a href="mailto:{{ $row->email }}">{{ $row->email }}</a></small>
                         @endif
                         @if($row->customer_type)

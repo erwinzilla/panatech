@@ -138,12 +138,16 @@ class ConfigController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $hasil = $config->fill($request->except(['validate']))->save();
+        $hasil = $config->fill($request->except(['validate', 'job_update_at']))->save();
+
+        // convert date time
+        $job_update_at = $request->job_update_at ? str_replace('/', '-', $request->job_update_at) : Carbon::now();
 
         // add updated by
         if ($hasil) {
             $config->update([
                 'job_update_by' => Auth::user()->id,
+                'job_update_at' => $job_update_at ? date('Y-m-d', strtotime($job_update_at)) : null,
             ]);
         }
 

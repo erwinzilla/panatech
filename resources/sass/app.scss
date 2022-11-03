@@ -120,10 +120,13 @@ $themes: (
                 input-disabled-bg: #E9ECF7,
                 input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)),
-                //login-img: url('/assets/images/backgrounds/bg-login-min.jpg'),
                 navbar-bg: $body-bg,
                 navbar-color: #000,
                 table-striped-bg: $table-striped-bg,
+                calendar-bg: #fff,
+                calendar-color: #000,
+                calendar-hover-bg: $card-bg,
+                calendar-hover-color: $body-color,
         ),
         dark: (
                 body-bg: #171717,
@@ -142,10 +145,13 @@ $themes: (
                 input-disabled-bg: #444444,
                 input-disabled-color: #73837b,
                 login-bg: linear-gradient(270deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-                //login-img: url('/assets/images/backgrounds/bg-login-dark-min.jpg'),
                 navbar-bg: #171717,
                 navbar-color: #fff,
                 table-striped-bg: rgba(0, 0, 0, 0.175),
+                calendar-bg: #171717,
+                calendar-color: #fff,
+                calendar-hover-bg: #1a1a1a,
+                calendar-hover-color: #838383,
         ),
 );
 
@@ -253,6 +259,10 @@ body {
         --bs-color: #{t-top('color')};
         --bs-color-hover: #{t-top('color-hover')};
         --bs-sweet-alert-2-bg: #{t-top('card-bg')};
+        --bs-calendar-bg: #{t-top('calendar-bg')};
+        --bs-calendar-color: #{t-top('calendar-color')};
+        --bs-calendar-hover-bg: #{t-top('calendar-hover-bg')};
+        --bs-calendar-hover-color: #{t-top('calendar-hover-color')};
     }
 }
 footer {
@@ -370,6 +380,54 @@ hr {
     padding-left: 16.5rem;
     padding-top: 1rem;
     background-color: var(--bs-content-bg);
+}
+.datepicker-cell {
+    &:not(.disabled) {
+        &:hover {
+            background-color: var(--bs-calendar-hover-bg);
+        }
+    }
+}
+.datepicker-controls {
+    .button {
+        background-color: var(--bs-calendar-bg);
+        color: var(--bs-body-color);
+        border-radius: $border-radius;
+        &:hover {
+            background-color: var(--bs-calendar-hover-bg);
+            color: var(--bs-calendar-hover-color);
+        }
+    }
+}
+.datepicker-footer {
+    background-color: var(--bs-calendar-hover-bg);
+    .datepicker-controls {
+        .button {
+            border-radius: $border-radius;
+            border-color: var(--bs-body-color);
+        }
+    }
+}
+.datepicker-header {
+    .datepicker-controls {
+        .button {
+            &:active {
+                background-color: var(--bs-calendar-hover-bg);
+            }
+            &:hover {
+                background-color: var(--bs-calendar-hover-bg);
+                color: var(--bs-calendar-hover-color);
+            }
+        }
+    }
+}
+.datepicker-picker {
+    background-color: var(--bs-calendar-bg);
+    color: var(--bs-calendar-color);
+    border-radius: $border-radius;
+    span {
+        border-radius: $border-radius;
+    }
 }
 .dropdown-menu {
     @include theme() {
@@ -723,6 +781,12 @@ hr {
 }
 .w-2-slot {
     width: 7rem;
+}
+
+[data-bs-toggle="tooltip"] {
+    text-decoration-style: dotted;
+    text-decoration-color: $text-muted;
+    text-decoration-line: underline;
 }
 
 @keyframes shake {

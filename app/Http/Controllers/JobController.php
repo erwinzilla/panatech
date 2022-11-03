@@ -98,7 +98,7 @@ class JobController extends Controller
             'serial'            => $ticket ? $ticket->serial : null,
             'warranty_no'       => $ticket ? $ticket->warranty_no : null,
             'purchase_date'     => $ticket ? $ticket->purchase_date : null,
-            'warranty_type'     => $ticket ? $ticket->waraanty_type : null,
+            'warranty_type'     => $ticket ? $ticket->warranty_type : null,
             'branch_service'    => Auth::user()->branch_service,
             'job_type'          => null,
             'handle_by'         => Auth::user()->id,
@@ -137,7 +137,7 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = Job::create($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time']));
+            $hasil = Job::create($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time', 'purchase_date']));
         }
 
         // convert date time
@@ -146,6 +146,7 @@ class JobController extends Controller
         $collection_at = str_replace('/', '-', $request->collection_at);
         $actual_start_at = str_replace('/', '-', $request->actual_start_at);
         $actual_end_at = str_replace('/', '-', $request->actual_end_at);
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add created and date
         if ($hasil) {
@@ -158,6 +159,7 @@ class JobController extends Controller
                 'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
                 'quality_report'    => $request->quality_report ? 1 : 0,
                 'dealer_report'     => $request->dealer_report ? 1 : 0,
+                'purchase_date'     => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
         }
 
@@ -244,6 +246,7 @@ class JobController extends Controller
         $collection_at = str_replace('/', '-', $request->collection_at);
         $actual_start_at = str_replace('/', '-', $request->actual_start_at);
         $actual_end_at = str_replace('/', '-', $request->actual_end_at);
+        $purchase_date = $request->purchase_date ? str_replace('/', '-', $request->purchase_date) : null;
 
         // add created and date
         if ($hasil) {
@@ -256,6 +259,7 @@ class JobController extends Controller
                 'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
                 'quality_report'    => $request->quality_report ? 1 : 0,
                 'dealer_report'     => $request->dealer_report ? 1 : 0,
+                'purchase_date'     => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
         }
 

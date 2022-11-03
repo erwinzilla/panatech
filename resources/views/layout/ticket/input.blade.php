@@ -63,7 +63,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Created Date<span class="text-danger">*</span></label>
-                        <input type="date" name="created_at" class="form-control w-50 @error('created_at') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('created_at', $data->created_at))) }}" placeholder="Masukan tanggal pembuatan" validate>
+                        <input type="text" name="created_at" class="form-control w-50 @error('created_at') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('created_at', $data->created_at))) }}" placeholder="Masukan tanggal" date-picker>
                         @error('created_at')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -215,7 +215,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Purchase Date<span class="text-danger">*</span></label>
-                            <input type="date" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan tanggal pembelian" validate>
+                            <input type="text" name="purchase_date" class="form-control w-50 @error('purchase_date') is-invalid @enderror" value="{{ date('d/m/Y', strtotime(old('purchase_date', $data->purchase_date))) }}" placeholder="Masukan tanggal" date-picker>
                             @error('purchase_date')
                             <div class="invalid-feedback">
                                 {{ $message }}
