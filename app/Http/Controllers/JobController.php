@@ -237,7 +237,7 @@ class JobController extends Controller
 //        $customerType = CustomerType::find($id);
 
         if ($this->validateInput($request, $job->id)){
-            $hasil = $job->fill($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time']))->save();
+            $hasil = $job->fill($request->except(['flash-fill', 'created_at', 'repair_at', 'collection_at', 'actual_start_at', 'actual_end_at', 'created_at_time', 'repair_at_time', 'collection_at_time', 'actual_start_at_time', 'actual_end_at_time', 'purchase_date']))->save();
         }
 
         // convert date time

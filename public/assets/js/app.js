@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // initialisasi date picker
     const datePickerInput = $s('input[date-picker]');
     datePickerInput.forEach((el) => {
-        const datepicker = new Datepicker(el, {
+        let datepicker = new Datepicker(el, {
             autohide: true,
             format: 'dd/mm/yyyy',
             todayBtn: true,
@@ -248,6 +248,29 @@ document.addEventListener("DOMContentLoaded", function() {
             todayHighlight: true,
             defaultViewDate: 'today',
         });
+
+        datepicker.element.addEventListener('click', () => {
+            let inputDate = $('input[name="job_update_at"]')
+            if (inputDate) {
+                let id = inputDate.dataset.id;
+                // kirim data untuk menunjukan hasil pencarian
+                let load_url = url('config/'+id);
+                send_http(load_url, function (data) {
+                    let obj = JSON.parse(data);
+                    if (obj.status === 'success') {
+                        if (inputDate.classList.contains('is-invalid')) {
+                            inputDate.classList.remove('is-invalid')
+                        }
+                        inputDate.classList.add('is-valid');
+                    } else {
+                        if (inputDate.classList.contains('is-valid')) {
+                            inputDate.classList.remove('is-valid')
+                        }
+                        inputDate.classList.add('is-invalid');
+                    }
+                },'post', '_method=put&validate=true&job_update_at='+inputDate.value, false)
+            }
+        })
     })
 });
 

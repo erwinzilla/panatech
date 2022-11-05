@@ -33,6 +33,11 @@ class JobTypeController extends Controller
         // olah data
         $parse  = $this->parseData(JobType::select('*'), $request);
 
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            return responseJson($parse['data']);
+        }
+
         // penguraian data
         $params = [
             'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
@@ -57,9 +62,11 @@ class JobTypeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'id'    => null,
-            'name'  => null,
-            'color' => 'primary',
+            'id'            => null,
+            'name'          => null,
+            'color'         => 'primary',
+            'actual_date'   => false,
+            'transport'     => null,
         ];
 
         $data = (object) $data;
@@ -93,7 +100,8 @@ class JobTypeController extends Controller
         // add created by
         if ($hasil) {
             $hasil->update([
-                'created_by' => Auth::user()->id,
+                'created_by'    => Auth::user()->id,
+                'actual_date'   => $request->actual_date ? 1 : 0,
             ]);
         }
 
@@ -165,6 +173,7 @@ class JobTypeController extends Controller
         if ($hasil) {
             $jobType->update([
                 'updated_by' => Auth::user()->id,
+                'actual_date'   => $request->actual_date ? 1 : 0,
             ]);
         }
 

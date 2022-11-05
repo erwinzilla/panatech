@@ -299,7 +299,7 @@
                         $('input[name="model"]').value = obj.data.model;
                         $('input[name="serial"]').value = obj.data.serial;
                         $('input[name="warranty_no"]').value = obj.data.warranty_no;
-                        $('input[name="purchase_date"]').value = obj.data.purchase_date;
+                        $('input[name="purchase_date"]').value = new Date(obj.data.purchase_date).toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit', year: 'numeric'});
 
                         if (obj.data.type === {{ IN_WARRANTY }}) {
                             bsCollapse.show();

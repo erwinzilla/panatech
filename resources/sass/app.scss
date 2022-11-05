@@ -258,7 +258,7 @@ body {
         --bs-border-color: #{t-top('border-color')};
         --bs-color: #{t-top('color')};
         --bs-color-hover: #{t-top('color-hover')};
-        --bs-sweet-alert-2-bg: #{t-top('card-bg')};
+        --bs-sweet-alert-2-bg: #{t-top('body-bg')};
         --bs-calendar-bg: #{t-top('calendar-bg')};
         --bs-calendar-color: #{t-top('calendar-color')};
         --bs-calendar-hover-bg: #{t-top('calendar-hover-bg')};
@@ -691,6 +691,7 @@ hr {
 }
 .swal2-popup {
     background-color: var(--bs-sweet-alert-2-bg) !important;
+    box-shadow: $btn-box-shadow;
 }
 .table {
     @include theme() {
@@ -774,7 +775,7 @@ hr {
     }
 }
 .text-default {
-    color: var(--bs-color);
+    color: var(--bs-color) !important;
 }
 .w-1-slot {
     width: 3.5rem;

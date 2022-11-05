@@ -5,6 +5,13 @@
 - Run Composer Install
 - Run Migrate
 
+1.13.4 **Fix Job Function**
+- Fix job update (purchase date)
+- Add job type Misc
+- Add function job update type in job input
+- Fix flash fill ticket in job input
+- Add part and invoice tab in Job View (On-Process)
+
 1.13.3 **Calendar Dark & Date Picker**
 - Calendar dark mode
 - Change date input with datepicker

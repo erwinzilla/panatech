@@ -33,6 +33,24 @@
                     <div class="mb-3">
                         @include('form.color')
                     </div>
+                    <h5 class="text-default">Miscellaneous</h5>
+                    <hr class="border-dashed">
+                    <div class="mb-3">
+                        <label class="form-label">Default Transport</label>
+                        <input type="number" name="transport" class="form-control w-50 @error('transport') is-invalid @enderror" value="{{ old('transport', $data->transport) }}" placeholder="Masukan default">
+                        @error('transport')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <hr class="border-dashed">
+                    <div class="form-check">
+                        <input name="actual_date" class="form-check-input" type="checkbox" value="1" id="checkboxActualDate" {{ $data->actual_date ? 'checked' : ''}}>
+                        <label class="form-check-label" for="checkboxActualDate">
+                            Disable Actual Date?
+                        </label>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

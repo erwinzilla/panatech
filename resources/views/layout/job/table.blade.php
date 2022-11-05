@@ -61,7 +61,9 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
-                        <span class="text-nowrap">{{ $row->name }}</span>
+                        <span class="text-nowrap">
+                            <a href="{{ url($config['url'].'/'.$row->id.'/edit') }}">{{ $row->name }}</a>
+                        </span>
                         @if($row->ticket)
                             <br><small class="text-muted">{{ $row->tickets->name }}</small>
                         @endif
@@ -154,3 +156,17 @@
     </table>
 </div>
 @include('component.table.footer', ['total' => $data->total(), 'firstItem' => $data->firstItem(), 'lastItem' => $data->lastItem(), 'data' => $data])
+
+@section('script')
+    <script>
+        let datePicker = $('.datepicker')
+        if (datePicker) {
+            let cell = datePicker.querySelectorAll('.datepicker-cell');
+            cell.forEach((el) => {
+                el.addEventListener('click', () => {
+                    console.log('work')
+                })
+            })
+        }
+    </script>
+@endsection

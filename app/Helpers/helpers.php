@@ -153,3 +153,13 @@ if (! function_exists('responseJSON')) {
         }
     }
 }
+
+if (! function_exists('getPrice')) {
+    function getPrice($num)
+    {
+        return '<div class="d-flex">
+                    <span class="me-2">Rp. </span>
+                    <span>'.number_format($num, 0, ',', '.').'</span>
+                </div>';
+    }
+}
