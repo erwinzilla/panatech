@@ -5,6 +5,11 @@
 - Run Composer Install
 - Run Migrate
 
+1.15 **Job Part Function**
+- Add parts in job input
+- Add job part database
+- Add job part function (app.js)
+
 1.14 **Part Function**
 - Add parts privilege
 - Add parts database

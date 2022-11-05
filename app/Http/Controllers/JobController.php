@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Config;
 use App\Models\CustomerType;
 use App\Models\Job;
+use App\Models\JobPart;
 use App\Models\JobType;
 use App\Models\Status;
 use App\Models\Ticket;
@@ -213,6 +214,7 @@ class JobController extends Controller
                 'status'        => Status::all(),
                 'job_type'      => JobType::all(),
                 'customer_type' => CustomerType::all(),
+                'job_part'      => JobPart::where('job', $job->id)->get(),
             ],
             'type'              => 'edit',
             'title'             => 'Edit '.self::config['name'],

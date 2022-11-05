@@ -117,12 +117,19 @@ class PartController extends Controller
      */
     public function show(Part $part)
     {
-        // penguraian data
-//        $params = [
-//            'data'      => $part,
-//        ];
-//
-//        return view(self::config['blade'].'.show', $params);
+        if ($part) {
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Sukses mengambil data',
+                'data'      => $part,
+            ]);
+        } else {
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Data tidak ditemukan',
+                'data'      => null,
+            ]);
+        }
     }
 
     /**

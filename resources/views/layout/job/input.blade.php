@@ -35,6 +35,8 @@
             </div>
         @endif
     </div>
+
+    @include('component.modal.table')
 @endsection
 
 @section('script')
@@ -312,6 +314,12 @@
                     }
                 }
             }, 'get', null, false)
+        }
+
+        let el = $('#table-data-part').querySelector('table tbody');
+        if (el) {
+            initTableBtnEdit(el);
+            initTableBtnDelete(el);
         }
     </script>
 @endsection

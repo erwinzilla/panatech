@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\JobPartController;
 use App\Http\Controllers\JobTypeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ConfigController;
@@ -102,6 +103,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('status/restore/{id?}', [StatusController::class, 'restore']);
     Route::get('status/delete/{id?}', [StatusController::class, 'delete']);
     Route::post('status/validate/{id?}', [StatusController::class, 'validateInput']);
+
+    // Job Part
+    Route::post('job/part', [JobPartController::class, 'store']);
+    Route::delete('job/part', [JobPartController::class, 'destroy']);
 
     // Job Type
     Route::get('job/type/trash', [JobTypeController::class, 'trash']);

@@ -330,25 +330,141 @@ function confirm_delete_link(id) {
     });
 }
 
-function choose(name, value) {
-    let input = $('input[name="'+name+'"]');
-    if (input && value) {
-        // isi hidden value
-        input.value = value
+function choose(name, value, target = null) {
+    if (name && value) {
+        if (!target) {
+            let input = $('input[name="'+name+'"]');
+            if (input) {
+                // isi hidden value
+                input.value = value
 
-        // callback hasil data
-        let box = $('#'+name+'-data');
-        if (box) {
-            // kirim data untuk menunjukan hasil pencarian
-            let load_url = url(name+'/'+value);
-            send_http(load_url, function (data) {
-                box.innerHTML = data;
-            })
+                // callback hasil data
+                let box = $('#'+name+'-data');
+                if (box) {
+                    // kirim data untuk menunjukan hasil pencarian
+                    let load_url = url(name+'/'+value);
+                    send_http(load_url, function (data) {
+                        box.innerHTML = data;
+                    })
+                }
+            }
+        }
+
+        if (target === 'table') {
+            let box = $('#table-data-'+name);
+            if (box) {
+                // kirim data untuk menunjukan hasil pencarian
+                let load_url = url(name+'/'+value);
+                send_http(load_url, function (data) {
+                    let obj = JSON.parse(data)
+
+                    //show notification
+                    Toast.fire({
+                        title: ucwords(obj.status),
+                        text: obj.message,
+                        icon: obj.status,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    })
+
+                    // lanjut jika sukses mengirim data
+                    if (obj.status === 'success') {
+                        let tbody = box.querySelector('table tbody');
+
+                        // hapus no entries
+                        if (tbody.querySelector('tr')) {
+                            if (tbody.querySelector('tr').classList.contains('no-entries')) {
+                                tbody.querySelector('tr').outerHTML = '';
+                            }
+                        }
+
+                        // jika data sudah ada di table
+                        const rows = tbody.querySelectorAll('tr');
+                        if (rows.length > 0) {
+                            let has_sku = false;
+                            rows.forEach((row) => {
+                                if (row.querySelector('#sku-'+obj.data.sku)) {
+                                    has_sku = true
+                                }
+                            })
+
+                            if (has_sku) {
+                                const row = tbody.querySelector('tr #sku-'+obj.data.sku).closest('tr');
+                                // update
+                                const price = parseInt(row.querySelector(`#price-${obj.data.sku}`).innerText);
+                                const qty = parseInt(row.querySelector(`#qty-${obj.data.sku}`).innerText) + 1;
+                                row.querySelector(`#qty-${obj.data.sku}`).innerText = qty;
+                                row.querySelector(`#total-${obj.data.sku}`).innerText = price * qty;
+                            } else {
+                                // create baru
+                                // get number
+                                const rows = box.querySelectorAll('table tbody tr');
+
+                                tbody.innerHTML += `
+                                    <tr>
+                                        <td class="text-center num">${rows.length + 1}</td>
+                                        <td id="sku-${obj.data.sku}">${obj.data.sku}</td>
+                                        <td>${obj.data.name}</td>
+                                        <td id="price-${obj.data.sku}">${obj.data.price}</td>
+                                        <td id="qty-${obj.data.sku}">1</td>
+                                        <td id="total-${obj.data.sku}">${obj.data.price * 1}</td>
+                                        <td class="pe-3 w-2-slot">
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-warning btn-icon me-2 edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-id="${obj.data.sku}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                        <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+                                                        <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+                                                    </svg>
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-icon delete" data-bs-toggle="tooltip" data-bs-title="Delete" data-id="${obj.data.sku}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>`;
+                            }
+                        } else {
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td class="text-center num">${rows.length + 1}</td>
+                                    <td id="sku-${obj.data.sku}" data-name="sku">${obj.data.sku}</td>
+                                    <td data-name="name">${obj.data.name}</td>
+                                    <td id="price-${obj.data.sku}" data-name="price">${obj.data.price}</td>
+                                    <td id="qty-${obj.data.sku}" data-name="qty">1</td>
+                                    <td id="total-${obj.data.sku}">${obj.data.price * 1}</td>
+                                    <td class="pe-3 w-2-slot">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-warning btn-icon me-2 edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-id="${obj.data.sku}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+                                                    <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-icon delete" data-bs-toggle="tooltip" data-bs-title="Delete" data-id="${obj.data.sku}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                        }
+                        initTableBtnEdit(tbody);
+                        initTableBtnDelete(tbody);
+
+                        // update status
+                        updateTableStatus('Data berubah, silahkan submit untuk menyimpan data', 'error')
+                    }
+                })
+            }
         }
     }
 }
 
-function send_http(url_http, callback, method = 'get', param = null, loading = true) {
+function send_http(url_http, callback, method = 'get', param = null, loading = true, json = false) {
     // console.log(url);
     let http = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
 
@@ -391,7 +507,11 @@ function send_http(url_http, callback, method = 'get', param = null, loading = t
 
     if (method === 'post' || method === 'put') {
         http.open(method, url_http, true);
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        if (json) {
+            http.setRequestHeader("Content-Type", "application/json");
+        } else {
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        }
         http.setRequestHeader("X-CSRF-TOKEN", document.head.querySelector("[name=csrf-token]").content);
         http.send(param)
     }
@@ -556,4 +676,257 @@ function initTable(el) {
     }
 
     init()
+}
+
+function initTableBtnEdit(el) {
+    // jika data sudah ada di table
+    const btn_edits = el.querySelectorAll('tr td .edit');
+    if (btn_edits) {
+        btn_edits.forEach((el_btn) => {
+            el_btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // jika yang ter-klik svg nya
+                const btn_edit = e.target.closest('td').querySelector('.edit');
+                const id = btn_edit.dataset.id;
+
+                const row = btn_edit.closest('tr');
+                // price element
+                const price_el = row.querySelector(`#price-${id}`);
+                if (price_el) {
+                    const price = price_el.innerText;
+                    price_el.innerHTML = `<input type="number" name="price" class="form-control" value="${price}">`
+                }
+
+                // qty element
+                const qty_el = row.querySelector(`#qty-${id}`);
+                if (qty_el) {
+                    const qty = qty_el.innerText;
+                    qty_el.innerHTML = `<input type="number" name="qty" class="form-control" value="${qty}">`
+                }
+
+                // change btn edit element
+                el_btn.outerHTML = `<button type="button" class="btn btn-success btn-icon me-2 apply" data-bs-toggle="tooltip" data-bs-title="Apply" data-id="${id}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                          <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </button>`
+
+                initTableBtnApply(el)
+
+                // hapus tooltip nyangkut
+                let tooltip_ui = document.querySelector('.tooltip');
+                if (tooltip_ui) {
+                    tooltip_ui.outerHTML = '';
+                }
+            })
+        })
+    }
+}
+
+function initTableBtnApply(el){
+    // jika data sudah ada di table
+    const btn_applies = el.querySelectorAll('tr td .apply');
+    if (btn_applies) {
+        btn_applies.forEach((el_btn) => {
+            el_btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // jika yang ter-klik svg nya
+                const btn_apply = e.target.closest('td').querySelector('.apply');
+                const id = btn_apply.dataset.id;
+
+                const row = btn_apply.closest('tr');
+
+                let price = 0, qty = 0;
+
+                // price element
+                const price_el = row.querySelector(`#price-${id}`);
+                if (price_el) {
+                    price = price_el.querySelector('input[name="price"]').value;
+                    price_el.innerText = price;
+                }
+
+                // qty element
+                const qty_el = row.querySelector(`#qty-${id}`);
+                if (qty_el) {
+                    qty = qty_el.querySelector('input[name="qty"]').value;
+                    qty_el.innerText = qty;
+                }
+
+                // total element
+                const total_el = row.querySelector(`#total-${id}`);
+                if (total_el) {
+                    const total = price * qty;
+                    total_el.innerHTML = total;
+                }
+
+                // change btn edit element
+                el_btn.outerHTML = `<button type="button" class="btn btn-warning btn-icon me-2 edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-id="${id}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                                                            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+                                                            <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+                                                        </svg>
+                                                    </button>`
+
+                initTableBtnEdit(el)
+
+                // update status
+                let status = $('#table-status')
+                updateTableStatus('Data berubah, silahkan submit untuk menyimpan data', 'error')
+
+                // hapus tooltip nyangkut
+                let tooltip_ui = document.querySelector('.tooltip');
+                if (tooltip_ui) {
+                    tooltip_ui.outerHTML = '';
+                }
+            })
+        })
+    }
+}
+
+function initTableBtnDelete(el) {
+    // jika data sudah ada di table
+    const btn_deletes = el.querySelectorAll('tr td .delete');
+    if (btn_deletes) {
+        btn_deletes.forEach((el_btn) => {
+            el_btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // jika yang ter-klik svg nya
+                const btn_delete = e.target.closest('td').querySelector('.delete');
+
+                const id = $('input[name="job"]').value;
+                const sku = btn_delete.dataset.id;
+                const load_url = url('job/part')
+                send_http(load_url, (data) => {
+                    let obj = JSON.parse(data)
+
+                    //show notification
+                    Toast.fire({
+                        title: ucwords(obj.status),
+                        text: obj.message,
+                        icon: obj.status,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    })
+
+                    // lanjut jika sukses mengirim data
+                    if (obj.status === 'success') {
+                        const row = btn_delete.closest('tr');
+                        row.outerHTML = '';
+
+                        // get number
+                        // urut kembali nomor table
+                        let count = 1; //defaut index
+                        const rows = el.closest('.table').querySelectorAll('tbody tr .num');
+                        if (rows) {
+                            rows.forEach((el_num) => {
+                                el_num.innerText = count;
+                                count += 1;
+                            })
+                        }
+                    }
+
+                    // lanjut jika sukses mengirim data
+                    if (obj.status === 'info') {
+                        const row = btn_delete.closest('tr');
+                        row.outerHTML = '';
+
+                        // get number
+                        // urut kembali nomor table
+                        let count = 1; //defaut index
+                        const rows = el.closest('.table').querySelectorAll('tbody tr .num');
+                        if (rows) {
+                            rows.forEach((el_num) => {
+                                el_num.innerText = count;
+                                count += 1;
+                            })
+                        }
+                    }
+                }, 'post', '_method=delete&job='+id+'&sku='+sku)
+
+                const rows = el.querySelectorAll('tbody tr');
+                if (rows.length === 0) {
+                    el.innerHtml += '<tr class="no-entries">' +
+                        '<td colspan="7" class="text-muted text-center">Silahkan Masukan Part</td>' +
+                        '</tr>'
+                }
+
+                // update status
+                let status = $('#table-status')
+                updateTableStatus('Data berubah, silahkan submit untuk menyimpan data', 'error')
+
+                // hapus tooltip nyangkut
+                let tooltip_ui = document.querySelector('.tooltip');
+                if (tooltip_ui) {
+                    tooltip_ui.outerHTML = '';
+                }
+            })
+        })
+    }
+}
+
+function sendPart(id) {
+    let table = $('#table-data-part');
+    if (table && id) {
+        var param = [];
+        var childnodes = table.querySelectorAll('tbody tr:not(.no-entries)');
+
+        if (childnodes.length > 0) {
+            for (var i = 0; i < childnodes.length; i++) {
+                var data = {};
+                var row = childnodes[i];
+                var columns = row.querySelectorAll("td");
+                data.job = id.toString();
+                data.sku = columns[1].innerText;
+                data.name = columns[2].innerText;
+                data.price = columns[3].innerText;
+                data.qty = columns[4].innerText;
+                param.push(data);
+            }
+
+            // kirim data untuk menunjukan hasil pencarian
+            const load_url = url('job/part');
+            send_http(load_url, function (data) {
+                let obj = JSON.parse(data)
+
+                //show notification
+                Toast.fire({
+                    title: ucwords(obj.status),
+                    text: obj.message,
+                    icon: obj.status,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+
+                updateTableStatus('Sukses, data telah tersubmit', 'success')
+            }, 'post', 'data='+JSON.stringify(param), true, false);
+        }
+    }
+}
+
+function updateTableStatus(text, tag = 'error') {
+    // update status
+    let status = $('#table-status')
+    if (status) {
+        status.innerText = text;
+
+        // clear classlist
+        status.className = '';
+
+        if (tag === 'idle') {
+            status.classList.add('text-muted')
+        }
+
+        if (tag === 'error') {
+            status.classList.add('text-danger')
+        }
+
+        if (tag === 'success') {
+            status.classList.add('text-success')
+        }
+    }
 }
