@@ -5,6 +5,11 @@
 - Run Composer Install
 - Run Migrate
 
+1.14 **Part Function**
+- Add parts privilege
+- Add parts database
+- Add parts CMV
+
 1.13.4 **Fix Job Function**
 - Fix job update (purchase date)
 - Add job type Misc

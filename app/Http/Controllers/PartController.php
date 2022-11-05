@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPrivilege;
+use App\Models\Part;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class UserPrivilegeController extends Controller
+class PartController extends Controller
 {
     // table
     const perPage = 10;
 
     // config
     const config = [
-        'blade'     => 'layout.user.privilege',
-        'url'       => 'user/privilege',
-        'name'      => 'user privilege',
-        'privilege' => 'users'
+        'blade'     => 'layout.part',
+        'url'       => 'part',
+        'name'      => 'Spare Part',
+        'privilege' => 'parts'
     ];
-
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +30,12 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
         // olah data
-        $parse  = $this->parseData(UserPrivilege::select('*'), $request);
+        $parse  = $this->parseData(Part::select('*'), $request, session('search'));
+
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            return responseJson($parse['data'], $parse['data']);
+        }
 
         // penguraian data
         $params = [
@@ -56,30 +61,21 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'id'            => null,
-            'name'          => null,
-            'tickets'       => 0,
-            'customers'     => 0,
-            'products'      => 0,
-            'reports'       => 0,
-            'users'         => 0,
-            'branches'      => 0,
-            'warranties'    => 0,
-            'states'        => 0,
-            'jobs'          => 0,
-            'misc'          => 0,
-            'parts'         => 0,
-            'color'         => 'primary',
+            'id'        => null,
+            'sku'       => null,
+            'name'      => null,
+            'price'     => 0,
+            'loc'       => 'DPL01',
         ];
 
         $data = (object) $data;
 
         // penguraian data
         $params = [
-            'data'      => $data,
-            'type'      => 'create',
-            'title'     => 'Create '.self::config['name'],
-            'config'    => self::config
+            'data'              => $data,
+            'type'              => 'create',
+            'title'             => 'Create '.self::config['name'],
+            'config'            => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -97,11 +93,18 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = UserPrivilege::create($request->all());
+            $hasil = Part::create($request->all());
+        }
+
+        // add created by
+        if ($hasil) {
+            $hasil->update([
+                'created_by' => Auth::user()->id,
+            ]);
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->sku);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -109,38 +112,38 @@ class UserPrivilegeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function show(UserPrivilege $userPrivilege)
+    public function show(Part $part)
     {
         // penguraian data
 //        $params = [
-//            'data'      => $warranty,
+//            'data'      => $part,
 //        ];
-
+//
 //        return view(self::config['blade'].'.show', $params);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserPrivilege $userPrivilege, $id)
+    public function edit(Part $part)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-//        $warannty = Customer::find($id);
+//        $customer = Customer::find($id);
 
         // penguraian data
         $params = [
-            'data'      => $userPrivilege->find($id),
-            'type'      => 'edit',
-            'title'     => 'Edit Data '.self::config['name'],
-            'config'    => self::config
+            'data'              => $part,
+            'type'              => 'edit',
+            'title'             => 'Edit '.self::config['name'],
+            'config'            => self::config
         ];
 
         return view(self::config['blade'].'.input', $params);
@@ -150,22 +153,29 @@ class UserPrivilegeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserPrivilege $userPrivilege, $id)
+    public function update(Request $request, Part $part)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $userPrivilege = $userPrivilege->find($id);
+//        $customerType = CustomerType::find($id);
 
-        if ($this->validateInput($request, $id)){
-            $hasil = $userPrivilege->fill($request->all())->save();
+        if ($this->validateInput($request, $part->id)){
+            $hasil = $part->fill($request->all())->save();
+        }
+
+        // add updated by
+        if ($hasil) {
+            $part->update([
+                'updated_by' => Auth::user()->id,
+            ]);
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name']);
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $part->sku);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -173,19 +183,23 @@ class UserPrivilegeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserPrivilege  $userPrivilege
+     * @param  \App\Models\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserPrivilege $userPrivilege, $id)
+    public function destroy(Part $part)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $hasil = UserPrivilege::find($id);
-        $hasil->delete();
+//        $customerType = CustomerType::find($id);
+
+        // update siapa yang menghapus
+        $part->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'delete', self::config['name']);
+        $params = getStatus($part->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -196,7 +210,7 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         // olah data
-        $parse  = $this->parseData(UserPrivilege::onlyTrashed()->select('*'), $request);
+        $parse  = $this->parseData(Part::onlyTrashed()->select('*'), $request);
 
         // penguraian data
         $params = [
@@ -217,11 +231,11 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = Part::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->restore();
+            $hasil = Part::onlyTrashed()->restore();
         }
 
         // send result
@@ -236,11 +250,11 @@ class UserPrivilegeController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = UserPrivilege::onlyTrashed()
+            $hasil = Part::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = UserPrivilege::onlyTrashed()->forceDelete();
+            $hasil = Part::onlyTrashed()->forceDelete();
         }
 
         // send result
@@ -249,17 +263,21 @@ class UserPrivilegeController extends Controller
         return redirect(self::config['url'].'/trash')->with($params);
     }
 
-    public function parseData($data, $request)
+    public function parseData($data, $request, $search = null)
     {
-        $search = $request->search;
-        if (strlen($search) > 2) {
-            $data = $data->where('name','LIKE','%'.$search.'%')
-                ->orWhere('color','LIKE','%'.$search.'%');
+        if (!$search) {
+            $search = $request->search;
+        }
+        if (strlen($search) > 1) {
+            $data = $data->where('sku','LIKE','%'.$search.'%')
+                ->orWhere('name', 'LIKE', '%'.$search.'%')
+                ->orWhere('price', 'LIKE', '%'.$search.'%')
+                ->orWhere('loc', 'LIKE', '%'.$search.'%');
         }
 
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: null;
-        $sort = $request->sort ?: null;
+        $column = $request->column ?: 'id';
+        $sort = $request->sort ?: 'desc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 
@@ -268,6 +286,7 @@ class UserPrivilegeController extends Controller
             $target = 'table';
         }
 
+        // sort by id
         if ($column && $sort) {
             $data = $data->orderBy($column, $sort);
         }
@@ -291,14 +310,21 @@ class UserPrivilegeController extends Controller
     {
         // validasi
         $rules = [
-            'name'                  => 'required|min:3|max:100|unique:user_privileges,name,'.$id,
+            'sku'                   => 'required|min:3|max:100|unique:parts,sku,'.$id,
+            'name'                  => 'required|min:3|max:100',
+            'price'                 => 'required|numeric',
         ];
 
         $messages = [
+            'sku.required'          => 'SKU / Kode Part wajib diisi',
+            'sku.min'               => 'SKU / Kode Part minimal 3 karakter',
+            'sku.max'               => 'SKU / Kode Part maksimal 100 karakter',
+            'sku.unique'            => 'SKU / Kode Part sudah terpakai',
             'name.required'         => 'Nama wajib diisi',
             'name.min'              => 'Nama minimal 3 karakter',
             'name.max'              => 'Nama maksimal 100 karakter',
-            'name.unique'           => 'Nama sudah terdaftar',
+            'price.required'        => 'Harga wajib diisi',
+            'price.numeric'         => 'Harga harus terdiri dari angka',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);

@@ -348,7 +348,7 @@ function choose(name, value) {
     }
 }
 
-function send_http(url, callback, method = 'get', param = null, loading = true) {
+function send_http(url_http, callback, method = 'get', param = null, loading = true) {
     // console.log(url);
     let http = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
 
@@ -364,7 +364,7 @@ function send_http(url, callback, method = 'get', param = null, loading = true) 
     if (loading) {
         alert.fire({
             title: 'Loading...',
-            imageUrl: '/assets/images/loading.svg',
+            imageUrl: url('/assets/images/loading.svg'),
             imageWidth: 150,
             imageHeight: 150,
             imageAlt: 'loading',
@@ -385,12 +385,12 @@ function send_http(url, callback, method = 'get', param = null, loading = true) 
     }
 
     if (method === 'get') {
-        http.open(method, url);
+        http.open(method, url_http);
         http.send()
     }
 
     if (method === 'post' || method === 'put') {
-        http.open(method, url, true);
+        http.open(method, url_http, true);
         http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         http.setRequestHeader("X-CSRF-TOKEN", document.head.querySelector("[name=csrf-token]").content);
         http.send(param)
@@ -444,7 +444,6 @@ function initInput(target) {
                 // kirim data untuk menunjukan hasil pencarian
                 let load_url = url(target+'/validate/'+id);
                 send_http(load_url, function (data) {
-                    console.log(data);
                     let obj = JSON.parse(data)
                     if (obj[el.getAttribute('name')]) {
                         if (el.classList.contains('is-valid')) {

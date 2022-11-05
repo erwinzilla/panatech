@@ -15,6 +15,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\JobTypeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\PartController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -115,6 +116,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('job/delete/{id?}', [JobController::class, 'delete']);
     Route::post('job/validate/{id?}', [JobController::class, 'validateInput']);
 
+    // Part
+    Route::get('part/trash', [PartController::class, 'trash']);
+    Route::get('part/restore/{id?}', [PartController::class, 'restore']);
+    Route::get('part/delete/{id?}', [PartController::class, 'delete']);
+    Route::post('part/validate/{id?}', [PartController::class, 'validateInput']);
+
     // resources route
     Route::resources([
         'user/privilege'        => UserPrivilegeController::class,
@@ -130,5 +137,6 @@ Route::group(['middleware' => 'auth'], function () {
         'job/type'              => JobTypeController::class,
         'job'                   => JobController::class,
         'config'                => ConfigController::class,
+        'part'                  => PartController::class,
     ]);
 });
