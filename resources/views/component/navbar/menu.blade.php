@@ -43,6 +43,11 @@
                         <a href="{{ url('part') }}" class="nav-link {{ Request::segment(1) == 'part' ? 'active' : '' }}">Spare Part</a>
                     </li>
                 @endif
+                @if(getUserLevel('jobs') >= ONLY_SEE)
+                    <li class="nav-item dropdown me-2">
+                        <a href="{{ url('invoice') }}" class="nav-link {{ Request::segment(1) == 'ticket' ? 'active' : '' }}">Invoice</a>
+                    </li>
+                @endif
                 @if(getUserLevel('branches') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'branch' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Branches</a>

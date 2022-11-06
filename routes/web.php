@@ -17,6 +17,8 @@ use App\Http\Controllers\JobTypeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\InvoiceItemController;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -127,6 +129,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('part/delete/{id?}', [PartController::class, 'delete']);
     Route::post('part/validate/{id?}', [PartController::class, 'validateInput']);
 
+    // Invoice Item
+    Route::get('invoice/item/create', [InvoiceItemController::class, 'create']);
+    Route::post('invoice/item', [InvoiceItemController::class, 'store']);
+    Route::get('invoice/item/{item}/edit', [InvoiceItemController::class, 'edit']);
+    Route::put('invoice/item/{item}', [InvoiceItemController::class, 'update']);
+    Route::delete('invoice/item/{item}', [InvoiceItemController::class, 'destroy']);
+
+    // Invoice
+    Route::get('invoice/trash', [InvoiceController::class, 'trash']);
+    Route::get('invoice/restore/{id?}', [InvoiceController::class, 'restore']);
+    Route::get('invoice/delete/{id?}', [InvoiceController::class, 'delete']);
+    Route::post('invoice/validate/{id?}', [InvoiceController::class, 'validateInput']);
+
     // resources route
     Route::resources([
         'user/privilege'        => UserPrivilegeController::class,
@@ -143,5 +158,6 @@ Route::group(['middleware' => 'auth'], function () {
         'job'                   => JobController::class,
         'config'                => ConfigController::class,
         'part'                  => PartController::class,
+        'invoice'               => InvoiceController::class,
     ]);
 });

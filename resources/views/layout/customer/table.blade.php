@@ -85,7 +85,7 @@
                     @endif
                     @if($type == 'choose')
                         <td class="w-1-slot text-center">
-                            <button type="button" class="btn btn-success btn-icon" data-bs-toggle="tooltip" data-bs-title="Choose" onclick="choose('customer', {{ $row->id }}, '{{ $row->name }}', null, null);return false;" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-success btn-icon" data-bs-toggle="tooltip" data-bs-title="Choose" onclick="choose('customer', {{ $row->id }});return false;" data-bs-dismiss="modal">
                                 @svg('heroicon-s-check-circle', 'icon')
                             </button>
                         </td>

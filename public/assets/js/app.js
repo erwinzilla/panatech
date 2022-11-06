@@ -195,24 +195,50 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // modal user table show
+    let btn_input_modal = $s('.btn-input-modal');
+    if (btn_input_modal) {
+        btn_input_modal.forEach(function (el) {
+            el.addEventListener('click', function () {
+                let table_data_modal = $('#table-data-modal');
+                if (table_data_modal) {
+                    let target = el.dataset.target;
+
+                    // setting header
+                    table_data_modal.closest('.modal').querySelector('.modal-title').innerText = 'Input Data';
+                    table_data_modal.closest('.modal').querySelector('.modal-dialog').className = 'modal-dialog modal-sm';
+                    // kirim data untuk menunjukan hasil pencarian
+                    let load_url = url(target);
+                    send_http(load_url, function (data) {
+                        table_data_modal.innerHTML = data;
+                    });
+                }
+
+                init();
+            });
+        });
+    }
+
     // table function
     let table_data_modal = $('#table-data-modal');
     if (table_data_modal) {
         // tambahkan fungsi jika ada perubahan pada search dan perpage selector
         table_data_modal.addEventListener('change', function (){
-            let perPage = $('select[name="perPage"]').value;
-            let search = $('input[name="search"]').value;
+            if ($('select[name="perPage"]')) {
+                let perPage = $('select[name="perPage"]').value;
+                let search = $('input[name="search"]').value;
 
-            let params = '&perPage=' + perPage +
-                '&search=' + search;
+                let params = '&perPage=' + perPage +
+                    '&search=' + search;
 
-            // kirim data untuk menunjukan hasil pencarian
-            let load_url = table_data_modal.dataset.url + params;
-            send_http(load_url, function (data) {
-                table_data_modal.innerHTML = data;
-            });
+                // kirim data untuk menunjukan hasil pencarian
+                let load_url = table_data_modal.dataset.url + params;
+                send_http(load_url, function (data) {
+                    table_data_modal.innerHTML = data;
+                });
 
-            init();
+                init();
+            }
         });
 
         // tambahkan funngsi saat kita mengklik link fungsi tabel
