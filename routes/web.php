@@ -137,6 +137,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('invoice/item/{item}', [InvoiceItemController::class, 'destroy']);
 
     // Invoice
+    Route::get('invoice/create/job/{job}', [InvoiceController::class, 'generateJob']);
+    Route::get('invoice/create/{layout?}', [InvoiceController::class, 'create']);
     Route::get('invoice/trash', [InvoiceController::class, 'trash']);
     Route::get('invoice/restore/{id?}', [InvoiceController::class, 'restore']);
     Route::get('invoice/delete/{id?}', [InvoiceController::class, 'delete']);

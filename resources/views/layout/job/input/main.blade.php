@@ -22,7 +22,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Job Type<span class="text-danger">*</span></label>
-                    <select name="job_type" class="form-select w-25 @error('job_type') is-invalid @enderror">
+                    <select name="job_type" class="form-select w-25 @error('job_type') is-invalid @enderror" {{ $data->on_invoice ? 'disabled' : '' }}>
                         @foreach($data_additional['job_type'] as $row)
                             <option value="{{ $row->id }}" {{ $row->id == old('job_type', $data->job_type) ? 'selected' :'' }}>{{ $row->name }}</option>
                         @endforeach
@@ -43,19 +43,14 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">No. Invoice</label>
-                    <input type="text" name="invoice_name" class="form-control w-50 @error('invoice_name') is-invalid @enderror" value="{{ old('invoice_name', $data->invoice_name) }}" placeholder="Masukan nomor invoice" validate>
-                    @error('invoice_name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label class="form-label">Job Status<span class="text-danger">*</span></label>
-                    <select name="status" class="form-select w-25 @error('status') is-invalid @enderror">
+                    <select name="status" class="form-select w-25 @error('status') is-invalid @enderror" {{ $data->on_invoice ? 'disabled' : '' }}>
                         @foreach($data_additional['status'] as $row)
-                            <option value="{{ $row->id }}" {{ $row->id == old('status', $data->status) ? 'selected' :'' }}>{{ $row->name }}</option>
+                            @if($row->disable_input > NONE && $type == 'create')
+{{--                                jangan di render --}}
+                            @else
+                                <option value="{{ $row->id }}" {{ $row->id == old('status', $data->status) ? 'selected' :'' }}>{{ $row->name }}</option>
+                            @endif
                         @endforeach
                     </select>
                     @error('status')
@@ -401,7 +396,7 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label">Labour</label>
-                    <input type="number" name="labour" class="form-control w-50 @error('labour') is-invalid @enderror" value="{{ old('labour', $data->labour) }}" placeholder="Masukan ongkos kerja">
+                    <input type="number" name="labour" class="form-control w-50 @error('labour') is-invalid @enderror" value="{{ old('labour', $data->labour) }}" placeholder="Masukan ongkos kerja" {{ $data->on_invoice ? 'readonly' : '' }}>
                     @error('labour')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -410,7 +405,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Transport</label>
-                    <input type="number" name="transport" class="form-control w-50 @error('transport') is-invalid @enderror" value="{{ old('transport', $data->transport) }}" placeholder="Masukan transport">
+                    <input type="number" name="transport" class="form-control w-50 @error('transport') is-invalid @enderror" value="{{ old('transport', $data->transport) }}" placeholder="Masukan transport" {{ $data->on_invoice ? 'readonly' : '' }}>
                     @error('transport')
                     <div class="invalid-feedback">
                         {{ $message }}

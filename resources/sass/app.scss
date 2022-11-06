@@ -263,6 +263,13 @@ body {
         --bs-calendar-color: #{t-top('calendar-color')};
         --bs-calendar-hover-bg: #{t-top('calendar-hover-bg')};
         --bs-calendar-hover-color: #{t-top('calendar-hover-color')};
+        --bs-input-bg: #{t-top('input-bg')};
+        --bs-input-color: #{t-top('input-color')};
+        --bs-input-border-color: #{t-top('border-color')};
+        --bs-input-focus-bg: #{t-top('input-bg')};
+        --bs-input-focus-color: #{t-top('input-color')};
+        --bs-input-disabled-bg: #{t-top('input-disabled-bg')};
+        --bs-input-disabled-color: #{t-top('input-disabled-color')};
     }
 }
 footer {
@@ -484,6 +491,10 @@ hr {
     background-color: var(--bs-input-bg);
     color: var(--bs-input-color);
     border-color: var(--bs-input-border-color);
+    &:disabled {
+        background-color: var(--bs-input-disabled-bg);
+        color: var(--bs-input-disabled-color);
+    }
     &:focus {
         background-color: var(--bs-input-focus-bg);
         color: var(--bs-input-focus-color);

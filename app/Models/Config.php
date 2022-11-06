@@ -14,4 +14,14 @@ class Config extends Model
     {
         return $this->belongsTo('App\Models\User', 'job_update_by');
     }
+
+    public function invoice_job_states()
+    {
+        return $this->belongsTo('App\Models\Status', 'invoice_job_status');
+    }
+
+    public function invoice_job_status_invoices()
+    {
+        return $this->belongsTo('App\Models\Status', 'invoice_job_status_invoice');
+    }
 }

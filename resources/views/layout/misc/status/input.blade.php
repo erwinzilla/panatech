@@ -31,6 +31,14 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Disable Input<span class="text-danger">*</span></label>
+                        <select name="disable_input" class="form-select w-50">
+                            <option value="{{ NONE }}" {{ old('disable_input', $data->disable_input) == NONE ? 'selected' : '' }}>None</option>
+                            <option value="{{ PARTIAL }}" {{ old('disable_input', $data->disable_input) == PARTIAL ? 'selected' : '' }}>Partial</option>
+                            <option value="{{ FULL }}" {{ old('disable_input', $data->disable_input) == FULL ? 'selected' : '' }}>Full</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         @include('form.color')
                     </div>
                 </div>

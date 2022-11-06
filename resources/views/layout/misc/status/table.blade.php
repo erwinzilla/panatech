@@ -6,6 +6,7 @@
             @include('component.table.title', ['title' => '#', 'column' => 'id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => 'Name', 'column' => 'name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Color', 'column' => 'color', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Disable Input', 'column' => 'disable_input', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
                 @include('component.table.title', ['title' => 'Action', 'column' => 'action', 'sortable'=> false, 'class' => 'text-center align-middle'])
@@ -30,6 +31,17 @@
                     <td>{{ $row->name }}</td>
                     <td>
                         <span class="{{ getBadge($row->color) }}">{{ ucwords($row->color) }}</span>
+                    </td>
+                    <td>
+                        @if($row->disable_input == NONE)
+                            <span class="text-muted">None</span>
+                        @endif
+                        @if($row->disable_input == PARTIAL)
+                            <span class="text-primary">Partial</span>
+                        @endif
+                        @if($row->disable_input == FULL)
+                            <span class="text-success">Full</span>
+                        @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD)

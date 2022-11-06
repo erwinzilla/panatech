@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Job;
+use App\Models\JobPart;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +60,7 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($layout = 'input')
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
@@ -83,7 +86,7 @@ class InvoiceController extends Controller
             'config'            => self::config
         ];
 
-        return view(self::config['blade'].'.input', $params);
+        return view(self::config['blade'].'.'.$layout, $params);
     }
 
     /**
@@ -167,7 +170,7 @@ class InvoiceController extends Controller
 //        $customerType = CustomerType::find($id);
 
         if ($this->validateInput($request, $invoice->id)){
-            $hasil = $invoice->fill($request->all())->save();
+            $hasil = $invoice->fill($request->except(['target']))->save();
         }
 
         // add updated by
@@ -179,9 +182,20 @@ class InvoiceController extends Controller
             ]);
         }
 
+        if ($request->target == 'job') {
+            if ($invoice->paid) {
+                $job = Job::find($invoice->job);
+                $job->update([
+                    'status' => Config::all()->first()->invoice_job_status_invoice,
+                ]);
+            }
+        }
+
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $invoice->phone);
-
+        if ($request->target == 'job') {
+            return redirect('job/'.$invoice->job.'/edit')->with($params);
+        }
         return redirect(self::config['url'])->with($params);
     }
 
@@ -445,5 +459,80 @@ class InvoiceController extends Controller
                 return true;
             }
         }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function generateJob(Job $job)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        $invoice = Invoice::where('job', $job->id)->first();
+        $config = Config::all()->first();
+        if ($invoice || $job->status != $config->invoice_job_status) {
+            if ($invoice) {
+                $message = 'invoice sudah pernah dibuat';
+            }
+            if ($job->status != $config->invoice_job_status) {
+                $message = 'status harus complete terlebih dahulu';
+            }
+            // send result
+            $params = getStatus('error', 'job', $message);
+            return redirect('job/'.$job->id.'/edit')->with($params);
+        }
+
+        // generate invoice first
+        $invoice = Invoice::create([
+            'name'          => 'INV-JOB-'.str_pad(Invoice::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+            'job'           => $job->id,
+            'created_by'    => Auth::user()->id,
+        ]);
+
+        // generate invoice item
+        if ($invoice) {
+            // created labour
+            if ($job->labour && $job->labour > 0) {
+                InvoiceItem::create([
+                    'invoice'   => $invoice->id,
+                    'item'      => 'Labour',
+                    'desc'      => 'Repair',
+                    'price'     => $job->labour,
+                    'qty'       => 1,
+                    'disc'      => 0,
+                ]);
+            }
+            // created transport
+            if ($job->transport && $job->transport > 0) {
+                InvoiceItem::create([
+                    'invoice'   => $invoice->id,
+                    'item'      => 'Transport',
+                    'desc'      => 'Repair',
+                    'price'     => $job->transport,
+                    'qty'       => 1,
+                    'disc'      => 0,
+                ]);
+            }
+            // create job part
+            $job_parts = JobPart::where('job', $job->id)->get();
+            foreach ($job_parts as $row) {
+                InvoiceItem::create([
+                    'invoice'   => $invoice->id,
+                    'item'      => $row->sku,
+                    'desc'      => $row->name,
+                    'price'     => $row->price,
+                    'qty'       => $row->qty,
+                    'disc'      => 0,
+                ]);
+            }
+        }
+
+        // send result
+        $params = getStatus($invoice ? 'success' : 'error', 'create', self::config['name']);
+        return redirect('job/'.$job->id.'/edit')->with($params);
     }
 }

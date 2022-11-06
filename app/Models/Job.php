@@ -36,4 +36,16 @@ class Job extends Model
     public function customer_types() {
         return $this->belongsTo('App\Models\CustomerType', 'customer_type');
     }
+
+    public function getOnInvoiceAttribute()
+    {
+        $invoice = Invoice::where('job', $this->id)->first();
+        return $invoice ? true : false;
+    }
+
+    public function getInvoiceAttribute()
+    {
+        $invoice = Invoice::where('job', $this->id)->first();
+        return $invoice ? $invoice->name : null;
+    }
 }

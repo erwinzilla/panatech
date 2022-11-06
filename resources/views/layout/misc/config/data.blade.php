@@ -62,6 +62,33 @@
                                     @endif
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <b>Invoices</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Job Status Rules</td>
+                                <td>:</td>
+                                <td>
+                                    @if($data->first()->invoice_job_status)
+                                        <span class="{{ getBadge($data->first()->invoice_job_states->color) }}">{{ $data->first()->invoice_job_states->name }}</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Job Status Invoices</td>
+                                <td>:</td>
+                                <td>
+                                    @if($data->first()->invoice_job_status_invoice)
+                                        <span class="{{ getBadge($data->first()->invoice_job_status_invoices->color) }}">{{ $data->first()->invoice_job_status_invoices->name }}</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                            </tr>
                         </table>
                     @else
                         <div class="text-center">

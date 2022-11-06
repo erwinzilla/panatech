@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use App\Models\Customer;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,7 @@ class ConfigController extends Controller
         // penguraian data
         $params = [
             'data'              => $data,
+            'data_additional'   => Status::all(),
             'type'              => 'create',
             'title'             => 'Create '.self::config['name'],
             'config'            => self::config
@@ -118,6 +120,7 @@ class ConfigController extends Controller
         // penguraian data
         $params = [
             'data'              => $config,
+            'data_additional'   => Status::all(),
             'type'              => 'edit',
             'title'             => 'Edit '.self::config['name'],
             'config'            => self::config

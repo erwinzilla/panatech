@@ -73,22 +73,16 @@
                         <br><small class="d-inline-flex text-info mt-1">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</small>
                     </td>
                     <td>
-                        @if($row->invoice_name)
-                            <span class="text-nowrap">{{ $row->invoice_name }}</span>
-                            @if($row->quality_report)
-                                <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
-                            @endif
-                            @if($row->dealer_report)
-                                <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
-                            @endif
+                        @if($row->invoice)
+                            <span class="text-nowrap">{{ $row->invoice }}</span>
                         @else
                             <span class="text-muted">-</span>
-                            @if($row->quality_report)
-                                <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
-                            @endif
-                            @if($row->dealer_report)
-                                <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
-                            @endif
+                        @endif
+                        @if($row->quality_report)
+                            <br><span class="{{ getBadge('purple') }}">Quality Checked</span>
+                        @endif
+                        @if($row->dealer_report)
+                            <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
                         @endif
                     </td>
                     <td>

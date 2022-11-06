@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Config;
 use App\Models\CustomerType;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Job;
 use App\Models\JobPart;
 use App\Models\JobType;
@@ -106,6 +108,7 @@ class JobController extends Controller
             'ticket'            => $ticket ? $ticket->id : null,
             'ticket_name'       => $ticket ? $ticket->name : null,
             'created_at'        => Carbon::now(),
+            'on_invoice'        => false,
         ];
 
         $data = (object) $data;
@@ -206,6 +209,7 @@ class JobController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
 //        $warannty = Customer::find($id);
+        $invoice = Invoice::where('job', $job->id)->first();
 
         // penguraian data
         $params = [
@@ -215,6 +219,8 @@ class JobController extends Controller
                 'job_type'      => JobType::all(),
                 'customer_type' => CustomerType::all(),
                 'job_part'      => JobPart::where('job', $job->id)->get(),
+                'invoice'       => $invoice ?: null,
+                'invoice_item'  => $invoice ? InvoiceItem::where('invoice', $invoice->id)->get() : null,
             ],
             'type'              => 'edit',
             'title'             => 'Edit '.self::config['name'],

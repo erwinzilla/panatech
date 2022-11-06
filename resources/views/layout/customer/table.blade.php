@@ -59,7 +59,7 @@
                     <td>
                         <address class="mb-0">{{ $row->address ?: '-' }}</address>
                         @if($row->email)
-                            <br><a href="mailto:{{ $row->email }}">{{ $row->email }}</a>
+                            <a href="mailto:{{ $row->email }}">{{ $row->email }}</a>
                         @endif
                     </td>
                     @if($type == 'data' || $type == 'trash')

@@ -32,6 +32,11 @@ class StatusController extends Controller
         // olah data
         $parse  = $this->parseData(Status::select('*'), $request);
 
+        // ambil data untuk form
+        if ($parse['table']['type'] == 'form') {
+            return responseJson($parse['data']);
+        }
+
         // penguraian data
         $params = [
             'data'      => $parse['data']->paginate($parse['table']['perPage'])->appends($parse['table']),
@@ -56,9 +61,10 @@ class StatusController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         $data = [
-            'id'    => null,
-            'name'  => null,
-            'color' => 'primary',
+            'id'            => null,
+            'name'          => null,
+            'color'         => 'primary',
+            'disable_input' => NONE,
         ];
 
         $data = (object) $data;

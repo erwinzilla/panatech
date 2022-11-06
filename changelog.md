@@ -5,6 +5,13 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.1 **Fully Functionally Job Input**
+- Add states disable input
+- Add job invoice function
+- Add config for job invoice
+- Fix customer table
+- Fix some bugs
+
 1.17 **Invoice Function**
 - Add invoice CMV
 

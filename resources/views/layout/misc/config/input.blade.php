@@ -30,6 +30,33 @@
                         </div>
                         @enderror
                     </div>
+                    <h5 class="text-default fw-bold mt-3">Invoices</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Invoice Job Status</label>
+                        <select name="invoice_job_status" class="form-select w-50 @error('invoice_job_status') is-invalid @enderror">
+                            @foreach($data_additional as $row)
+                                <option value="{{ $row->id }}" {{ old('invoice_job_status', $data->invoice_job_status) == $row->id ? 'selected' : ''}}>{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('invoice_job_status')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Invoice Job Status Invoice</label>
+                        <select name="invoice_job_status_invoice" class="form-select w-50 @error('invoice_job_status_invoice') is-invalid @enderror">
+                            @foreach($data_additional as $row)
+                                <option value="{{ $row->id }}" {{ old('invoice_job_status', $data->invoice_job_status_invoice) == $row->id ? 'selected' : ''}}>{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('invoice_job_status_invoice')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">

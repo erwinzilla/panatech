@@ -9879,6 +9879,13 @@ body.light-theme {
   --bs-calendar-color: #000;
   --bs-calendar-hover-bg: #fff;
   --bs-calendar-hover-color: #434A54;
+  --bs-input-bg: #e9ecef;
+  --bs-input-color: #000;
+  --bs-input-border-color: #dbdbdb;
+  --bs-input-focus-bg: #e9ecef;
+  --bs-input-focus-color: #000;
+  --bs-input-disabled-bg: #E9ECF7;
+  --bs-input-disabled-color: #73837b;
 }
 body.dark-theme {
   --bs-body-bg: #171717;
@@ -9891,6 +9898,13 @@ body.dark-theme {
   --bs-calendar-color: #fff;
   --bs-calendar-hover-bg: #1a1a1a;
   --bs-calendar-hover-color: #838383;
+  --bs-input-bg: #1e1e1e;
+  --bs-input-color: #fff;
+  --bs-input-border-color: #282828;
+  --bs-input-focus-bg: #1e1e1e;
+  --bs-input-focus-color: #fff;
+  --bs-input-disabled-bg: #444444;
+  --bs-input-disabled-color: #73837b;
 }
 
 footer {
@@ -10148,6 +10162,10 @@ body.dark-theme .form-select {
   --bs-input-border-color: #282828;
   --bs-input-focus-bg: #1e1e1e;
   --bs-input-focus-color: #fff;
+}
+.form-select:disabled {
+  background-color: var(--bs-input-disabled-bg);
+  color: var(--bs-input-disabled-color);
 }
 .form-select:focus {
   background-color: var(--bs-input-focus-bg);
