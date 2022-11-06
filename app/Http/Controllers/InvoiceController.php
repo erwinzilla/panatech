@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -105,6 +106,7 @@ class InvoiceController extends Controller
             $hasil->update([
                 'created_by'    => Auth::user()->id,
                 'paid'          => $request->paid ? 1 : 0,
+                'paid_at'       => $request->paid ? Carbon::now() : null,
             ]);
         }
 
@@ -159,7 +161,28 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, Invoice $invoice)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+//        $customerType = CustomerType::find($id);
+
+        if ($this->validateInput($request, $invoice->id)){
+            $hasil = $invoice->fill($request->all())->save();
+        }
+
+        // add updated by
+        if ($hasil) {
+            $invoice->update([
+                'updated_by'    => Auth::user()->id,
+                'paid'          => $request->paid ? 1 : 0,
+                'paid_at'       => $request->paid ? Carbon::now() : null,
+            ]);
+        }
+
+        // send result
+        $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $invoice->phone);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     /**
@@ -170,7 +193,18 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        // update siapa yang menghapus
+        $invoice->update([
+            'deleted_by' => Auth::user()->id,
+        ]);
+
+        // send result
+        $params = getStatus($invoice->delete() ? 'success' : 'error', 'delete', self::config['name']);
+
+        return redirect(self::config['url'])->with($params);
     }
 
     public function trash(Request $request)
@@ -179,7 +213,7 @@ class InvoiceController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         // olah data
-        $parse  = $this->parseData(Customer::onlyTrashed()->select('customers.*'), $request);
+        $parse  = $this->parseData(Invoice::onlyTrashed()->select('invoices.*'), $request);
 
         // penguraian data
         $params = [
@@ -200,11 +234,11 @@ class InvoiceController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Invoice::onlyTrashed()
                 ->where('id', $id)
                 ->restore();
         } else {
-            $hasil = Customer::onlyTrashed()->restore();
+            $hasil = Invoice::onlyTrashed()->restore();
         }
 
         // send result
@@ -219,11 +253,11 @@ class InvoiceController extends Controller
         privilegeLevel(self::config['privilege'], ALL_ACCESS);
 
         if ($id != null){
-            $hasil = Customer::onlyTrashed()
+            $hasil = Invoice::onlyTrashed()
                 ->where('id', $id)
                 ->forceDelete();
         } else {
-            $hasil = Customer::onlyTrashed()->forceDelete();
+            $hasil = Invoice::onlyTrashed()->forceDelete();
         }
 
         // send result

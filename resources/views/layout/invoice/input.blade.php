@@ -23,7 +23,7 @@
                     <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">Name<span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control w-75 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nama / kode invoice" validate>
+                        <input type="text" name="name" class="form-control w-75 @error('name') is-invalid @enderror" value="{{ old('name', $data->name) }}" placeholder="Masukan nama / kode invoice" validate {{ $data->paid ? 'readonly' : '' }}>
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -32,7 +32,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tax Rate *%<span class="text-danger">*</span></label>
-                        <input type="number" name="tax_rate" class="form-control w-50 @error('tax_rate') is-invalid @enderror" value="{{ old('tax_rate', $data->tax_rate) }}" placeholder="Tax Rate" validate>
+                        <input type="number" name="tax_rate" class="form-control w-50 @error('tax_rate') is-invalid @enderror" value="{{ old('tax_rate', $data->tax_rate) }}" placeholder="Tax Rate" validate {{ $data->paid ? 'readonly' : '' }}>
                         @error('tax_rate')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -107,7 +107,7 @@
             </div>
         </div>
         <div class="col-md-12">
-            @include('layout.invoice.item.show', ['data' => $data_additional, 'id' => $data->id])
+            @include('layout.invoice.item.show', ['data' => $data_additional, 'id' => $data->id, 'paid' => $data->paid])
         </div>
     </div>
 

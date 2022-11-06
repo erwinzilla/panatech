@@ -5,12 +5,15 @@
 - Run Composer Install
 - Run Migrate
 
+1.17 **Invoice Function**
+- Add invoice CMV
+
 1.16 **Job Invoice Item Function And Some Fixes**
-- Add job invoice database
+- Add invoice database
 - Fix job part on job
 - Fix choose function
-- Add job invoice item database
-- Add job invoice item CMV
+- Add invoice item database
+- Add invoice item CMV
 
 1.15 **Job Part Function**
 - Add parts in job input

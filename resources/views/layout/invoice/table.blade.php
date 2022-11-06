@@ -20,7 +20,7 @@
         @if($data->total() == 0)
             <tr>
                 @php
-                    $colspan = 5;
+                    $colspan = 7;
                     if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada bagian untuk action button
                     }

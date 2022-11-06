@@ -5,7 +5,7 @@
                 <h6 class="text-default">Invoice Items</h6>
                 <small>Daftar Invoice</small>
             </div>
-            @if($type == 'edit')
+            @if($type == 'edit' && !$paid)
                 <button type="button" class="btn btn-primary align-self-center btn-input-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="invoice/item/create?invoice={{ $id }}">@svg('heroicon-s-plus','icon-sm me-2') Add Invoice Item</button>
             @endif
         </div>
@@ -23,7 +23,9 @@
                     <th>Total</th>
                     <th>Disc *%</th>
                     <th>Grand Total</th>
-                    <th class="text-center">Action</th>
+                    @if(!$paid)
+                        <th class="text-center">Action</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -39,16 +41,18 @@
                                 <td>{!! getPrice($row->total) !!}</td>
                                 <td>{{ $row->disc }}</td>
                                 <td>{!! getPrice($row->grand_total) !!}</td>
-                                <td class="text-center w-2-slot">
-                                    <div class="d-flex">
-                                        <button type="button" class="btn btn-warning btn-icon me-2 btn-input-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="invoice/item/{{ $row->id }}/edit">@svg('heroicon-s-pencil-square','icon-sm')</button>
-                                        <form id="delete-{{ $row->id }}" method="post" action="{{ url('invoice/item/'.$row->id) }}" onsubmit="confirm_delete({{ $row->id }});return false;" data-bs-toggle="tooltip" data-bs-title="Delete">
-                                            @method('delete')
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger btn-icon">@svg('heroicon-s-trash', 'icon-sm')</button>
-                                        </form>
-                                    </div>
-                                </td>
+                                @if(!$paid)
+                                    <td class="text-center w-2-slot">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-warning btn-icon me-2 btn-input-modal" data-bs-toggle="modal" data-bs-target="#table-modal" data-target="invoice/item/{{ $row->id }}/edit">@svg('heroicon-s-pencil-square','icon-sm')</button>
+                                            <form id="delete-{{ $row->id }}" method="post" action="{{ url('invoice/item/'.$row->id) }}" onsubmit="confirm_delete({{ $row->id }});return false;" data-bs-toggle="tooltip" data-bs-title="Delete">
+                                                @method('delete')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-icon">@svg('heroicon-s-trash', 'icon-sm')</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     @else
