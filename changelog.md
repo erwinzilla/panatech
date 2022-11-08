@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.4 **Fix job type (job input) JS**
+- Fix job type js (seriously!)
+
 1.17.3 **Fix Some Issues Again**
 - Fix menu bar invoice
 - Redesign ticket table

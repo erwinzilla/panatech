@@ -252,7 +252,7 @@ function initJobType(el, init = false) {
             if (!init) {
                 resetInput();
             }
-            if (obj.data.actual_date) {
+            if (obj.data.actual_date > 0) {
                 $('input[name="actual_start_at"]').setAttribute('readonly','');
                 $('input[name="actual_start_at_time"]').setAttribute('readonly','');
                 $('input[name="actual_end_at"]').setAttribute('readonly','');
@@ -260,7 +260,7 @@ function initJobType(el, init = false) {
                 $('input[name="transport"]').setAttribute('readonly','');
                 $('input[name="transport"]').value = 0;
             }
-            if (obj.data.transport) {
+            if (obj.data.transport > 0) {
                 $('input[name="transport"]').value = obj.data.transport;
             }
         }
