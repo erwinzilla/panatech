@@ -400,8 +400,8 @@ class InvoiceController extends Controller
         }
 
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: 'invoices.id';
-        $sort = $request->sort ?: 'desc';
+        $column = $request->column ?: 'invoices.paid';
+        $sort = $request->sort ?: 'asc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 
@@ -503,7 +503,7 @@ class InvoiceController extends Controller
                     'desc'      => 'Repair',
                     'price'     => $job->labour,
                     'qty'       => 1,
-                    'disc'      => 0,
+                    'disc'      => $job->warranty_type == IN_WARRANTY ? 100 : 0,
                 ]);
             }
             // created transport
@@ -514,7 +514,7 @@ class InvoiceController extends Controller
                     'desc'      => 'Repair',
                     'price'     => $job->transport,
                     'qty'       => 1,
-                    'disc'      => 0,
+                    'disc'      => $job->warranty_type == IN_WARRANTY ? 100 : 0,
                 ]);
             }
             // create job part
@@ -526,7 +526,7 @@ class InvoiceController extends Controller
                     'desc'      => $row->name,
                     'price'     => $row->price,
                     'qty'       => $row->qty,
-                    'disc'      => 0,
+                    'disc'      => $job->warranty_type == IN_WARRANTY ? 100 : 0,
                 ]);
             }
         }

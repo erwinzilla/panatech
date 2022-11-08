@@ -10,15 +10,15 @@
     </div>
 </div>
 <div class="table-container table-responsive">
-    <table class="table table-striped mb-0 data-table align-middle">
+    <table class="table table-striped mb-0 data-table align-top">
         <thead>
         <tr>
             @include('component.table.title', ['title' => '#', 'column' => 'tickets.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Created', 'column' => 'tickets.created_at', 'sortable' => true])
             @include('component.table.title', ['title' => 'Name', 'column' => 'tickets.type', 'sortable' => true])
             @include('component.table.title', ['title' => 'Customer', 'column' => 'tickets.customer_name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'tickets.model', 'sortable' => true])
             @include('component.table.title', ['title' => 'Service Info', 'column' => 'tickets.service_info', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Created', 'column' => 'tickets.created_at', 'sortable' => true])
             @include('component.table.title', ['title' => 'Status', 'column' => 'states.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
             @if(getUserLevel($config['privilege']) >= CAN_CRUD)
@@ -41,6 +41,9 @@
             @foreach($data as $key => $row)
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
+                    <td>
+                        <small>{{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                    </td>
                     <td>
                         {{ $row->name }}
                         @if($row->branch_service)
@@ -87,9 +90,6 @@
                         @if($row->note)
                             <br><span class="text-muted">{{ $row->note }}</span>
                         @endif
-                    </td>
-                    <td>
-                        <span class="d-inline-flex">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</span>
                     </td>
                     <td>
                         @if($row->status)

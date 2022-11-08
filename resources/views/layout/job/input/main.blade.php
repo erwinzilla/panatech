@@ -309,7 +309,7 @@
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" name="created_at_time" class="form-control" value="{{ date('h:i', strtotime(old('created_at', $data->created_at))) }}" placeholder="hh:mm">
+                                    <input type="text" name="created_at_time" class="form-control" value="{{ date('H:i', strtotime(old('created_at', $data->created_at))) }}" placeholder="hh:mm">
                                 </div>
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" name="repair_at_time" class="form-control" value="{{ date('h:i', strtotime(old('repair_at', $data->repair_at))) }}" placeholder="hh:mm">
+                                    <input type="text" name="repair_at_time" class="form-control" value="{{ date('H:i', strtotime(old('repair_at', $data->repair_at))) }}" placeholder="hh:mm">
                                 </div>
                             </div>
                         </div>
@@ -341,7 +341,7 @@
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" name="collection_at_time" class="form-control" value="{{ date('h:i', strtotime(old('collection_at', $data->collection_at))) }}" placeholder="hh:mm">
+                                    <input type="text" name="collection_at_time" class="form-control" value="{{ date('H:i', strtotime(old('collection_at', $data->collection_at))) }}" placeholder="hh:mm">
                                 </div>
                             </div>
                         </div>
@@ -359,7 +359,7 @@
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" name="actual_start_at_time" class="form-control" value="{{ date('h:i', strtotime(old('actual_start_at', $data->actual_start_at))) }}" placeholder="hh:mm">
+                                    <input type="text" name="actual_start_at_time" class="form-control" value="{{ date('H:i', strtotime(old('actual_start_at', $data->actual_start_at))) }}" placeholder="hh:mm">
                                 </div>
                             </div>
                         </div>
@@ -375,7 +375,7 @@
                                     @enderror
                                 </div>
                                 <div class="col">
-                                    <input type="text" name="actual_end_at_time" class="form-control" value="{{ date('h:i', strtotime(old('actual_end_at', $data->actual_end_at))) }}" placeholder="hh:mm">
+                                    <input type="text" name="actual_end_at_time" class="form-control" value="{{ date('H:i', strtotime(old('actual_end_at', $data->actual_end_at))) }}" placeholder="hh:mm">
                                 </div>
                             </div>
                         </div>

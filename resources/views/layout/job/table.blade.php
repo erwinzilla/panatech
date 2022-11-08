@@ -29,14 +29,15 @@
     </div>
 </div>
 <div class="table-container table-responsive">
-    <table class="table table-striped mb-0 data-table align-middle">
+    <table class="table table-striped mb-0 data-table align-top">
         <thead>
         <tr>
             @include('component.table.title', ['title' => '#', 'column' => 'jobs.id', 'sortable' => true, 'class' => 'text-center'])
+            @include('component.table.title', ['title' => 'Created', 'column' => 'jobs.created_at', 'sortable' => true])
             @include('component.table.title', ['title' => 'No. Job', 'column' => 'jobs.name', 'sortable' => true])
             @include('component.table.title', ['title' => 'No. Inv', 'column' => 'jobs.invoice_name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Customer', 'column' => 'jobs.customer_name', 'sortable' => true])
-            @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'jobs.model', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Product / Warranty', 'column' => 'jobs.model', 'sortable' => true, 'class' => 'text-nowrap'])
             @include('component.table.title', ['title' => 'Service Info', 'column' => 'jobs.service_info', 'sortable' => true])
             @include('component.table.title', ['title' => 'Status', 'column' => 'states.name', 'sortable' => true])
             {{-- Jika can CRUD maka munculkan tombol--}}
@@ -61,6 +62,9 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
+                        <small class="d-inline-flex">{{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                    </td>
+                    <td>
                         <span class="text-nowrap">
                             <a href="{{ url($config['url'].'/'.$row->id.'/edit') }}">{{ $row->name }}</a>
                         </span>
@@ -70,7 +74,6 @@
                         @if($row->branch_service)
                             <br><span class="{{ getBadge('primary') }}">{{ $row->branch_services->code }}</span>
                         @endif
-                        <br><small class="d-inline-flex text-info mt-1">@svg('heroicon-s-calendar-days', 'icon-sm me-1',['style' => 'margin-top:1px;']) {{ date('d/m/Y', strtotime($row->created_at)) }}</small>
                     </td>
                     <td>
                         @if($row->invoice)
@@ -122,9 +125,15 @@
                         @endif
                     </td>
                     <td>
-                        {{ $row->service_info }}
-                        @if($row->repair_info)
-                            <br><span class="text-success">{{ $row->repair_info }}</span>
+                        @if(strlen($row->service_info) > 30)
+                            <span class="text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->service_info }}">{{ substr_replace($row->service_info, '...', 30) }}</span>
+                        @else
+                            <span class="text-nowrap">{{ $row->service_info }}</span>
+                        @endif
+                        @if(strlen($row->repair_info) > 30)
+                            <br><small class="text-muted text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->repair_info }}">{{ substr_replace($row->repair_info, '...', 30) }}</small>
+                        @else
+                            <br><small class="text-muted text-nowrap">{{ $row->repair_info }}</small>
                         @endif
                     </td>
                     <td>

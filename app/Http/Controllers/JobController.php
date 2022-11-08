@@ -282,7 +282,7 @@ class JobController extends Controller
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $job->name);
 
-        return redirect(self::config['url'])->with($params);
+        return redirect(self::config['url'].'/'.$job->id.'/edit')->with($params);
     }
 
     /**
@@ -490,8 +490,8 @@ class JobController extends Controller
         }
 
         $perPage = $request->perPage ?: self::perPage;
-        $column = $request->column ?: 'jobs.id';
-        $sort = $request->sort ?: 'desc';
+        $column = $request->column ?: 'jobs.created_by';
+        $sort = $request->sort ?: 'asc';
         $target = $request->target ?: 'data';
         $type = $request->type ?: 'data';
 

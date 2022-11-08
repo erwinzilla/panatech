@@ -5,6 +5,16 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.2 **Fix Some Issues**
+- Fix redirect edit job
+- Fix css checkbox
+- Add invoice ref in table column
+- Add rules warranty type in, discount 100%
+- Sort invoice by paid unpaid
+- Redesign job table
+- Fix Job Type (maybe)
+- Fix date time in job
+
 1.17.1 **Fully Functionally Job Input**
 - Add states disable input
 - Add job invoice function

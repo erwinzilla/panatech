@@ -3124,29 +3124,29 @@ textarea.form-control-lg {
 .form-check {
   display: block;
   min-height: 1.35rem;
-  padding-left: 1.5em;
+  padding-left: 2em;
   margin-bottom: 0.125rem;
 }
 .form-check .form-check-input {
   float: left;
-  margin-left: -1.5em;
+  margin-left: -2em;
 }
 
 .form-check-reverse {
-  padding-right: 1.5em;
+  padding-right: 2em;
   padding-left: 0;
   text-align: right;
 }
 .form-check-reverse .form-check-input {
   float: right;
-  margin-right: -1.5em;
+  margin-right: -2em;
   margin-left: 0;
 }
 
 .form-check-input {
-  width: 1em;
-  height: 1em;
-  margin-top: 0.25em;
+  width: 1.5em;
+  height: 1.5em;
+  margin-top: 0em;
   vertical-align: top;
   background-color: #e9ecef;
   background-repeat: no-repeat;
@@ -3160,7 +3160,7 @@ textarea.form-control-lg {
           print-color-adjust: exact;
 }
 .form-check-input[type=checkbox] {
-  border-radius: 0.25em;
+  border-radius: 0.5em;
 }
 .form-check-input[type=radio] {
   border-radius: 50%;
@@ -10097,6 +10097,25 @@ body.dark-theme .dropdown-menu {
 
 .font-logo {
   font-family: "Righteous";
+}
+
+.form-check-input {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: var(--bs-input-bg);
+}
+.form-check-input:not(:focus) {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-input-border-color);
+}
+.form-check-input:focus {
+  border-color: #5D9CEC;
+}
+.form-check-input:checked {
+  background-color: #5D9CEC !important;
+}
+
+.form-check-label {
+  margin-top: 2px;
 }
 
 .form-control {

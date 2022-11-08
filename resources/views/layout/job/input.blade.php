@@ -292,9 +292,9 @@
 
                 // lanjut jika sukses mengirim data
                 if (obj.status === 'success') {
-                    if (!init) {
+                    // if (!init) {
                         resetInput();
-                    }
+                    // }
                     if (obj.data.actual_date) {
                         $('input[name="actual_start_at"]').setAttribute('readonly','');
                         $('input[name="actual_start_at_time"]').setAttribute('readonly','');
@@ -331,9 +331,9 @@
 
                 // lanjut jika sukses mengirim data
                 if (obj.status === 'success') {
-                    if (!init) {
+                    // if (!init) {
                         resetInput();
-                    }
+                    // }
                     // jika disable input PARTIAL and FULL
                     if (obj.data.disable_input > {{ NONE }}) {
                         $('input[name="flash-fill"]').setAttribute('readonly','');

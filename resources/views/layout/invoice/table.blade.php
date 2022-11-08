@@ -5,6 +5,7 @@
         <tr>
             @include('component.table.title', ['title' => '#', 'column' => 'invoices.id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => 'Name', 'column' => 'invoices.name', 'sortable' => true])
+            @include('component.table.title', ['title' => 'Ref', 'column' => 'jobs.name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Tax *%', 'column' => 'invoices.tax_rate', 'sortable' => true])
             @include('component.table.title', ['title' => 'Total Item', 'column' => 'invoices.items', 'sortable' => false])
             @include('component.table.title', ['title' => 'Grand Total', 'column' => 'invoices.grand_total', 'sortable' => false])
@@ -33,6 +34,11 @@
                     <td class="text-center text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
                         <span class="text-nowrap">{{ $row->name }}</span>
+                    </td>
+                    <td>
+                        @if($row->job)
+                            <span class="text-nowrap">{{ $row->jobs->name }}</span>
+                        @endif
                     </td>
                     <td>
                         <span>{{ $row->tax_rate }}</span>
