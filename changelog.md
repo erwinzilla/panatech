@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.3 **Fix Some Issues Again**
+- Fix menu bar invoice
+- Redesign ticket table
+- Reformat date
+- Fix job type js again (maybe)
+
 1.17.2 **Fix Some Issues**
 - Fix redirect edit job
 - Fix css checkbox

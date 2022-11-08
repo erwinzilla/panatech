@@ -45,7 +45,7 @@
                 @endif
                 @if(getUserLevel('jobs') >= ONLY_SEE)
                     <li class="nav-item dropdown me-2">
-                        <a href="{{ url('invoice') }}" class="nav-link {{ Request::segment(1) == 'ticket' ? 'active' : '' }}">Invoice</a>
+                        <a href="{{ url('invoice') }}" class="nav-link {{ Request::segment(1) == 'invoice' ? 'active' : '' }}">Invoice</a>
                     </li>
                 @endif
                 @if(getUserLevel('branches') >= ONLY_SEE)

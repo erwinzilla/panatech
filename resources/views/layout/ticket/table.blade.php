@@ -42,7 +42,7 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
-                        <small>{{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                        <small>{{ date('l, d/m/Y H:i', strtotime($row->created_at)) }}</small>
                     </td>
                     <td>
                         {{ $row->name }}
@@ -86,9 +86,15 @@
                         @endif
                     </td>
                     <td>
-                        {{ $row->service_info }}
-                        @if($row->note)
-                            <br><span class="text-muted">{{ $row->note }}</span>
+                        @if(strlen($row->service_info) > 30)
+                            <br><span class="text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->service_info }}">{{ substr_replace($row->service_info, '...', 30) }}</span>
+                        @else
+                            <br><span class="text-nowrap">{{ $row->service_info }}</span>
+                        @endif
+                        @if(strlen($row->note) > 30)
+                            <br><small class="text-muted text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->note }}">{{ substr_replace($row->note, '...', 30) }}</small>
+                        @else
+                            <br><small class="text-muted text-nowrap">{{ $row->note }}</small>
                         @endif
                     </td>
                     <td>

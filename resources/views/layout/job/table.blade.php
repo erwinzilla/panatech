@@ -62,7 +62,7 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
-                        <small class="d-inline-flex">{{ date('d/m/Y', strtotime($row->created_at)) }}</small>
+                        <small class="d-inline-flex">{{ date('l, d/m/Y H:i', strtotime($row->created_at)) }}</small>
                     </td>
                     <td>
                         <span class="text-nowrap">
