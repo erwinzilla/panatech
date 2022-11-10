@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Job;
 use App\Models\JobPart;
+use App\Models\Ticket;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -184,10 +185,19 @@ class InvoiceController extends Controller
 
         if ($request->target == 'job') {
             if ($invoice->paid) {
+                // update status job
                 $job = Job::find($invoice->job);
                 $job->update([
                     'status' => Config::all()->first()->invoice_job_status_invoice,
                 ]);
+
+                // update status ticket
+                if ($job->ticket) {
+                    $ticket = Ticket::find($job->ticket);
+                    $ticket->update([
+                        'status' => $job->status,
+                    ]);
+                }
             }
         }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -14,12 +16,15 @@ class HomeController extends Controller
     {
         $config = [
             'blade'     => self::blade_view,
-            'url'       => self::url_redirect
+            'url'       => self::url_redirect,
         ];
 
         // penguraian data
         $params = [
-            'config'    => $config
+            'config'    => $config,
+            'user'      => Auth::user(),
+            'title'     => 'Home',
+            'type'      => 'data',
         ];
 
         return view('layout.home.main', $params);

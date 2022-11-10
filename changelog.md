@@ -5,6 +5,14 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.6 **Target Homepage**
+- Add target homepage (on-process)
+
+1.17.5 **Fix Some Issues**
+- Fix update status invoice (job & ticket)
+- Set Autofocus part input
+- Redesign table job
+
 1.17.4 **Fix job type (job input) JS**
 - Fix job type js (seriously!)
 

@@ -23,7 +23,7 @@
                     <input type="hidden" name="id" value="{{ old('id', $data->id) }}">
                     <div class="mb-3">
                         <label class="form-label">SKU / Part No.<span class="text-danger">*</span></label>
-                        <input type="text" name="sku" class="form-control w-50 @error('sku') is-invalid @enderror" value="{{ old('sku', $data->sku) }}" placeholder="Masukan SKU / Nomor Kode Part" validate>
+                        <input type="text" name="sku" class="form-control w-50 @error('sku') is-invalid @enderror" value="{{ old('sku', $data->sku) }}" placeholder="Masukan SKU / Nomor Kode Part" autofocus validate>
                         @error('sku')
                         <div class="invalid-feedback">
                             {{ $message }}

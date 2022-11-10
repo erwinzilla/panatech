@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,6 +47,35 @@ class Job extends Model
     public function getInvoiceAttribute()
     {
         $invoice = Invoice::where('job', $this->id)->first();
+        return $invoice ? $invoice->id : null;
+    }
+
+    public function getInvoiceNameAttribute()
+    {
+        $invoice = Invoice::where('job', $this->id)->first();
         return $invoice ? $invoice->name : null;
+    }
+
+    public function getInvoicePaidAttribute()
+    {
+        $invoice = Invoice::where('job', $this->id)->first();
+        return $invoice ? $invoice->paid : null;
+    }
+
+    public function getDayAttribute()
+    {
+        // jika bench servis
+        if ($this->job_type == 1) {
+            $to = Carbon::parse($this->created_at);
+            $from = Carbon::parse($this->repair_at);
+        }
+
+        // jika home servis
+        if ($this->job_type == 2) {
+            $to = Carbon::parse($this->actual_start_at);
+            $from = Carbon::parse($this->repair_at);
+        }
+
+        return $to->diffInDays($from);
     }
 }

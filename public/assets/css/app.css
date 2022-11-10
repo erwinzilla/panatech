@@ -10203,6 +10203,12 @@ body.dark-theme .form-select {
   margin-top: -1px;
 }
 
+.icon-lg {
+  width: 5rem;
+  height: 5rem;
+  margin-top: -1px;
+}
+
 .input-group {
   border-radius: 0.7rem !important;
 }
@@ -10326,6 +10332,7 @@ body.light-theme .pagination {
   --bs-pagination-disabled-border-color: #dbdbdb;
   --bs-pagination-hover-bg: #dbdbdb;
   --bs-pagination-hover-border-color: #dbdbdb;
+  --bs-pagination-focus-bg: #dbdbdb;
 }
 body.dark-theme .pagination {
   --bs-pagination-bg: #1e1e1e;
@@ -10334,6 +10341,7 @@ body.dark-theme .pagination {
   --bs-pagination-disabled-border-color: #282828;
   --bs-pagination-hover-bg: #282828;
   --bs-pagination-hover-border-color: #282828;
+  --bs-pagination-focus-bg: #282828;
 }
 
 .profile-widget {

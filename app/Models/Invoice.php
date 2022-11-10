@@ -43,4 +43,15 @@ class Invoice extends Model
     {
         return InvoiceItem::where('invoice', $this->id)->count();
     }
+
+    public function getTotalNoDiscAttribute()
+    {
+        $sum = 0;
+        $data = InvoiceItem::where('invoice', $this->id)->get();
+        foreach ($data as $row) {
+            $sum += $row->total;
+        }
+
+        return $sum;
+    }
 }
