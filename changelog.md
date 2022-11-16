@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.18 **Branch Service Target Function**
+- Add branch service target database
+- Add branch service target CMV
+- Implementation to main page
+- Add more breadcrumb
+
 1.17.7 **Fix Some Issues**
 - Fix job input js
 

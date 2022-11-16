@@ -13,6 +13,9 @@
         <li class="nav-item mb-1">
             <a href="{{ url('branch/service') }}" class="nav-link">@svg('heroicon-o-building-storefront', 'icon') Service</a>
         </li>
+        <li class="nav-item mb-1">
+            <a href="{{ url('branch/service/target') }}" class="nav-link">@svg('heroicon-o-cursor-arrow-ripple', 'icon') Target</a>
+        </li>
         {{--            Jika all access maka munculkan element--}}
         @if(getUserLevel('branches') >= ALL_ACCESS)
             <li class="nav-item">

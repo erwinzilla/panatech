@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BranchServiceTarget;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,9 @@ class HomeController extends Controller
         $params = [
             'config'    => $config,
             'user'      => Auth::user(),
+            'data'      => [
+                'target' => BranchServiceTarget::where('branch_Service', Auth::user()->branch_service)->get()->first(),
+            ],
             'title'     => 'Home',
             'type'      => 'data',
         ];

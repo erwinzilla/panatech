@@ -37,7 +37,7 @@
             <table class="table w-100">
                 <tr>
                     <td class="text-muted">Target SABBR</td>
-                    <td class="text-end">4%</td>
+                    <td class="text-end">{{ $data['target'] ? $data['target']->sabbr_target.'%' : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
@@ -45,11 +45,11 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
-                    <td class="text-end">35%</td>
+                    <td class="text-end">{{ $data['target'] ? $data['target']->sabbr_div.'%' : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-primary">Result</td>
-                    <td class="text-end">- <span class="text-muted">/ 0.35</span></td>
+                    <td class="text-end">- <span class="text-muted">/ {{ $data['target'] ? $data['target']->sabbr_div / 100 : '-' }}</span></td>
                 </tr>
             </table>
         </div>
@@ -73,19 +73,19 @@
             <table class="table w-100">
                 <tr>
                     <td class="text-muted">Target</td>
-                    <td class="text-end">90%</td>
+                    <td class="text-end">{{ $data['target'] ? $data['target']->speed_repair_target.'%' : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
-                    <td class="text-end">{{ number_format(($user->speed_repair / $user->set_repair * 100) / 90, 2, ',', '.') }}</td>
+                    <td class="text-end">{{ $data['target'] ? number_format(($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target, 2, ',', '.') : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
-                    <td class="text-end">35%</td>
+                    <td class="text-end">{{ $data['target'] ? $data['target']->speed_repair_div.'%' : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-secondary">Result</td>
-                    <td class="text-end">{{ number_format((($user->speed_repair / $user->set_repair * 100) / 90) * 35 / 100, 2, ',', '.')  }} <span class="text-muted">/ 0.35</span></td>
+                    <td class="text-end">{{ $data['target'] ? number_format((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100, 2, ',', '.') : '-' }} <span class="text-muted">/ {{ $data['target']->speed_repair_div / 100 }}</span></td>
                 </tr>
             </table>
         </div>
@@ -109,19 +109,19 @@
             <table class="table w-100">
                 <tr>
                     <td class="text-muted">Target</td>
-                    <td class="text-end">{!! getPrice(getWorkingDay() * 300000, 'justify-content-end') !!}</td>
+                    <td class="text-end">{!! $data['target'] ? getPrice(getWorkingDay() * $data['target']->income_target, 'justify-content-end') : '-' !!}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
-                    <td class="text-end">{{ number_format($user->income / (getWorkingDay() * 300000) * 100, 2, ',', '.') }}%</td>
+                    <td class="text-end">{{ $data['target'] ? number_format($user->income / (getWorkingDay() * $data['target']->income_target) * 100, 2, ',', '.') : '-'}}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
-                    <td class="text-end">50%</td>
+                    <td class="text-end">{{ $data['target'] ? $data['target']->income_div.'%' : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-warning">Result</td>
-                    <td class="text-end">{{ number_format(($user->income / (getWorkingDay() * 300000) * 100) * .5 / 100, 2, ',', '.')  }} <span class="text-muted">/ 0.5</span></td>
+                    <td class="text-end">{{ $data['target'] ? number_format(($user->income / (getWorkingDay() * $data['target']->income_target) * 100) * ($data['target']->income_div / 100) / 100, 2, ',', '.') : '-' }} <span class="text-muted">/ {{ $data['target'] ? $data['target']->income_div / 100 : '-'}}</span></td>
                 </tr>
             </table>
         </div>

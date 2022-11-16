@@ -27,4 +27,9 @@ class BranchService extends Model
     {
         return $this->belongsTo('App\Models\BranchCoordinator', 'branch_coordinator');
     }
+
+    public function getHaveTargetAttribute()
+    {
+        return BranchServiceTarget::where('branch_service', $this->id)->get()->count();
+    }
 }

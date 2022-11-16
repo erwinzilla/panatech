@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserPrivilegeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BranchServiceTargetController;
 use App\Http\Controllers\BranchServiceController;
 use App\Http\Controllers\BranchCoordinatorController;
 use App\Http\Controllers\BranchController;
@@ -56,7 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('user/profile/{id}', [UserController::class, 'profile']);
     Route::post('user/validate/{id?}', [UserController::class, 'validateInput']);
 
-    // Branch Coordinator
+    // Branch Service Target
+    Route::get('branch/service/target/create/{branchService}', [BranchServiceTargetController::class, 'create']);
+    Route::post('branch/service/target/validate/{id?}', [BranchServiceTargetController::class, 'validateInput']);
+
+    // Branch Service
     Route::get('branch/service/trash', [BranchServiceController::class, 'trash']);
     Route::get('branch/service/restore/{id?}', [BranchServiceController::class, 'restore']);
     Route::get('branch/service/delete/{id?}', [BranchServiceController::class, 'delete']);
@@ -148,6 +153,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resources([
         'user/privilege'        => UserPrivilegeController::class,
         'user'                  => UserController::class,
+        'branch/service/target' => BranchServiceTargetController::class,
         'branch/service'        => BranchServiceController::class,
         'branch/coordinator'    => BranchCoordinatorController::class,
         'branch'                => BranchController::class,
