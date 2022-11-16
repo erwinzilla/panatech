@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.17.7 **Fix Some Issues**
+- Fix job input js
+
 1.17.6 **Target Homepage**
 - Add target homepage (on-process)
 

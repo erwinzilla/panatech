@@ -59,7 +59,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <span>Speed Repair</span>
-                            <h2 class="mb-0">{{ $user->speed_repair / $user->set_repair * 100 }}%</h2>
+                            <h2 class="mb-0">{{ number_format($user->speed_repair / $user->set_repair * 100, 2, ',','.') }}%</h2>
                             <a href="{{ url('job/create') }}" class="text-decoration-none text-white small">
                                 @svg('heroicon-s-arrow-right-circle', 'icon-sm') Add more job
                             </a>

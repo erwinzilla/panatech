@@ -4,7 +4,7 @@ const bsCollapse = new bootstrap.Collapse('#collapseIn', {
 
 let selectType = document.querySelector('select[name="warranty_type"]');
 selectType.addEventListener('change', function () {
-    if (selectType.value === 0) {
+    if (selectType.value == 1) {
         bsCollapse.show();
     } else {
         bsCollapse.hide();
@@ -75,7 +75,7 @@ inputFlashFill.addEventListener('change', function () {
                 $('input[name="warranty_no"]').value = obj.data.warranty_no;
                 $('input[name="purchase_date"]').value = new Date(obj.data.purchase_date).toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit', year: 'numeric'});
 
-                if (obj.data.warranty_type === 1) {
+                if (obj.data.warranty_type == 1) {
                     bsCollapse.show();
                 } else {
                     bsCollapse.hide();
@@ -172,7 +172,7 @@ if (!inputSerial.getAttribute('readonly')) {
                     $('input[name="warranty_no"]').value = obj.data.warranty_no;
                     $('input[name="purchase_date"]').value = new Date(obj.data.purchase_date).toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit', year: 'numeric'});
 
-                    if (obj.data.type === 1) {
+                    if (obj.data.type == 1) {
                         bsCollapse.show();
                     } else {
                         bsCollapse.hide();
