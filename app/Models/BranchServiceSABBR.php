@@ -26,7 +26,8 @@ class BranchServiceSABBR extends Model
     {
         $sabbr = $this->total / ($this->total + $this->set_total);
         $target = BranchServiceTarget::where('branch_service', $this->branch_service)->get()->first();
-        $result = $sabbr / ($target->sabbr_target / 100);
+        $result = ($target->sabbr_target / 100) / $sabbr;
+
         $sum = $result > $target->sabbr_max_result ? $target->sabbr_max_result : $result;
 
         return $sum;

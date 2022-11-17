@@ -27,7 +27,10 @@
                         <div class="col">
                             <span>Result This Month</span>
                             @php
-                                $total = ($data['sabbr']->rates * ($data['target']->sabbr_div / 100)) + ((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100) + (($user->income / (getWorkingDay() * $data['target']->income_target) * 100) * ($data['target']->income_div / 100) / 100)
+                                $sabbr = ($data['sabbr']->rates * ($data['target']->sabbr_div / 100));
+                                $speed_repair = ((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100);
+                                $income = (($user->income / (getWorkingDay() * $data['target']->income_target) * 100) * ($data['target']->income_div / 100) / 100);
+                                $total = $sabbr + $speed_repair + $income;
                             @endphp
                             <h3 class="fw-bold mb-0">{!! getPrice($total * $data['target']->incentive) !!}</h3>
                             <small>Total: {{ number_format($total, 2, ',','.') }}</small>
@@ -132,7 +135,7 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
-                    <td class="text-end">{{ $data['target'] ? number_format($user->income / (getWorkingDay() * $data['target']->income_target) * 100, 2, ',', '.') : '-'}}</td>
+                    <td class="text-end">{{ $data['target'] ? number_format($user->income / (getWorkingDay() * $data['target']->income_target), 2, ',', '.') : '-'}}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
