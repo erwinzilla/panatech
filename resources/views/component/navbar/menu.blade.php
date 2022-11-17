@@ -56,6 +56,7 @@
                             <li><a href="{{ url('branch/coordinator') }}" class="dropdown-item">@svg('heroicon-s-user-group', 'icon-sm me-1') Coordinator</a></li>
                             <li><a href="{{ url('branch/service') }}" class="dropdown-item">@svg('heroicon-s-building-storefront', 'icon-sm me-1') Service</a></li>
                             <li><a href="{{ url('branch/service/target') }}" class="dropdown-item">@svg('heroicon-s-cursor-arrow-ripple', 'icon-sm me-1') Target</a></li>
+                            <li><a href="{{ url('branch/service/sabbr') }}" class="dropdown-item">@svg('heroicon-s-chart-bar', 'icon-sm me-1') SABBR</a></li>
                         </ul>
                     </li>
                 @endif

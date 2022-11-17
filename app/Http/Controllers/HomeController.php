@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BranchServiceSABBR;
 use App\Models\BranchServiceTarget;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,7 +26,8 @@ class HomeController extends Controller
             'config'    => $config,
             'user'      => Auth::user(),
             'data'      => [
-                'target' => BranchServiceTarget::where('branch_Service', Auth::user()->branch_service)->get()->first(),
+                'target'    => BranchServiceTarget::where('branch_Service', Auth::user()->branch_service)->get()->first(),
+                'sabbr'     => BranchServiceSABBR::where('branch_Service', Auth::user()->branch_service)->get()->first(),
             ],
             'title'     => 'Home',
             'type'      => 'data',

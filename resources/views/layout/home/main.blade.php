@@ -17,8 +17,27 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12 mb-3">
             <div class="card bg-gradient-primary">
+                <div class="card-body text-white">
+                    <div class="row align-items-center">
+                        <div class="col-auto ms-3">
+                            @svg('heroicon-s-sparkles', 'icon-lg')
+                        </div>
+                        <div class="col">
+                            <span>Result This Month</span>
+                            @php
+                                $total = ($data['sabbr']->rates * ($data['target']->sabbr_div / 100)) + ((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100) + (($user->income / (getWorkingDay() * $data['target']->income_target) * 100) * ($data['target']->income_div / 100) / 100)
+                            @endphp
+                            <h3 class="fw-bold mb-0">{!! getPrice($total * $data['target']->incentive) !!}</h3>
+                            <small>Total: {{ number_format($total, 2, ',','.') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-gradient-secondary">
                 <div class="card-body text-white">
                     <div class="row align-items-center">
                         <div class="col">
@@ -41,7 +60,7 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
-                    <td class="text-end">-</td>
+                    <td class="text-end">{{ $data['sabbr'] ? number_format($data['sabbr']->rates, 2, ',', '.') : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
@@ -49,12 +68,12 @@
                 </tr>
                 <tr>
                     <td class="text-primary">Result</td>
-                    <td class="text-end">- <span class="text-muted">/ {{ $data['target'] ? $data['target']->sabbr_div / 100 : '-' }}</span></td>
+                    <td class="text-end">{{ $data['sabbr'] ? number_format($data['sabbr']->rates * ($data['target']->sabbr_div / 100), 2, ',', '.') : '-' }} <span class="text-muted">/ {{ $data['target'] ? $data['target']->sabbr_div / 100 : '-' }}</span></td>
                 </tr>
             </table>
         </div>
         <div class="col-md-4">
-            <div class="card bg-gradient-secondary">
+            <div class="card bg-gradient-warning">
                 <div class="card-body text-white">
                     <div class="row align-items-center">
                         <div class="col">
@@ -90,7 +109,7 @@
             </table>
         </div>
         <div class="col-md-4">
-            <div class="card bg-gradient-warning">
+            <div class="card bg-gradient-danger">
                 <div class="card-body text-white">
                     <div class="row align-items-center">
                         <div class="col">

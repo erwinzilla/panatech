@@ -32,4 +32,9 @@ class BranchService extends Model
     {
         return BranchServiceTarget::where('branch_service', $this->id)->get()->count();
     }
+
+    public function getHaveSABBRAttribute()
+    {
+        return BranchServiceSABBR::where('branch_service', $this->id)->get()->count();
+    }
 }

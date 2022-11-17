@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\BranchService;
-use App\Models\BranchServiceTarget;
+use App\Models\BranchServiceSABBR;
 use Illuminate\Http\Request;
 use Validator;
 
-class BranchServiceTargetController extends Controller
+class BranchServiceSABBRController extends Controller
 {
     // table
     const perPage = 10;
 
     // config
     const config = [
-        'blade'     => 'layout.branch.service.target',
-        'url'       => 'branch/service/target',
-        'name'      => 'branch service target',
+        'blade'     => 'layout.branch.service.sabbr',
+        'url'       => 'branch/service/sabbr',
+        'name'      => 'branch service SABBR',
         'privilege' => 'branches'
     ];
     /**
@@ -58,14 +58,10 @@ class BranchServiceTargetController extends Controller
         $data = [
             'branch_service'        => $branchService->id,
             'id'                    => null,
-            'income_target'         => null,
-            'income_div'            => null,
-            'speed_repair_target'   => null,
-            'speed_repair_div'      => null,
-            'sabbr_target'          => null,
-            'sabbr_div'             => null,
-            'sabbr_max_result'      => null,
-            'incentive'             => null,
+            'open'                  => null,
+            'repair'                => null,
+            'complete'              => null,
+            'set_total'             => null,
         ];
 
         $data = (object) $data;
@@ -93,7 +89,7 @@ class BranchServiceTargetController extends Controller
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
         if($this->validateInput($request)) {
-            $hasil = BranchServiceTarget::create($request->all());
+            $hasil = BranchServiceSABBR::create($request->all());
         }
 
         // send result
@@ -105,10 +101,10 @@ class BranchServiceTargetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\BranchServiceTarget  $branchServiceTarget
+     * @param  \App\Models\BranchServiceSABBR  $branchServiceSABBR
      * @return \Illuminate\Http\Response
      */
-    public function show(BranchServiceTarget $branchServiceTarget)
+    public function show(BranchServiceSABBR $branchServiceSABBR)
     {
         //
     }
@@ -116,15 +112,15 @@ class BranchServiceTargetController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\BranchServiceTarget  $branchServiceTarget
+     * @param  \App\Models\BranchServiceSABBR  $branchServiceSABBR
      * @return \Illuminate\Http\Response
      */
-    public function edit(BranchService $target)
+    public function edit(BranchService $sabbr)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $data = BranchServiceTarget::where('branch_service', $target->id)->get()->first();
+        $data = BranchServiceSABBR::where('branch_service', $sabbr->id)->get()->first();
 
         // penguraian data
         $params = [
@@ -141,18 +137,16 @@ class BranchServiceTargetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BranchServiceTarget  $branchServiceTarget
+     * @param  \App\Models\BranchServiceSABBR  $branchServiceSABBR
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BranchServiceTarget $target)
+    public function update(Request $request, BranchServiceSABBR $sabbr)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-//        $branchServiceTarget = BranchServiceTarget::where('branch_service', $target->id)->get()->first();
-
-        if ($this->validateInput($request, $target->id)){
-            $hasil = $target->fill($request->all())->save();
+        if ($this->validateInput($request, $sabbr->id)){
+            $hasil = $sabbr->fill($request->all())->save();
         }
 
         // send result
@@ -164,18 +158,18 @@ class BranchServiceTargetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BranchServiceTarget  $branchServiceTarget
+     * @param  \App\Models\BranchServiceSABBR  $branchServiceSABBR
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BranchService $target)
+    public function destroy(BranchService $sabbr)
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], CAN_CRUD);
 
-        $branchServiceTarget = BranchServiceTarget::where('branch_service', $target->id)->get()->first();
+        $branchServiceSABBR = BranchServiceSABBR::where('branch_service', $sabbr->id)->get()->first();
 
         // send result
-        $params = getStatus($branchServiceTarget->delete() ? 'success' : 'error', 'delete', self::config['name']);
+        $params = getStatus($branchServiceSABBR->delete() ? 'success' : 'error', 'delete', self::config['name']);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -259,33 +253,21 @@ class BranchServiceTargetController extends Controller
     {
         // validasi
         $rules = [
-            'income_target'                 => 'required|numeric',
-            'income_div'                    => 'required|numeric',
-            'speed_repair_target'           => 'required|numeric',
-            'speed_repair_div'              => 'required|numeric',
-            'sabbr_target'                  => 'required|numeric',
-            'sabbr_div'                     => 'required|numeric',
-            'sabbr_max_result'              => 'required|numeric',
-            'incentive'                     => 'required|numeric',
+            'open'                  => 'required|numeric',
+            'repair'                => 'required|numeric',
+            'complete'              => 'required|numeric',
+            'set_total'             => 'required|numeric',
         ];
 
         $messages = [
-            'income_target.required'        => 'Income target wajib diisi',
-            'income_target.numeric'         => 'Income target hanya berupa angka',
-            'income_div.required'           => 'Income dividen wajib diisi',
-            'income_div.numeric'            => 'Income dividen hanya berupa angka',
-            'speed_repair_target.required'  => 'Speed repair target wajib diisi',
-            'speed_repair_target.numeric'   => 'Speed repair target hanya berupa angka',
-            'speed_repair_div.required'     => 'Speed repair dividen wajib diisi',
-            'speed_repair_div.numeric'      => 'Speed repair dividen hanya berupa angka',
-            'sabbr_target.required'         => 'SABBR target wajib diisi',
-            'sabbr_target.numeric'          => 'SABBR target hanya berupa angka',
-            'sabbr_div.required'            => 'SABBR dividen wajib diisi',
-            'sabbr_div.numeric'             => 'SABBR dividen hanya berupa angka',
-            'sabbr_max_result.required'     => 'SABBR hasil maksimal wajib diisi',
-            'sabbr_max_result.numeric'      => 'SABBR hasil maksimal hanya berupa angka',
-            'incentive.required'            => 'Insentif wajib diisi',
-            'incentive.numeric'             => 'Insentif hanya berupa angka',
+            'open.required'         => 'Open set wajib diisi',
+            'open.numeric'          => 'Open set hanya berupa angka',
+            'repair.required'       => 'Repair set wajib diisi',
+            'repair.numeric'        => 'Repair set hanya berupa angka',
+            'complete.required'     => 'Complete set wajib diisi',
+            'complete.numeric'      => 'Complete set hanya berupa angka',
+            'set_total.required'    => 'Total set wajib diisi',
+            'set_total.numeric'     => 'Total set hanya berupa angka',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);

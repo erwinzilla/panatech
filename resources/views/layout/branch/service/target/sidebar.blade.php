@@ -14,7 +14,10 @@
             <a href="{{ url('branch/coordinator') }}" class="nav-link">@svg('heroicon-o-user-group', 'icon') Coordinator</a>
         </li>
         <li class="nav-item mb-1">
-            <a href="{{ url('branch/service') }}" class="nav-link">@svg('heroicon-o-building-storefront', 'icon') Target</a>
+            <a href="{{ url('branch/service') }}" class="nav-link">@svg('heroicon-o-building-storefront', 'icon') Service</a>
+        </li>
+        <li class="nav-item mb-1">
+            <a href="{{ url('branch/service/sabbr') }}" class="nav-link">@svg('heroicon-o-chart-bar', 'icon') SABBR</a>
         </li>
         {{--            Jika all access maka munculkan element--}}
         @if(getUserLevel($config['privilege']) >= ALL_ACCESS)
