@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.18.2 **Fix Some Issues**
+- Fix income attributte
+
 1.18.1 **Fix Income Mainpage**
 - Fix income mainpage
 

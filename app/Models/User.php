@@ -101,12 +101,14 @@ class User extends Authenticatable
 
         $sum = 0;
         foreach ($jobs as $row) {
-            $total = Invoice::where('job', $row->id)->get()->first()->total_income;
-            if ($total > 0) {
-                $sum += $total;
+            $invoices = Invoice::where('job', $row->id)->get();
+            foreach ($invoices as $row) {
+                if ($row->total_income > 0) {
+                    $sum += $row->total_income;
+                }
             }
         }
 
-        return $total;
+        return $sum;
     }
 }
