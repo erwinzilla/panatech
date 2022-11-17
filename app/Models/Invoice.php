@@ -44,10 +44,13 @@ class Invoice extends Model
         return InvoiceItem::where('invoice', $this->id)->count();
     }
 
-    public function getTotalNoDiscAttribute()
+    public function getTotalIncomeAttribute()
     {
         $sum = 0;
-        $data = InvoiceItem::where('invoice', $this->id)->get();
+        $data = InvoiceItem::where('invoice', $this->id)
+            ->where('desc', 'repair')
+            ->get();
+
         foreach ($data as $row) {
             $sum += $row->total;
         }

@@ -101,7 +101,7 @@ class User extends Authenticatable
 
         $sum = 0;
         foreach ($jobs as $row) {
-            $total = Invoice::where('job', $row->id)->get()->first()->total_no_disc;
+            $total = Invoice::where('job', $row->id)->get()->first()->total_income;
             if ($total > 0) {
                 $sum += $total;
             }
