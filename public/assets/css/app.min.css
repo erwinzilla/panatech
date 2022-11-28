@@ -10076,6 +10076,10 @@ body.dark-theme .content {
   border-radius: 0.7rem;
 }
 
+.dropdown-hover:hover .dropdown-menu {
+  display: block;
+}
+
 body.light-theme .dropdown-menu {
   --bs-dropdown-bg: #ffffff;
   --bs-dropdown-color: #000;

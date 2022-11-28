@@ -441,3 +441,19 @@ function resetInput() {
         $('input[name="transport"]').removeAttribute('readonly','');
     }
 }
+
+// let btnTab = $s('button[data-bs-toggle="tab"]');
+// if (btnTab) {
+//     btnTab.forEach((el) => {
+//         el.addEventListener('click', (e) => {
+//             localStorage.setItem('activeTab', e.target.dataset.bsTarget);
+//         })
+//     })
+// }
+let activeTab = window.location.hash;
+if (activeTab) {
+    const triggerEl = $(`button[data-bs-target="${activeTab}"]`);
+    if (triggerEl) {
+        bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+    }
+}

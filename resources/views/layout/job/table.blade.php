@@ -62,7 +62,7 @@
                 <tr>
                     <td class="ps-3 text-muted w-1-slot">{{ $table['column'] == 'id' && $table['sort'] == 'desc' ? $data->total() - ($data->firstItem() + $key) + 1 : $data->firstItem() + $key }}</td>
                     <td>
-                        <small class="d-inline-flex {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}">{{ date('l, d/m/Y H:i', strtotime($row->created_at)) }}</small>
+                        <small class="d-inline-flex {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }} {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ date('l, d/m/Y H:i', strtotime($row->created_at)) }}</small>
                         @if($row->quality_report)
                             <br><span class="{{ getBadge('secondary') }}">QC Pass</span>
                         @endif
@@ -71,9 +71,9 @@
                         @endif
                     </td>
                     <td>
-                        <span class="text-nowrap">
-                            <a href="{{ url($config['url'].'/'.$row->id.'/edit') }}">{{ $row->name }}</a>
-                        </span>
+                        <a href="{{ url($config['url'].'/'.$row->id.'/edit') }}" target="_blank" class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">
+                            <span>{{ $row->name }}</span>
+                        </a>
                         @if($row->ticket)
                             <br><small class="text-muted">{{ $row->tickets->name }}</small>
                         @endif
@@ -83,7 +83,7 @@
                     </td>
                     <td>
                         @if($row->invoice)
-                            <a href="{{ url('invoice/'.$row->invoice.'/edit') }}" class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}">
+                            <a href="{{ url('invoice/'.$row->invoice.'/edit') }}" class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">
                                 <span>{{ $row->invoice_name }}</span>
                             </a>
                             @if($row->invoice_paid)
@@ -94,8 +94,8 @@
                         @endif
                     </td>
                     <td>
-                        <span class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}">{{ $row->customer_name }}</span>
-                        <br><small>{{ $row->phone }}</small>
+                        <span class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->customer_name }}</span>
+                        <br><small class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->phone }}</small>
                         @if($row->phone2)
                             <br><small class="text-muted">{{ $row->phone2 }}</small>
                         @endif
@@ -115,7 +115,7 @@
                         @endif
                     </td>
                     <td>
-                        <span class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}">{{ $row->model }}</span>
+                        <span class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->model }}</span>
                         @if($row->serial)
                             <br><small class="text-muted">{{ $row->serial }}</small>
                         @endif
@@ -131,9 +131,9 @@
                     </td>
                     <td>
                         @if(strlen($row->service_info) > 30)
-                            <span class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->service_info }}">{{ substr_replace($row->service_info, '...', 30) }}</span>
+                            <span class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->service_info }}">{{ substr_replace($row->service_info, '...', 30) }}</span>
                         @else
-                            <span class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}">{{ $row->service_info }}</span>
+                            <span class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->service_info }}</span>
                         @endif
                         @if(strlen($row->repair_info) > 30)
                             <br><small class="text-muted text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->repair_info }}">{{ substr_replace($row->repair_info, '...', 30) }}</small>

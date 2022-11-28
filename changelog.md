@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.2 **Add Little Function**
+- Change quick sidebar
+- Dropdown hover
+- Add name to input job
+- Focus Tab on job desk
+
 1.19.1 **Fix Mainpage Target**
 - Fix mainpage target
 

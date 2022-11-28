@@ -204,7 +204,7 @@ class InvoiceController extends Controller
         // send result
         $params = getStatus($hasil ? 'success' : 'error', 'update', self::config['name'], $invoice->phone);
         if ($request->target == 'job') {
-            return redirect('job/'.$invoice->job.'/edit')->with($params);
+            return redirect('job/'.$invoice->job.'/edit#invoice-tab-pane')->with($params);
         }
         return redirect(self::config['url'])->with($params);
     }
@@ -493,7 +493,7 @@ class InvoiceController extends Controller
             }
             // send result
             $params = getStatus('error', 'job', $message);
-            return redirect('job/'.$job->id.'/edit')->with($params);
+            return redirect('job/'.$job->id.'/edit#invoice-tab-pane')->with($params);
         }
 
         // generate invoice first
@@ -543,6 +543,6 @@ class InvoiceController extends Controller
 
         // send result
         $params = getStatus($invoice ? 'success' : 'error', 'create', self::config['name']);
-        return redirect('job/'.$job->id.'/edit')->with($params);
+        return redirect('job/'.$job->id.'/edit#invoice-tab-pane')->with($params);
     }
 }

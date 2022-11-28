@@ -1,6 +1,6 @@
 @extends('layout.template')
 
-@section('title', ucwords($title))
+@section('title', $type == 'edit' ? $data->customer_name.' :: '.$data->name : 'Create Job Desk')
 
 @section('sidebar')
     @include($config['blade'].'.sidebar')
