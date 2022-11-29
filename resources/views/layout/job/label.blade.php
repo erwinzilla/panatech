@@ -30,6 +30,10 @@
             font-size: 6pt;
             border: 2px solid #000;
             width: 100%;
+            overflow: hidden;
+        }
+        .table {
+            white-space: nowrap;
         }
     </style>
 {{--    <link rel="stylesheet" href="{{ url('assets/css/app.min.css') }}">--}}

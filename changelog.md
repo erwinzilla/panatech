@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.4 **Fix Label Print**
+- Fix label print
+
 1.19.3 **Fix Ticket And Print Label**
 - Fix ticket service info column
 - Add quality label for job table
