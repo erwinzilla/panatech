@@ -132,6 +132,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('job/restore/{id?}', [JobController::class, 'restore']);
     Route::get('job/delete/{id?}', [JobController::class, 'delete']);
     Route::post('job/validate/{id?}', [JobController::class, 'validateInput']);
+    Route::get('job/generate/label', [JobController::class, 'generateQCLabel']);
 
     // Part
     Route::get('part/trash', [PartController::class, 'trash']);

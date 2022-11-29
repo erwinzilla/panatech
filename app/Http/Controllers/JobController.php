@@ -81,6 +81,7 @@ class JobController extends Controller
             'labour'            => null,
             'transport'         => null,
             'quality_report'    => null,
+            'quality_label'     => null,
             'dealer_report'     => null,
             'repair_at'         => Carbon::now(),
             'collection_at'     => Carbon::now(),
@@ -162,6 +163,7 @@ class JobController extends Controller
                 'actual_start_at'   => date('Y-m-d', strtotime($actual_start_at)).' '.$request->actual_start_at_time.':00',
                 'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
                 'quality_report'    => $request->quality_report ? 1 : 0,
+                'quality_label'     => $request->quality_label ? 1 : 0,
                 'dealer_report'     => $request->dealer_report ? 1 : 0,
                 'purchase_date'     => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
@@ -266,6 +268,7 @@ class JobController extends Controller
                 'actual_start_at'   => date('Y-m-d', strtotime($actual_start_at)).' '.$request->actual_start_at_time.':00',
                 'actual_end_at'     => date('Y-m-d', strtotime($actual_end_at)).' '.$request->actual_end_at_time.':00',
                 'quality_report'    => $request->quality_report ? 1 : 0,
+                'quality_label'     => $request->quality_label ? 1 : 0,
                 'dealer_report'     => $request->dealer_report ? 1 : 0,
                 'purchase_date'     => $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null,
             ]);
@@ -388,6 +391,7 @@ class JobController extends Controller
                 ->orWhere('jobs.labour', 'LIKE', '%'.$search.'%')
                 ->orWhere('jobs.transport', 'LIKE', '%'.$search.'%')
                 ->orWhere('jobs.quality_report', 'LIKE', '%'.$search.'%')
+                ->orWhere('jobs.quality_label', 'LIKE', '%'.$search.'%')
                 ->orWhere('jobs.dealer_report', 'LIKE', '%'.$search.'%')
                 ->orWhere('jobs.repair_at', 'LIKE', '%'.$search.'%')
                 ->orWhere('jobs.collection_at', 'LIKE', '%'.$search.'%')
@@ -567,5 +571,27 @@ class JobController extends Controller
                 return true;
             }
         }
+    }
+
+    public function generateQCLabel()
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
+
+
+        // penguraian data
+        $params = [
+            'data'              => Job::where('quality_label', false)
+                                    ->where('quality_report', true)
+                                    ->get(),
+//            'data_additional'   => Config::all(),
+//            'type'              => $parse['table']['type'],
+//            'title'             => $parse['table']['type'] != 'choose' ? self::config['name'] : $parse['table']['type'],
+//            'table'             => $parse['table'],
+//            'config'            => self::config
+        ];
+
+        // sesuaikan berdasarkan target
+        return view(self::config['blade'].'.label', $params);
     }
 }

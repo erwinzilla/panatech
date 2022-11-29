@@ -78,4 +78,10 @@ class Job extends Model
 
         return $to->diffInDays($from);
     }
+
+    public function getHavePartAttribute()
+    {
+        $part = JobPart::where('job', $this->id)->get()->count();
+        return $part > 0 ? true : false;
+    }
 }

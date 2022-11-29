@@ -89,7 +89,7 @@
                         @if(strlen($row->service_info) > 30)
                             <span class="text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->service_info }}">{{ substr_replace($row->service_info, '...', 30) }}</span>
                         @else
-                            <br><span class="text-nowrap">{{ $row->service_info }}</span>
+                            <span class="text-nowrap">{{ $row->service_info }}</span>
                         @endif
                         @if(strlen($row->note) > 30)
                             <br><small class="text-muted text-nowrap" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $row->note }}">{{ substr_replace($row->note, '...', 30) }}</small>

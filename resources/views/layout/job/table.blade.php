@@ -66,6 +66,9 @@
                         @if($row->quality_report)
                             <br><span class="{{ getBadge('secondary') }}">QC Pass</span>
                         @endif
+                        @if($row->quality_label)
+                            <br><span class="{{ getBadge('grey') }}">QC Label</span>
+                        @endif
                         @if($row->dealer_report)
                             <br><span class="{{ getBadge('blue') }}">Dealer Checked</span>
                         @endif

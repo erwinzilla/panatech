@@ -5,6 +5,11 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.3 **Fix Ticket And Print Label**
+- Fix ticket service info column
+- Add quality label for job table
+- Add label print
+
 1.19.2 **Add Little Function**
 - Change quick sidebar
 - Dropdown hover

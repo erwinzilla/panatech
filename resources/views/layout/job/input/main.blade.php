@@ -22,7 +22,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Job Type<span class="text-danger">*</span></label>
-                    <select name="job_type" class="form-select w-25 @error('job_type') is-invalid @enderror" {{ $data->on_invoice ? 'disabled' : '' }}>
+                    <select name="job_type" class="form-select w-25 bg-secondary @error('job_type') is-invalid @enderror" {{ $data->on_invoice ? 'disabled' : '' }}>
                         @foreach($data_additional['job_type'] as $row)
                             <option value="{{ $row->id }}" {{ $row->id == old('job_type', $data->job_type) ? 'selected' :'' }}>{{ $row->name }}</option>
                         @endforeach
@@ -427,6 +427,14 @@
                         <input name="quality_report" class="form-check-input" type="checkbox" value="1" id="checkboxQuality" {{ $data->quality_report ? 'checked' : ''}}>
                         <label class="form-check-label" for="checkboxQuality">
                             Quality Report
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input name="quality_label" class="form-check-input" type="checkbox" value="1" id="checkboxQualityLabel" {{ $data->quality_label ? 'checked' : ''}}>
+                        <label class="form-check-label" for="checkboxQualityLabel">
+                            Quality Label
                         </label>
                     </div>
                 </div>
