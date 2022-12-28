@@ -34,12 +34,12 @@
                     <td>
                         @if($row->customer)
                             <span>{{ ucwords($row->customers->name) }}</span>
-                            <br><span class="text-muted">{{ $row->customers->phone }}</span>
+                            <br><small class="text-muted">{{ $row->customers->phone }}</small>
                             @if($row->customers->phone2)
-                                <br><span class="text-muted">{{ $row->customers->phone2 }}</span>
+                                <br><small class="text-muted">{{ $row->customers->phone2 }}</small>
                             @endif
                             @if($row->customers->phone3)
-                                <br><span class="text-muted">{{ $row->customers->phone3 }}</span>
+                                <br><small class="text-muted">{{ $row->customers->phone3 }}</small>
                             @endif
                         @else
                             <span class="text-muted">-</span>
@@ -48,11 +48,11 @@
                     <td>
                         {{ $row->type == 0 ? 'Out' : 'In' }}
                     </td>
-                    <td>{{ $row->model }}</td>
-                    <td>{{ $row->serial }}</td>
+                    <td class="text-nowrap">{{ $row->model }}</td>
+                    <td class="text-nowrap">{{ $row->serial }}</td>
                     <td>
                         @if($row->warranty_no)
-                            <span>{{ $row->warranty_no }}</span>
+                            <span class="text-nowrap">{{ $row->warranty_no }}</span>
                         @else
                             <span class="text-muted">-</span>
                         @endif

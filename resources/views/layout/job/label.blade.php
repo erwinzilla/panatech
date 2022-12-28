@@ -7,6 +7,11 @@
     <title>Generate QC Label</title>
     @include('favicon')
     <style>
+        @media print {
+            .no-print {
+                visibility: hidden;
+            }
+        }
         body {
             font-family: 'Arial';
         }
@@ -36,10 +41,14 @@
             white-space: nowrap;
         }
     </style>
-{{--    <link rel="stylesheet" href="{{ url('assets/css/app.min.css') }}">--}}
+    <link rel="stylesheet" href="{{ url('assets/css/app.min.css') }}">
 </head>
 <body>
-{{--<button onClick="window.print()" style="margin-bottom: 1rem;">Print this page »</button>--}}
+<div class="card no-print rounded-0">
+    <div class="card-body">
+        <button id="btn-print" class="btn btn-primary">Print this page »</button>
+    </div>
+</div>
 @foreach($data as $row)
     @if($row->have_part)
         @php
@@ -151,5 +160,35 @@
     @endif
 @endforeach
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="{{ asset('assets/js/app.js') }}" url="{{ url('') }}"></script>
+
+<script>
+    window.addEventListener('afterprint', (e) => {
+        // kirim untuk mengubah data
+        let load_url = url('job/generate/process');
+        send_http(load_url, function (data) {
+            console.log(data);
+        }, 'get', null, false);
+    });
+
+    let btnPrint = $('#btn-print');
+    if (btnPrint) {
+        btnPrint.addEventListener('click', (e) => {
+            //show notification
+            alert.fire({
+                title: 'Print Label',
+                text: 'Data dibawah dianggap sudah dicetak dan akan hilang bila di refresh kembali',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Print',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.print();
+                }
+            })
+        })
+    }
+</script>
 </body>
 </html>

@@ -38,7 +38,7 @@
                         @if($row->branch)
                             {{ ucwords($row->branches->name) }}
                         @else
-                            -
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>{{ $row->name }}</td>
@@ -46,34 +46,49 @@
                         @if($row->branch_coordinator)
                             {{ ucwords($row->branch_coordinators->name) }}
                         @else
-                            -
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>{{ $row->code }}</td>
                     <td>
                         @if($row->user)
                             <span>{{ ucwords($row->users->name) }}</span>
-                            <br><small>{{ $row->users->phone }}</small>
+                            <br><small class="text-muted">{{ $row->users->phone }}</small>
                         @else
-                            -
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>
-                        <address>{{ $row->address ?: '-' }}</address>
+                        @if($row->address)
+                            <address class="mb-0">{{ $row->address }}</address>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                     </td>
                     <td>
-                        <span>{{ $row->phone ?: '-' }}</span>
+                        @if($row->phone)
+                            <span class="text-nowrap">{{ $row->phone }}</span>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                     </td>
                     <td>
-                        <span>{{ $row->fax ?: '-' }}</span>
+                        @if($row->fax)
+                            <span class="text-nowrap">{{ $row->fax }}</span>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                     </td>
                     <td>
-                        <span>
-                            {{ $row->email ?: '-' }}
-                            @if($row->user)
-                                <br>{{ $row->users->email }}
-                            @endif
-                        </span>
+                        @if(!$row->email && !$row->user)
+                            <span class="text-muted">-</span>
+                        @endif
+                        @if($row->email)
+                            <a href="mailto:{{ $row->email }}" target="_blank" class="text-nowrap">{{ $row->email }}</a><br>
+                        @endif
+                        @if($row->user)
+                            <a href="mailto:{{ $row->users->email }}" target="_blank" class="text-nowrap">{{ $row->users->email }}</a>
+                        @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}
                     @if(getUserLevel($config['privilege']) >= CAN_CRUD)

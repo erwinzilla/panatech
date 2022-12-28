@@ -1,7 +1,7 @@
 @include('component.table.header', ['perPage' => $table['perPage'], 'search' => $table['search']])
 <div class="d-flex w-100 justify-content-between px-3">
-    <div class="table-filter h-100">
-        <div class="dropdown">
+    <div class="table-filter d-flex h-100">
+        <div class="dropdown me-2">
             <button type="button" class="btn btn-info dropdown-toggle h-100" data-bs-toggle="dropdown" aria-expanded="false">@svg('heroicon-s-funnel', 'icon-sm me-1') Filter Data</button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=1&filter[]=2&filter[]=9&filter[]=10&target=table') }}">Only On-Handled Job</a></li>
@@ -9,6 +9,9 @@
                 <li><a class="dropdown-item" href="{{ url($config['url'].'?filter[]=9&filter[]=10&target=table') }}">Hide Invoice and Cancelled</a></li>
             </ul>
         </div>
+        <a href="{{ url('job/generate/label') }}" target="_blank" class="btn btn-icon btn-secondary" data-bs-toggle="tooltip" data-bs-title="Generate QC Label">
+            @svg('heroicon-s-printer', 'icon-sm')
+        </a>
     </div>
     <div class="table-update-date d-inline-flex w-50">
         <label class="align-self-center w-100 me-2 text-end">Last Update</label>
@@ -86,7 +89,7 @@
                     </td>
                     <td>
                         @if($row->invoice)
-                            <a href="{{ url('invoice/'.$row->invoice.'/edit') }}" class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">
+                            <a href="{{ url('invoice/'.$row->invoice.'/edit') }}" target="_blank" class="text-nowrap {{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">
                                 <span>{{ $row->invoice_name }}</span>
                             </a>
                             @if($row->invoice_paid)
@@ -98,7 +101,7 @@
                     </td>
                     <td>
                         <span class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->customer_name }}</span>
-                        <br><small class="{{ $row->quality_report ? 'text-secondary' : '' }} {{ $row->dealer_report ? 'text-primary' : '' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : '' }}">{{ $row->phone }}</small>
+                        <br><small class="{{ $row->quality_report ? 'text-secondary' : 'text-muted' }} {{ $row->dealer_report ? 'text-primary' : 'text-muted' }}  {{ $row->states->name == 'Cancelled' ? 'text-muted' : 'text-muted' }}">{{ $row->phone }}</small>
                         @if($row->phone2)
                             <br><small class="text-muted">{{ $row->phone2 }}</small>
                         @endif

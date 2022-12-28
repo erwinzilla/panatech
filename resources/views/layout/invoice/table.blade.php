@@ -2,7 +2,7 @@
 <div class="table-container table-responsive">
     <table class="table table-striped mb-0 data-table align-middle">
         <thead>
-        <tr>
+        <tr class="align-middle">
             @include('component.table.title', ['title' => '#', 'column' => 'invoices.id', 'sortable' => true, 'class' => 'text-center'])
             @include('component.table.title', ['title' => 'Name', 'column' => 'invoices.name', 'sortable' => true])
             @include('component.table.title', ['title' => 'Ref', 'column' => 'jobs.name', 'sortable' => true])
@@ -21,7 +21,7 @@
         @if($data->total() == 0)
             <tr>
                 @php
-                    $colspan = 7;
+                    $colspan = 8;
                     if (getUserLevel($config['privilege']) >= CAN_CRUD) {
                         $colspan += 1; // ada bagian untuk action button
                     }

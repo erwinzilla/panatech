@@ -33,14 +33,14 @@
                         @if($row->user)
                             <span>{{ $row->users->name }}</span>
                         @else
-                            <span>-</span>
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     <td>
                         @if($row->user)
                             <span class="{{ getBadge($row->users->privileges->color) }}">{{ $row->users->privileges->name }}</span>
                         @else
-                            <span>-</span>
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}

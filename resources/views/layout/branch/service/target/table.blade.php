@@ -35,7 +35,7 @@
                             <span>{{ ucwords($row->users->name) }}</span>
                             <br><small class="text-muted">{{ $row->users->phone }}</small>
                         @else
-                            -
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                     {{--                                    Jika can CRUD maka munculkan tombol--}}

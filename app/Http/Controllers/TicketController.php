@@ -72,7 +72,7 @@ class TicketController extends Controller
 
         $data = [
             'id'            => null,
-            'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+            'name'          => 'PT-'.date('ym').'-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'service_info'  => null,
             'note'          => null,
             'status'        => null,

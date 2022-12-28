@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Config;
+use App\Models\Customer;
 use App\Models\CustomerType;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -11,7 +12,9 @@ use App\Models\JobPart;
 use App\Models\JobType;
 use App\Models\Status;
 use App\Models\Ticket;
+use App\Models\Warranty;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -110,6 +113,7 @@ class JobController extends Controller
             'ticket_name'       => $ticket ? $ticket->name : null,
             'created_at'        => Carbon::now(),
             'on_invoice'        => false,
+            'invoice_paid'      => false,
         ];
 
         $data = (object) $data;
@@ -175,6 +179,27 @@ class JobController extends Controller
             $ticket->update([
                 'status' => $hasil->status,
             ]);
+        }
+
+        // get or create customer
+        $customer_id = $this->getOrCreateCustomer($hasil);
+
+        // create warranty
+        $warranties = Warranty::where('serial')->get();
+        if ($warranties->count() <= 0 && $customer_id) {
+            // tambah data
+            $warranty = new Warranty([
+                'model'         => $hasil->model,
+                'serial'        => $hasil->serial,
+                'warranty_no'   => $hasil->warranty_no,
+                'purchase_date' => $hasil->purchase_date,
+                'type'          => $hasil->warranty_type,
+                'customer'      => $customer_id,
+                'created_by'    => Auth::user()->id,
+            ]);
+
+            // save
+            $warranty->save();
         }
 
         // send result
@@ -578,11 +603,13 @@ class JobController extends Controller
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
 
+        $config = Config::all()->first();
 
         // penguraian data
         $params = [
             'data'              => Job::where('quality_label', false)
                                     ->where('quality_report', true)
+                                    ->where('status', $config->invoice_job_status_invoice)
                                     ->get(),
 //            'data_additional'   => Config::all(),
 //            'type'              => $parse['table']['type'],
@@ -593,5 +620,58 @@ class JobController extends Controller
 
         // sesuaikan berdasarkan target
         return view(self::config['blade'].'.label', $params);
+    }
+
+    public function generateQCProcess(Request $request)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], ONLY_SEE);
+
+        $config = Config::all()->first();
+
+        $jobs = Job::where('quality_label', false)
+            ->where('quality_report', true)
+            ->where('status', $config->invoice_job_status_invoice)
+            ->get();
+
+        foreach ($jobs as $row) {
+            $job = Job::find($row->id);
+            $job->update([
+                'quality_label' => true,
+            ]);
+        }
+
+        // sesuaikan berdasarkan target
+        return $jobs ? 'success' : 'error';
+    }
+
+    public function getOrCreateCustomer($hasil)
+    {
+        // find customer
+        $customers = Customer::where('phone', $hasil->phone)->get();
+
+        if ($customers->count() <= 0) {
+            // tambah data
+            $customer = new Customer([
+                'name'          => $hasil->customer_name,
+                'phone'         => $hasil->phone,
+                'phone2'        => $hasil->phone2,
+                'phone3'        => $hasil->phone3,
+                'address'       => $hasil->address,
+                'email'         => $hasil->email,
+                'type'          => $hasil->customer_type,
+                'tax_id'        => $hasil->tax_id,
+                'created_by'    => Auth::user()->id,
+            ]);
+
+            // save
+            $customer->save();
+            $customer_id = $customer->id;
+        } else {
+            // dapatkan id konsumen pertama
+            $customer_id = $customers->first()->id;
+        }
+
+        return $customer_id;
     }
 }

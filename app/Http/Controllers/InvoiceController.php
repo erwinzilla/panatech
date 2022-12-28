@@ -498,7 +498,7 @@ class InvoiceController extends Controller
 
         // generate invoice first
         $invoice = Invoice::create([
-            'name'          => 'INV-JOB-'.str_pad(Invoice::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+            'name'          => 'INV-JOB-'.date('ym').'-'.str_pad(Invoice::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'job'           => $job->id,
             'created_by'    => Auth::user()->id,
         ]);

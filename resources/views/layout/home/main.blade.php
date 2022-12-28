@@ -28,7 +28,8 @@
                             <span>Result This Month</span>
                             @php
                                 $sabbr = ($data['sabbr']->rates * ($data['target']->sabbr_div / 100));
-                                $speed_repair = ((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100);
+                                $set_repair = $user->set_repair ? $user->set_repair : 1;
+                                $speed_repair = ((($user->speed_repair / $set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100);
                                 $income = (($user->income / (getWorkingDay() * $data['target']->income_target) * 100) * ($data['target']->income_div / 100) / 100);
                                 $total = $sabbr + $speed_repair + $income;
                             @endphp
@@ -81,7 +82,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <span>Speed Repair</span>
-                            <h2 class="mb-0">{{ number_format($user->speed_repair / $user->set_repair * 100, 2, ',','.') }}%</h2>
+                            <h2 class="mb-0">{{ number_format($user->speed_repair / $set_repair * 100, 2, ',','.') }}%</h2>
                             <a href="{{ url('job/create') }}" class="text-decoration-none text-white small">
                                 @svg('heroicon-s-arrow-right-circle', 'icon-sm') Add more job
                             </a>
@@ -99,7 +100,7 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Target Rates</td>
-                    <td class="text-end">{{ $data['target'] ? number_format(($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target, 2, ',', '.') : '-' }}</td>
+                    <td class="text-end">{{ $data['target'] ? number_format(($user->speed_repair / $set_repair * 100) / $data['target']->speed_repair_target, 2, ',', '.') : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Div</td>
@@ -107,7 +108,7 @@
                 </tr>
                 <tr>
                     <td class="text-secondary">Result</td>
-                    <td class="text-end">{{ $data['target'] ? number_format((($user->speed_repair / $user->set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100, 2, ',', '.') : '-' }} <span class="text-muted">/ {{ $data['target']->speed_repair_div / 100 }}</span></td>
+                    <td class="text-end">{{ $data['target'] ? number_format((($user->speed_repair / $set_repair * 100) / $data['target']->speed_repair_target) * $data['target']->speed_repair_div / 100, 2, ',', '.') : '-' }} <span class="text-muted">/ {{ $data['target']->speed_repair_div / 100 }}</span></td>
                 </tr>
             </table>
         </div>

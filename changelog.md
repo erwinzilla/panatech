@@ -5,6 +5,13 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.5 **Add And Fix Some Function**
+- Completely add print label
+- Create customer and warannty on job creation
+- Fix invoice table
+- Redesign quick sidebar
+- Fix Branch Module Table
+
 1.19.4 **Fix Label Print**
 - Fix label print
 

@@ -44,7 +44,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Job Status<span class="text-danger">*</span></label>
-                    <select name="status" class="form-select w-25 @error('status') is-invalid @enderror" {{ $data->on_invoice ? 'disabled' : '' }}>
+                    <select name="status" class="form-select w-25 @error('status') is-invalid @enderror" {{ $data->invoice_paid ? 'disabled' : '' }}>
                         @foreach($data_additional['status'] as $row)
                             @if($row->disable_input > NONE && $type == 'create')
 {{--                                jangan di render --}}
