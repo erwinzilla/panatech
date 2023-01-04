@@ -72,7 +72,7 @@ class TicketController extends Controller
 
         $data = [
             'id'            => null,
-            'name'          => 'PT-'.date('ym').'-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+            'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
             'service_info'  => null,
             'note'          => null,
             'status'        => null,
@@ -410,5 +410,51 @@ class TicketController extends Controller
                 return true;
             }
         }
+    }
+
+    public function generate()
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        $data = [
+            'name'          => 'PT-'.str_pad(Ticket::withTrashed()->get()->count() + 1, 6, '0', STR_PAD_LEFT),
+        ];
+
+        $data = (object) $data;
+
+        // penguraian data
+        $params = [
+            'data'              => $data,
+            'type'              => 'generate',
+            'title'             => 'Generate '.self::config['name'],
+            'config'            => self::config
+        ];
+
+        return view(self::config['blade'].'.generate', $params);
+    }
+
+    public function generateProcess($name)
+    {
+        // cek privilege
+        privilegeLevel(self::config['privilege'], CAN_CRUD);
+
+        $ticket = Ticket::where('name', $name)->first();
+        if (!$ticket) {
+            $ticket = new Ticket();
+            $ticket->create([
+                'name'          => $name,
+                'service_info'  => 'Book Ticket',
+                'customer_name' => 'Book',
+                'phone'         => '0878',
+                'address'       => 'Book',
+                'model'         => 'Book'
+            ]);
+        }
+
+        // send result
+        $params = getStatus($ticket ? 'success' : 'error', 'generate', self::config['name']);
+
+        return redirect(self::config['url'].'/generate')->with($params);
     }
 }

@@ -14,7 +14,6 @@ use App\Models\Status;
 use App\Models\Ticket;
 use App\Models\Warranty;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -182,28 +181,56 @@ class JobController extends Controller
         }
 
         // get or create customer
-        $customer_id = $this->getOrCreateCustomer($hasil);
+        $cust = $request->only([
+            'customer_name',
+            'phone',
+            'phone2',
+            'phone3',
+            'address',
+            'email',
+            'customer_type',
+            'tax_id',
+        ]);
+
+        // ubah array name
+        $cust['name'] = $cust['customer_name'];
+        unset($cust['customer_name']);
+
+        // ubah array name
+        $cust['type'] = $cust['customer_type'];
+        unset($cust['customer_type']);
+
+        // tambah user baru
+        $customer = new Customer;
+        $customer = $customer->findOrCreate($cust);
 
         // create warranty
-        $warranties = Warranty::where('serial')->get();
-        if ($warranties->count() <= 0 && $customer_id) {
-            // tambah data
-            $warranty = new Warranty([
-                'model'         => $hasil->model,
-                'serial'        => $hasil->serial,
-                'warranty_no'   => $hasil->warranty_no,
-                'purchase_date' => $hasil->purchase_date,
-                'type'          => $hasil->warranty_type,
-                'customer'      => $customer_id,
-                'created_by'    => Auth::user()->id,
+        if ($customer) {
+            // get or create warranty
+            $warr = $request->only([
+                'model',
+                'serial',
+                'warranty_no',
+                'purchase_date',
+                'warranty_type',
+                'email',
+                'customer_type',
             ]);
 
-            // save
-            $warranty->save();
+            // ubah array name
+            $warr['type'] = $warr['warranty_type'];
+            unset($warr['warranty_type']);
+
+            // menambahkan konsumen
+            $warr['customer'] = $customer->id;
+
+            // tambah user baru
+            $warranty = new Warranty();
+            $warranty = $warranty->findOrCreate($warr);
         }
 
         // send result
-        $params = getStatus($hasil ? 'success' : 'error', 'create', self::config['name'], $hasil->name);
+        $params = getStatus($hasil && $customer && $warranty ? 'success' : 'error', 'create', self::config['name'], $hasil->name);
 
         return redirect(self::config['url'])->with($params);
     }
@@ -643,35 +670,5 @@ class JobController extends Controller
 
         // sesuaikan berdasarkan target
         return $jobs ? 'success' : 'error';
-    }
-
-    public function getOrCreateCustomer($hasil)
-    {
-        // find customer
-        $customers = Customer::where('phone', $hasil->phone)->get();
-
-        if ($customers->count() <= 0) {
-            // tambah data
-            $customer = new Customer([
-                'name'          => $hasil->customer_name,
-                'phone'         => $hasil->phone,
-                'phone2'        => $hasil->phone2,
-                'phone3'        => $hasil->phone3,
-                'address'       => $hasil->address,
-                'email'         => $hasil->email,
-                'type'          => $hasil->customer_type,
-                'tax_id'        => $hasil->tax_id,
-                'created_by'    => Auth::user()->id,
-            ]);
-
-            // save
-            $customer->save();
-            $customer_id = $customer->id;
-        } else {
-            // dapatkan id konsumen pertama
-            $customer_id = $customers->first()->id;
-        }
-
-        return $customer_id;
     }
 }

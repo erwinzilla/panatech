@@ -13,13 +13,13 @@
             }
         }
         body {
-            font-family: 'Arial';
+            font-family: 'Arial' !important;
         }
-        .container {
+        .p-container {
             display: flex;
             margin-bottom: 1rem;
         }
-        .row {
+        .p-row {
             display: flex;
             min-width: 85mm;
             max-width: 85mm;
@@ -28,16 +28,16 @@
             border: 1px dashed red;
             margin-right: 1rem;
         }
-        .col {
+        .p-col {
             padding: 2mm;
         }
-        .col-desc {
-            font-size: 6pt;
+        .p-col-desc {
+            font-size: 5pt;
             border: 2px solid #000;
             width: 100%;
             overflow: hidden;
         }
-        .table {
+        .p-table {
             white-space: nowrap;
         }
     </style>
@@ -64,13 +64,13 @@
                     'NOTA SERVICE : '.$row->name.PHP_EOL
                     ;
         @endphp
-        <div class="container">
-            <div class="row">
-                <div class="col">
+        <div class="p-container">
+            <div class="p-row">
+                <div class="p-col">
                     {!! QrCode::size(80)->generate($text); !!}
                 </div>
-                <div class="col-desc">
-                    <table class="table">
+                <div class="p-col-desc">
+                    <table class="p-table">
                         <tr>
                             <td>Service Center</td>
                             <td>:</td>
@@ -109,12 +109,12 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
+            <div class="p-row">
+                <div class="p-col">
                     {!! QrCode::size(80)->generate($text); !!}
                 </div>
-                <div class="col-desc">
-                    <table class="table">
+                <div class="p-col-desc">
+                    <table class="p-table">
                         <tr>
                             <td>Service Center</td>
                             <td>:</td>

@@ -16,4 +16,13 @@ class Warranty extends Model
     public function customers() {
         return $this->belongsTo('App\Models\Customer', 'customer');
     }
+
+    function findOrCreate($data) {
+        $record = Model::where('serial', $data['serial'])->first();
+        if ($record) {
+            return $record;
+        } else {
+            return Model::create($data);
+        }
+    }
 }

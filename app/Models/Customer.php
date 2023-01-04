@@ -17,4 +17,13 @@ class Customer extends Model
     {
         return $this->belongsTo('App\Models\CustomerType', 'type');
     }
+
+    function findOrCreate($data) {
+        $record = Model::where('phone', $data['phone'])->first();
+        if ($record) {
+            return $record;
+        } else {
+            return Model::create($data);
+        }
+    }
 }

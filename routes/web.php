@@ -109,6 +109,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ticket/restore/{id?}', [TicketController::class, 'restore']);
     Route::get('ticket/delete/{id?}', [TicketController::class, 'delete']);
     Route::post('ticket/validate/{id?}', [TicketController::class, 'validateInput']);
+    Route::get('ticket/generate', [TicketController::class, 'generate']);
+    Route::get('ticket/generateProcess/{name}', [TicketController::class, 'generateProcess']);
 
     // Ticket
     Route::get('status/trash', [StatusController::class, 'trash']);

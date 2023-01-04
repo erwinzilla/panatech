@@ -5,6 +5,12 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.6 **Fix And Create Some Function**
+- Fix print position
+- Create function FindOrCreate Model
+- Fix Job Function
+- Generate Book Ticket
+
 1.19.5 **Add And Fix Some Function**
 - Completely add print label
 - Create customer and warannty on job creation
