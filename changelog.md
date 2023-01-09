@@ -5,6 +5,11 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.7 **Fix Some Issues**
+- Fix FindOrCreate warranty on job store
+- Fix QC Label color
+- Recolor location sparepart table
+
 1.19.6 **Fix And Create Some Function**
 - Fix print position
 - Create function FindOrCreate Model

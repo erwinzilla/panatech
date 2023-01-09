@@ -46,7 +46,7 @@
 <body>
 <div class="card no-print rounded-0">
     <div class="card-body">
-        <button id="btn-print" class="btn btn-primary">Print this page »</button>
+        <button id="btn-print" class="btn btn-primary me-3">Print this page »</button><small>Jika halaman tidak muncul silahkan gunakan <span class="badge bg-gray">Ctrl + P</span></small>
     </div>
 </div>
 @foreach($data as $row)

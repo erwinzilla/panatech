@@ -43,7 +43,7 @@
                     </td>
                     <td>
                         @if($row->loc)
-                            <span>{{ $row->loc }}</span>
+                            <span class="text-muted">{{ $row->loc }}</span>
                         @else
                             <span class="text-muted">-</span>
                         @endif
