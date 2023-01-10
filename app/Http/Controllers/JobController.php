@@ -213,7 +213,6 @@ class JobController extends Controller
                 'warranty_no',
                 'purchase_date',
                 'warranty_type',
-                'customer_type',
             ]);
 
             // ubah array name

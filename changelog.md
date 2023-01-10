@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.8 **Fix Issues**
+- Fix FindOrCreate warranty on job store
+
 1.19.7 **Fix Some Issues**
 - Fix FindOrCreate warranty on job store
 - Fix QC Label color
