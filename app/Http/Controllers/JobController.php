@@ -197,7 +197,7 @@ class JobController extends Controller
         unset($cust['customer_name']);
 
         // ubah array name
-        $cust['type'] = $cust['customer_type'];
+        $cust['type'] = $cust['customer_type'] ?: 0;
         unset($cust['customer_type']);
 
         // tambah user baru

@@ -5,6 +5,9 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.9 **Fix Customer Type**
+- Fix "customer_type" in create job
+
 1.19.8 **Fix Issues**
 - Fix FindOrCreate warranty on job store
 
