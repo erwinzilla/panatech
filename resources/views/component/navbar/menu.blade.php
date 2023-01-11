@@ -34,7 +34,7 @@
                         <a href="#" class="nav-link dropdown-toggle {{ Request::segment(1) == 'job' ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">Job</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('job/create') }}" class="dropdown-item">@svg('heroicon-s-plus', 'icon-sm me-1') Create Job</a></li>
-                            <li><a href="{{ url('job') }}" class="dropdown-item">@svg('heroicon-s-briefcase', 'icon-sm me-1') Job</a></li>
+                            <li><a href="{{ url('job') }}" class="dropdown-item">@svg('heroicon-s-briefcase', 'icon-sm me-1') Job List</a></li>
                             <li><a href="{{ url('job/type') }}" class="dropdown-item">@svg('heroicon-s-tag', 'icon-sm me-1') Job Type</a></li>
                         </ul>
                     </li>

@@ -5,6 +5,10 @@
 - Run Composer Install
 - Run Migrate
 
+1.19.10 **Rename And Fix Issues**
+- Rename Job sub menu
+- Fix "purchase_date" in create job
+
 1.19.9 **Fix Customer Type**
 - Fix "customer_type" in create job
 

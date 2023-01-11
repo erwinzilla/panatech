@@ -215,6 +215,10 @@ class JobController extends Controller
                 'warranty_type',
             ]);
 
+            // convert date time
+            $purchase_date = $warr['purchase_date'] ? str_replace('/', '-', $warr['purchase_date']) : null;
+            $warr['purchase_date'] = $purchase_date ? date('Y-m-d', strtotime($purchase_date)) : null;
+
             // ubah array name
             $warr['type'] = $warr['warranty_type'];
             unset($warr['warranty_type']);
