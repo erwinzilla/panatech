@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Part;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Validator;
 
 class PartController extends Controller
@@ -28,6 +29,10 @@ class PartController extends Controller
     {
         // cek privilege
         privilegeLevel(self::config['privilege'], ONLY_SEE);
+
+//        $token = $request->session()->get('access_token');
+//        $response = Http::withToken($token)->get(env('OAUTH_SERVER_URL').'/api/part');
+//        return $response->json();
 
         // olah data
         $parse  = $this->parseData(Part::select('*'), $request, session('search'));

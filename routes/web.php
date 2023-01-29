@@ -21,6 +21,9 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\InvoiceItemController;
 use App\Http\Controllers\InvoiceController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +42,44 @@ Route::get('login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::get('theme/{mode}', [HomeController::class, 'theme']);
 Route::get('theme/{mode}/icon', [HomeController::class, 'themeIcon']);
+
+// Client Oauth
+Route::get('client/redirect', function (Request $request) {
+//    $request->session()->put('state', $state = Str::random(40));
+
+    $query = http_build_query([
+        'client_id' => env('OAUTH_CLIENT_ID'),
+        'redirect_uri' => env('OAUTH_REDIRECT_URI'),
+        'response_type' => 'code',
+        'scope' => '',
+//        'state' => $state,
+         'prompt' => 'consent', // "none", "consent", or "login"
+    ]);
+
+    return redirect(env('OAUTH_SERVER_URL').'/oauth/authorize?'.$query);
+});
+
+Route::get('client/callback', function (Request $request) {
+//    return $request->code;
+//    $state = $request->session()->pull('state');
+
+//    throw_unless(
+//        strlen($state) > 0 && $state === $request->state,
+//        InvalidArgumentException::class
+//    );
+
+    $response = Http::asForm()->post(env('OAUTH_SERVER_URL').'/oauth/token', [
+        'grant_type' => 'authorization_code',
+        'client_id' => env('OAUTH_CLIENT_ID'),
+        'client_secret' => env('OAUTH_CLIENT_SECRET'),
+        'redirect_uri' => env('OAUTH_REDIRECT_URI'),
+        'code' => $request->code,
+    ]);
+
+    $request->session()->put('access_token', $response['access_token']);
+
+    return $response['access_token'];
+});
 
 Route::group(['middleware' => 'auth'], function () {
     // auth
